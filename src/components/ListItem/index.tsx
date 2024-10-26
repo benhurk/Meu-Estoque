@@ -1,6 +1,5 @@
 import { useDispatch } from 'react-redux';
 
-import './styles.css';
 import { ListItemType } from '../../models';
 
 import { removeItem } from '../../store/reducers/list';
@@ -12,8 +11,8 @@ export default function ListItem({id, name, qtdType}: ListItemType) {
         if (type === 'unity') {
             return (
                 <>
-                <input className='item-quantity__input form-control form-control-sm' type='number' />
-                <span className='item-quantity__text text-dark'>un.</span>
+                    <input className='form-control form-control-sm d-inline-block' style={{width: '5rem'}} type='number' min={0} />
+                    <span className='text-dark'>un.</span>
                 </>
             )
         }
@@ -31,8 +30,8 @@ export default function ListItem({id, name, qtdType}: ListItemType) {
 
     return (
         <>
-            <span className='item-name text-primary'>{name}</span>
-            <div className='item-quantity'>
+            <span className='text-primary'>{name}</span>
+            <div>
                 {getInput(qtdType)}
             </div>
             <div>
