@@ -1,0 +1,9 @@
+.item-name {
+    font-weight: 600;
+}
+
+.item-quantity__input[type="number"] {
+    display: inline-block;
+    width: 5rem;
+    margin-right: .5rem;
+}
