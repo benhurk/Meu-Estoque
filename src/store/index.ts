@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import listReducer from "./reducers/list";
+import modalReducer from "./reducers/modal";
 
 const store = configureStore({
     reducer: {
-        list: listReducer
+        list: listReducer,
+        modal: modalReducer
     }
 })
 

@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 
 import { ListItemType } from '../../models';
 import { removeItem, editItem } from '../../store/reducers/list';
+import { setAlertField, setModalMode, setNameField, setQtdField, setTargetId, setTypeField } from '../../store/reducers/modal';
 
 import QuantityInput from '../QuantityInput';
 
@@ -20,6 +21,15 @@ export default function ListItem({id, name, qtdType, quantity, alertQuantity}: L
         dispatch(editItem(itemObj));
     }
 
+    const setEditModal = (id: number) => {
+        dispatch(setTargetId(id));
+        dispatch(setModalMode('edit'));
+        dispatch(setNameField(name));
+        dispatch(setTypeField(qtdType));
+        dispatch(setQtdField(quantity));
+        dispatch(setAlertField(alertQuantity));
+    }
+
     const warn = quantity <= alertQuantity;
 
     return (
@@ -34,7 +44,9 @@ export default function ListItem({id, name, qtdType, quantity, alertQuantity}: L
                 </div>
             </div>
             <div>
-                <button type="button" className="btn btn-sm btn-primary me-1"><i className="bi bi-gear-fill"></i></button>
+                <button type="button" className="btn btn-sm btn-primary me-1" data-toggle="modal" data-target="#modal-form" onClick={() => setEditModal(id)}>
+                    <i className="bi bi-gear-fill"></i>
+                </button>
                 <button type="button" className="btn btn-sm btn-danger" onClick={() => dispatch(removeItem(id))}><i className="bi bi-trash-fill"></i></button>
             </div>
         </li>
