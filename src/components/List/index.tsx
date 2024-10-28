@@ -9,10 +9,8 @@ export default function List() {
     return (
         <ul className="list-group">
             {
-                listItems.map((item, index) => (
-                    <li key={index} className="list-group-item d-flex align-items-center justify-content-between">
-                        <ListItem id={index} name={item.name} qtdType={item.qtdType} />
-                    </li>
+                listItems.map((item) => (
+                    <ListItem key={item.id} id={item.id} name={item.name} qtdType={item.qtdType} quantity={item.quantity} alertQuantity={item.alertQuantity} />
                 ))
             }
         </ul>
