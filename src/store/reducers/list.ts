@@ -6,19 +6,8 @@ type listState = {
 }
 
 const initialState: listState = {
-    items: [
-        {
-            id: 0,
-            name: 'teste',
-            qtdType: 'unity'
-        },
-        {
-            id: 1,
-            name: 'teste 2',
-            qtdType: 'abstract'
-        }
-    ]
-}
+    items: []
+};
 
 const listSlice = createSlice({
     name: 'list',
@@ -29,10 +18,19 @@ const listSlice = createSlice({
         },
 
         removeItem: (state, action: PayloadAction<number>) => {
-            state.items = state.items.filter(item => item.id !== action.payload)
+            state.items = state.items.filter(item => item.id !== action.payload);
+            state.items.forEach(item => {
+                if (item.id > action.payload) {
+                    item.id -= 1;
+                }
+            });
+        },
+
+        editItem: (state, action: PayloadAction<ListItemType>) => {
+            state.items[action.payload.id] = action.payload;
         }
     }
 });
 
-export const { addItem, removeItem } = listSlice.actions;
+export const { addItem, removeItem, editItem } = listSlice.actions;
 export default listSlice.reducer;
