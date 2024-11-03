@@ -28,9 +28,15 @@ const listSlice = createSlice({
 
         editItem: (state, action: PayloadAction<ListItemType>) => {
             state.items[action.payload.id] = action.payload;
+        },
+
+        pushList: (state, action: PayloadAction<ListItemType[]>) => {
+            action.payload.forEach(item => {
+                state.items.push(item);
+            })
         }
     }
 });
 
-export const { addItem, removeItem, editItem } = listSlice.actions;
+export const { addItem, removeItem, editItem, pushList } = listSlice.actions;
 export default listSlice.reducer;

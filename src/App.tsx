@@ -5,6 +5,8 @@ import { RootState } from "./store";
 
 import List from "./components/List";
 import ModalForm from "./components/ModalForm";
+import DownloadBtn from "./components/DownloadBtn";
+import LoadBtn from "./components/LoadBtn";
 
 function App() {
   const dispatch = useDispatch();
@@ -86,13 +88,15 @@ function App() {
     <>
       <header className="container py-4 bg-primary">
         <h1 className="text-center text-light">Eztoque</h1>
+        <DownloadBtn />
+        <LoadBtn />
       </header>
       <main className="container py-4">
         <button type="button" className="btn btn-success mx-auto d-block mb-4" data-toggle="modal" data-target="#modal-form" onClick={setModal}>
           <i className="bi bi-plus-lg" /> Adicionar item
         </button>
-        <List />
-        <div className="mb-4 d-flex justify-content-center gap-2 mt-4">
+        { listItems.length > 0 && <List /> }
+        <div className="d-flex justify-content-center gap-2">
           <button type="button" className="btn btn-sm btn-primary" disabled={listItems.length > 0 ? false : true} onClick={() => sendAll()}>
             <i className="bi bi-send-fill"></i> Enviar tudo
           </button>
