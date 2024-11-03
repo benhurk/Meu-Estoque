@@ -7,7 +7,7 @@ export default function List() {
     const listItems = useSelector((state: RootState) => state.list.items);
 
     return (
-        <ul className="list-group">
+        <ul className="list-group mb-4">
             {
                 listItems.map((item) => (
                     <ListItem key={item.id} id={item.id} name={item.name} qtdType={item.qtdType} quantity={item.quantity} alertQuantity={item.alertQuantity} />
