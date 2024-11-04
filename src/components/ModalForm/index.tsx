@@ -55,7 +55,7 @@ export default function ModalForm() {
                         <button type="button" className="btn-close position-absolute top-0 end-0 mt-1 me-1" data-dismiss="modal" />
                         <div className="form-group mb-3">
                             <label htmlFor="item-name" className="mb-1 text-sm">O que é:</label>
-                            <input type="text" id="item-name" className="form-control form-control" value={nameField} onChange={(e) => dispatch(setNameField(e.target.value))} />
+                            <input type="text" id="item-name" className="form-control" value={nameField} onChange={(e) => dispatch(setNameField(e.target.value))} />
                         </div>
                         <div className="form-group mb-3">
                             <label htmlFor="item-qtdtype" className="mb-1">Contar por:</label>
