@@ -30,7 +30,7 @@ export default function Header() {
             message += itemMessage;
         })
     
-        const url = `https://api.whatsapp.com/send/?phone=${sendTo}&text=${message}`;
+        const url = `whatsapp://send?phone=${sendTo}&text=${message}`;
         window.open(url);
     }
 
@@ -45,7 +45,7 @@ export default function Header() {
             message += itemMessage;
         })
     
-        const url = `https://api.whatsapp.com/send/?phone=${sendTo}&text=${message}`;
+        const url = `whatsapp://send?phone=${sendTo}&text=${message}`;
         window.open(url);
     }
 
