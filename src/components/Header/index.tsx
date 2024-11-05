@@ -25,9 +25,7 @@ export default function Header() {
         listItems.forEach(item => {
             const abstractQuantity = abstractSwitch(item);
     
-            const itemMessage = `
-            *• ${item.quantity <= item.alertQuantity ? '❗' : '✅'} ${item.name}:* ${item.qtdType === 'unity' ? item.quantity : abstractQuantity} ${item.qtdType === 'unity' ? 'unidades' : ''}%0a
-            `;
+            const itemMessage = `*• ${item.quantity <= item.alertQuantity ? '❗' : '✅'} ${item.name}:* ${item.qtdType === 'unity' ? item.quantity : abstractQuantity} ${item.qtdType === 'unity' ? 'unidades' : ''}%0a`;
     
             message += itemMessage;
         })
