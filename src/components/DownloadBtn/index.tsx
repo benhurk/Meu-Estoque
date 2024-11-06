@@ -10,7 +10,7 @@ export default function DownloadBtn() {
     const url = URL.createObjectURL(blob);
 
     return (
-        <a className="btn btn-sm btn-success" href={url} download='lista.json'>
+        <a className="btn btn-sm btn-success" href={url} download='estoque.json'>
             <i className="bi bi-download" /> Baixar
         </a>
     )
