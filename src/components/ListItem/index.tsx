@@ -10,10 +10,6 @@ export default function ListItem({id, name, qtdType, quantity, alertQuantity}: L
     const dispatch = useDispatch();
 
     const changeValue = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        if (e.target.value[0] === '0') {
-            e.target.value = String(Number(e.target.value) * 1);
-        }
-
         const itemObj: ListItemType = {
             id,
             name,

@@ -1,6 +1,7 @@
 import { ChangeEvent } from "react";
 
 import { ListItemType } from "../../models"
+import removeZeroBeforeNumber from "../../utils/removeZero";
 
 type Props = {
     size?: 'sm' | 'md';
@@ -13,7 +14,9 @@ export default function QuantityInput({size = 'sm', type, value, change}: Props)
     if (type === 'unity') {
         return (
             <>
-                <input className={`form-control form-control-${size} d-inline-block me-1`} style={{width: '5rem'}} type='number' min={0} value={value} onChange={change} />
+                <input className={`form-control form-control-${size} d-inline-block me-1`} style={{width: '5rem'}} type='number' min={0} 
+                        value={removeZeroBeforeNumber(String(value))} onChange={change} />
+
                 <span className='text-dark'>un.</span>
             </>
         )
