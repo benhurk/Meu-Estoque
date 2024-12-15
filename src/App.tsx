@@ -5,8 +5,8 @@ import { RootState } from "./store";
 import { clearList } from "./store/reducers/list";
 
 import Header from "./components/Header";
-import List from "./components/List";
 import ModalForm from "./components/ModalForm";
+import ListItem from "./components/ListItem";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,10 +32,20 @@ function App() {
             </button>
           }
         </div>
-
-        { listItems.length > 0 && <List /> }
+        { 
+          listItems.length > 0 &&
+          <ul className="list-group mb-4">
+            {
+                listItems.map((item) => (
+                    <ListItem key={item.id} id={item.id} name={item.name} qtdType={item.qtdType} quantity={item.quantity} alertQuantity={item.alertQuantity} />
+                ))
+            }
+          </ul>
+        }
       </main>
+
       <ModalForm />
+
       <div id="removeAll-confirm" className="modal fade" tabIndex={-1} role="dialog">
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
