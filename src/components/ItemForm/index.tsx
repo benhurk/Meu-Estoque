@@ -23,10 +23,12 @@ export default function ItemForm() {
         if (formMode === 'edit') {
             const targetItem = listItems.filter(item => item.id === targetId)[0];
 
-            setNameField(targetItem.name);
-            setTypeField(targetItem.qtdType);
-            setQuantityField(targetItem.quantity);
-            setAlertField(targetItem.alertQuantity);
+            if (targetItem) {
+                setNameField(targetItem.name);
+                setTypeField(targetItem.qtdType);
+                setQuantityField(targetItem.quantity);
+                setAlertField(targetItem.alertQuantity);
+            }
         }
 
         if (formMode === 'add') {
