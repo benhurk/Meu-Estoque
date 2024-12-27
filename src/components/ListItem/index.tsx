@@ -1,8 +1,9 @@
 import { useDispatch } from 'react-redux';
 
-import { ListItemType } from '../../models';
+import ListItemType from '../../types/ListItem';
+
 import { removeItem, editItem } from '../../store/reducers/list';
-import { setAlertField, setModalMode, setNameField, setQtdField, setTargetId, setTypeField } from '../../store/reducers/modal';
+import { setFormMode, setTargetId } from '../../store/reducers/form';
 
 import QuantityInput from '../QuantityInput';
 
@@ -23,11 +24,7 @@ export default function ListItem({id, name, qtdType, quantity, alertQuantity}: L
 
     const setEditModal = (id: number) => {
         dispatch(setTargetId(id));
-        dispatch(setModalMode('edit'));
-        dispatch(setNameField(name));
-        dispatch(setTypeField(qtdType));
-        dispatch(setQtdField(quantity));
-        dispatch(setAlertField(alertQuantity));
+        dispatch(setFormMode('edit'));
     }
 
     const warn = quantity <= alertQuantity;
