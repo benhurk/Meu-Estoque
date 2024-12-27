@@ -7,4 +7,6 @@ type ItemForm = {
     alertField: number;
 }
 
+export type FormMode = 'add' | 'edit';
+
 export default ItemForm;
