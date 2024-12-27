@@ -1,25 +1,41 @@
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../store";
-import ListItemType, { Quantity } from "../../types/ListItem";
-
 import { addItem, editItem } from "../../store/reducers/list";
-import { resetModal } from "../../store/reducers/modal";
+
+import ListItemType, { Quantity } from "../../types/ListItem";
 
 import QuantityInput from "../QuantityInput";
 
 export default function ItemForm() {
-    const listItems = useSelector((state: RootState) => state.list.items);
+    const dispatch = useDispatch();
 
-    const { modalMode, targetId } = useSelector((state: RootState) => state.modal);
+    const listItems = useSelector((state: RootState) => state.list.items);
+    const { formMode, targetId } = useSelector((state: RootState) => state.form);
 
     const [ nameField, setNameField ] = useState<string>('');
     const [ typeField, setTypeField ] = useState<Quantity>('unity');
     const [ quantityField, setQuantityField ] = useState<number>(0);
     const [ alertField, setAlertField ] = useState<number>(0);
 
-    const dispatch = useDispatch();
+    useEffect(() => {
+        if (formMode === 'edit') {
+            const targetItem = listItems.filter(item => item.id === targetId)[0];
+
+            setNameField(targetItem.name);
+            setTypeField(targetItem.qtdType);
+            setQuantityField(targetItem.quantity);
+            setAlertField(targetItem.alertQuantity);
+        }
+
+        if (formMode === 'add') {
+            setNameField('');
+            setTypeField('unity');
+            setQuantityField(0);
+            setAlertField(0);
+        }
+    }, [formMode, listItems, targetId]);
 
     const createNewItem = (e: FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -33,7 +49,6 @@ export default function ItemForm() {
         }
 
         dispatch(addItem(newItem));
-        dispatch(resetModal());
     }
 
     const saveItem = (e: FormEvent<HTMLButtonElement>) => {
@@ -48,7 +63,6 @@ export default function ItemForm() {
         }
 
         dispatch(editItem(editedItem));
-        dispatch(resetModal());
     }
 
     return (
@@ -73,13 +87,13 @@ export default function ItemForm() {
                 <QuantityInput size="md" type={typeField} value={alertField} change={(e) => setAlertField(Number(e.target.value))} />
             </div>
             {
-                modalMode === 'add' &&
+                formMode === 'add' &&
                 <button type="submit" className="btn btn-success" data-dismiss="modal" onClick={(e) => createNewItem(e)}>
                     <i className="bi bi-plus-lg" /> Adicionar
                 </button> 
             }
             {
-                modalMode === 'edit' &&
+                formMode === 'edit' &&
                 <button type="submit" className="btn btn-success" data-dismiss="modal" onClick={(e) => saveItem(e)}>
                     <i className="bi bi-check-lg" /> Salvar
                 </button> 
