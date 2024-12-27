@@ -3,14 +3,14 @@ import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, pers
 import storage from "redux-persist/lib/storage";
 
 import listReducer from "./reducers/list";
-import modalReducer from "./reducers/modal";
+import formReducer from "./reducers/form";
 
 const persistedListReducer = persistReducer({ key: 'root', storage }, listReducer);
 
 const store = configureStore({
     reducer: {
         list: persistedListReducer,
-        modal: modalReducer
+        form: formReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: {
