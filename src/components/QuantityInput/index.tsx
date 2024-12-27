@@ -1,11 +1,11 @@
 import { ChangeEvent } from "react";
 
-import { ListItemType } from "../../models"
+import { Quantity } from "../../types/ListItem";
 import removeZeroBeforeNumber from "../../utils/removeZero";
 
 type Props = {
     size?: 'sm' | 'md';
-    type: ListItemType['qtdType'];
+    type: Quantity;
     value: number;
     change: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 }

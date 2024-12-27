@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../store";
-import { ListItemType } from "../../models";
+import ListItemType from "../../types/ListItem";
 import { pushList } from "../../store/reducers/list";
 
 export default function LoadBtn() {

@@ -1,4 +1,4 @@
-import { ListItemType } from "../models";
+import ListItemType from "../types/ListItem";
 
 export default function abstractSwitch(item: ListItemType) {
     switch (item.quantity) {
