@@ -35,8 +35,9 @@ export default function LoadBtn() {
     }
 
     return (
-        <label className="btn btn-sm btn-secondary">
-            <i className="bi bi-upload" /> Carregar
+        <label className="btn btn-sm btn-light">
+            <i className="bi bi-upload" />
+            &nbsp;Importar
             <input className="d-none" type="file" accept=".json, application/JSON" onChange={(e) => upload(e)} />
         </label>
     )
