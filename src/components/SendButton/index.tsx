@@ -42,7 +42,7 @@ export default function SendButton({ sendMode }: Props) {
 
     if (sendMode === 'all') {
         return (
-            <button type="button" className="btn btn-primary" disabled={listItems.length > 0 ? false : true} data-dismiss="modal" onClick={() => sendAll()}>
+            <button type="button" className="btn btn-dark" disabled={listItems.length > 0 ? false : true} data-dismiss="modal" onClick={() => sendAll()}>
                 <i className="bi bi-send-fill" />
                 &nbsp;Enviar tudo
             </button>
