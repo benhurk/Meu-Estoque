@@ -90,13 +90,13 @@ export default function ItemForm() {
             </div>
             {
                 formMode === 'add' &&
-                <button type="submit" className="btn btn-success" data-dismiss="modal" onClick={(e) => createNewItem(e)}>
+                <button type="submit" className="btn btn-dark" data-dismiss="modal" onClick={(e) => createNewItem(e)}>
                     <i className="bi bi-plus-lg" /> Adicionar
                 </button> 
             }
             {
                 formMode === 'edit' &&
-                <button type="submit" className="btn btn-success" data-dismiss="modal" onClick={(e) => saveItem(e)}>
+                <button type="submit" className="btn btn-dark" data-dismiss="modal" onClick={(e) => saveItem(e)}>
                     <i className="bi bi-check-lg" /> Salvar
                 </button> 
             }

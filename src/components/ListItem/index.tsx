@@ -41,7 +41,7 @@ export default function ListItem({id, name, qtdType, quantity, alertQuantity}: L
                 </div>
             </div>
             <div>
-                <button type="button" className="btn btn-sm btn-primary me-1" data-toggle="modal" data-target="#modal-form" onClick={() => setEditModal(id)}>
+                <button type="button" className="btn btn-sm btn-dark me-1" data-toggle="modal" data-target="#modal-form" onClick={() => setEditModal(id)}>
                     <i className="bi bi-pencil-fill"></i>
                 </button>
                 <button type="button" className="btn btn-sm btn-danger" onClick={() => dispatch(removeItem(id))}>
