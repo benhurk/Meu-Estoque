@@ -1,0 +1,27 @@
+.icon {
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.icon:hover {
+    color: #0d6efd;
+}
+
+.tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 1rem;
+    color: white;
+    background-color: rgba(0, 0, 0, .82);
+    translate: 0 -5%;
+    opacity: 0;
+    transition: all 0.25s ease-in-out;
+    pointer-events: none;
+    z-index: 1;
+}
+
+div:hover > .tooltip {
+    opacity: 1;
+    translate: 0 0;
+}
