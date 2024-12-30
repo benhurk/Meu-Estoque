@@ -29,6 +29,7 @@ export default function ItemForm() {
                 setTypeField(targetItem.qtdType);
                 setQuantityField(targetItem.quantity);
                 setAlertField(targetItem.alertQuantity);
+                setDescriptionField(targetItem.description as string);
             }
         }
 
@@ -37,6 +38,7 @@ export default function ItemForm() {
             setTypeField('unity');
             setQuantityField(0);
             setAlertField(0);
+            setDescriptionField('');
         }
     }, [formMode, listItems, targetId]);
 
@@ -93,7 +95,7 @@ export default function ItemForm() {
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="description" className="mb-1 d-block">Descrição:</label>
-                <textarea className="form-control" id="description" style={{resize: 'none', height: '7rem'}} onChange={(e) => setDescriptionField(e.target.value)} />
+                <textarea className="form-control" id="description" value={descriptionField} style={{resize: 'none', height: '7rem'}} onChange={(e) => setDescriptionField(e.target.value)} />
             </div>
             {
                 formMode === 'add' &&
