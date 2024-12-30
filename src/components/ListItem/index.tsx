@@ -6,8 +6,9 @@ import { removeItem, editItem } from '../../store/reducers/list';
 import { setFormMode, setTargetId } from '../../store/reducers/form';
 
 import QuantityInput from '../QuantityInput';
+import TextTooltip from '../TextTooltip';
 
-export default function ListItem({id, name, qtdType, quantity, alertQuantity}: ListItemType) {
+export default function ListItem({id, name, qtdType, quantity, alertQuantity, description}: ListItemType) {
     const dispatch = useDispatch();
 
     const changeValue = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -16,7 +17,8 @@ export default function ListItem({id, name, qtdType, quantity, alertQuantity}: L
             name,
             qtdType,
             quantity: Number(e.target.value),
-            alertQuantity
+            alertQuantity,
+            description
         }
 
         dispatch(editItem(itemObj));
@@ -31,14 +33,17 @@ export default function ListItem({id, name, qtdType, quantity, alertQuantity}: L
 
     return (
         <li className='list-group-item d-flex align-items-center justify-content-between'>
-            <div className='w-75'>
-                <div className='mb-2'>
-                    <span className={`d-inline ${warn ? 'text-danger' : 'text-primary'}`}>{name}</span>
-                    {warn && <i className="bi bi-exclamation-diamond-fill text-danger ms-1"></i>}
-                </div>
+            <div className='w-75 d-flex gap-4'>
                 <div>
-                    <QuantityInput value={quantity} type={qtdType} change={changeValue} />
+                    <div className='mb-2'>
+                        <span className={`d-inline ${warn ? 'text-danger' : 'text-primary'}`}>{name}</span>
+                        {warn && <i className="bi bi-exclamation-diamond-fill text-danger ms-1"></i>}
+                    </div>
+                    <div>
+                        <QuantityInput value={quantity} type={qtdType} change={changeValue} />
+                    </div>
                 </div>
+                { description && <TextTooltip classNames='align-self-center' bootstrapIconClass='bi bi-chat-left-text-fill' text={description} /> }
             </div>
             <div>
                 <button type="button" className="btn btn-sm btn-dark me-1" data-toggle="modal" data-target="#modal-form" onClick={() => setEditModal(id)}>
