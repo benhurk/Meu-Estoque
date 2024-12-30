@@ -20,7 +20,8 @@ export default function LoadBtn() {
                     name: loadedItem.name,
                     qtdType: loadedItem.qtdType,
                     quantity: loadedItem.quantity,
-                    alertQuantity: loadedItem.alertQuantity
+                    alertQuantity: loadedItem.alertQuantity,
+                    description: loadedItem.description
                 }
 
                 return item;

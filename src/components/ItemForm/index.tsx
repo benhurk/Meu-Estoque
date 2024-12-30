@@ -18,6 +18,7 @@ export default function ItemForm() {
     const [ typeField, setTypeField ] = useState<Quantity>('unity');
     const [ quantityField, setQuantityField ] = useState<number>(0);
     const [ alertField, setAlertField ] = useState<number>(0);
+    const [ descriptionField, setDescriptionField ] = useState<string>('');
 
     useEffect(() => {
         if (formMode === 'edit') {
@@ -47,7 +48,8 @@ export default function ItemForm() {
             name: nameField,
             qtdType: typeField,
             quantity: quantityField,
-            alertQuantity: alertField
+            alertQuantity: alertField,
+            description: descriptionField
         }
 
         dispatch(addItem(newItem));
@@ -61,7 +63,8 @@ export default function ItemForm() {
             name: nameField,
             qtdType: typeField,
             quantity: quantityField,
-            alertQuantity: alertField
+            alertQuantity: alertField,
+            description: descriptionField
         }
 
         dispatch(editItem(editedItem));
@@ -87,6 +90,10 @@ export default function ItemForm() {
             <div className="form-group mb-3">
                 <label htmlFor="item-qtd-alert" className="mb-1 d-block">Alertar quando tiver:</label>
                 <QuantityInput size="md" type={typeField} value={alertField} change={(e) => setAlertField(Number(e.target.value))} />
+            </div>
+            <div className="form-group mb-3">
+                <label htmlFor="description" className="mb-1 d-block">Descrição:</label>
+                <textarea className="form-control" id="description" style={{resize: 'none', height: '7rem'}} onChange={(e) => setDescriptionField(e.target.value)} />
             </div>
             {
                 formMode === 'add' &&
