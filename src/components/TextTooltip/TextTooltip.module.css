@@ -1,6 +1,7 @@
 .icon {
     color: #333;
     font-size: 1.2rem;
+    transition: color 0.25s ease-in-out;
 }
 
 .icon:hover {
