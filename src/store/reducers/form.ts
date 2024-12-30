@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FormMode } from "../../types/ItemForm";
+import FormMode from "../../types/FormMode";
 
 type formState = {
     formMode: FormMode;
