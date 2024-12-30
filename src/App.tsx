@@ -1,5 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 
+import './styles.css';
+
 import { RootState } from "./store";
 import { setFormMode } from "./store/reducers/form";
 
@@ -16,7 +18,7 @@ function App() {
   return (
     <>
       <Header />
-      <main className="container py-5">
+      <main className="wraper py-5">
         <div className="mb-4 d-flex justify-content-center gap-3">
           <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#modal-form" onClick={() => dispatch(setFormMode('add'))}>
             <i className="bi bi-plus-lg" />
@@ -27,7 +29,7 @@ function App() {
         <ul className="list-group">
           {
             listItems.map((item) => (
-              <ListItem key={item.id} id={item.id} name={item.name} qtdType={item.qtdType} quantity={item.quantity} alertQuantity={item.alertQuantity} />
+              <ListItem key={item.id} id={item.id} name={item.name} qtdType={item.qtdType} quantity={item.quantity} alertQuantity={item.alertQuantity} description={item.description} />
             ))
           }
         </ul>
