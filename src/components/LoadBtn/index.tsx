@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../store";
 import ListItemType from "../../types/ListItem";
-import { pushList } from "../../store/reducers/list";
+import { pushItem } from "../../store/reducers/list";
 
 export default function LoadBtn() {
     const dispatch = useDispatch();
@@ -12,9 +12,9 @@ export default function LoadBtn() {
         const reader = new FileReader();
 
         reader.onload = () => {
-            const result: ListItemType[] = JSON.parse(reader.result as string);
+            const result = JSON.parse(reader.result as string);
 
-            const loadedItems: ListItemType[] = result.map(loadedItem => {
+            result.forEach((loadedItem: ListItemType) => {
                 const item: ListItemType = {
                     id: listItems.length + loadedItem.id,
                     name: loadedItem.name,
@@ -24,10 +24,10 @@ export default function LoadBtn() {
                     description: loadedItem.description
                 }
 
-                return item;
-            });
+                const isValid = !Object.values(item).some(val => typeof val === "undefined");
 
-            dispatch(pushList(loadedItems));
+                if (isValid) dispatch(pushItem(item));
+            });
         }
 
         if (e.target.files) {
