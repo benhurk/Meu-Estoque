@@ -30,10 +30,8 @@ const listSlice = createSlice({
             state.items[action.payload.id] = action.payload;
         },
 
-        pushList: (state, action: PayloadAction<ListItemType[]>) => {
-            action.payload.forEach(item => {
-                state.items.push(item);
-            })
+        pushItem: (state, action: PayloadAction<ListItemType>) => {
+            state.items.push(action.payload);
         },
 
         clearList: (state) => {
@@ -42,5 +40,5 @@ const listSlice = createSlice({
     }
 });
 
-export const { addItem, removeItem, editItem, pushList, clearList } = listSlice.actions;
+export const { addItem, removeItem, editItem, pushItem, clearList } = listSlice.actions;
 export default listSlice.reducer;
