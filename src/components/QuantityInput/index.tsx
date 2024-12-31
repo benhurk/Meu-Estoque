@@ -24,7 +24,7 @@ export default function QuantityInput({size = 'sm', type, value, change}: Props)
 
     if (type === 'abstract') {
         return (
-            <select className={`w-50 form-select form-select-${size}`} value={value} onChange={change}>
+            <select className={`form-select form-select-${size}`} style={{width: 'fit-content'}} value={value} onChange={change}>
                 <option value='0'>Acabou</option>
                 <option value='1'>Pouco</option>
                 <option value='2'>Suficiente</option>
