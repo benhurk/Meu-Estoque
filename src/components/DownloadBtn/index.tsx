@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 
-import { RootState } from "../../store";
+import { RootState } from '../../store';
 
 export default function DownloadBtn() {
     const listItems = useSelector((state: RootState) => state.list.items);
@@ -10,9 +10,9 @@ export default function DownloadBtn() {
     const url = URL.createObjectURL(blob);
 
     return (
-        <a className="btn btn-sm btn-light" href={url} download='estoque.json'>
-            <i className="bi bi-download" />
+        <a className='btn btn-sm btn-light' href={url} download='estoque.json'>
+            <i className='bi bi-download' />
             &nbsp;Exportar
         </a>
-    )
+    );
 }

@@ -14,7 +14,7 @@
     left: 0;
     padding: 1rem;
     color: white;
-    background-color: rgba(0, 0, 0, .82);
+    background-color: rgba(0, 0, 0, 0.82);
     translate: 0 -5%;
     opacity: 0;
     transition: all 0.25s ease-in-out;

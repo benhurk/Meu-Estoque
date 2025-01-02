@@ -1,8 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 
-import { RootState } from "../../store";
-import ListItemType from "../../types/ListItem";
-import { pushItem } from "../../store/reducers/list";
+import { RootState } from '../../store';
+import ListItemType from '../../types/ListItem';
+import { pushItem } from '../../store/reducers/list';
 
 export default function LoadBtn() {
     const dispatch = useDispatch();
@@ -21,25 +21,32 @@ export default function LoadBtn() {
                     qtdType: loadedItem.qtdType,
                     quantity: loadedItem.quantity,
                     alertQuantity: loadedItem.alertQuantity,
-                    description: loadedItem.description
-                }
+                    description: loadedItem.description,
+                };
 
-                const isValid = !Object.values(item).some(val => typeof val === "undefined");
+                const isValid = !Object.values(item).some(
+                    (val) => typeof val === 'undefined'
+                );
 
                 if (isValid) dispatch(pushItem(item));
             });
-        }
+        };
 
         if (e.target.files) {
             reader.readAsText(e.target.files[0]);
         }
-    }
+    };
 
     return (
-        <label className="btn btn-sm btn-light">
-            <i className="bi bi-upload" />
+        <label className='btn btn-sm btn-light'>
+            <i className='bi bi-upload' />
             &nbsp;Importar
-            <input className="d-none" type="file" accept=".json, application/JSON" onChange={(e) => upload(e)} />
+            <input
+                className='d-none'
+                type='file'
+                accept='.json, application/JSON'
+                onChange={(e) => upload(e)}
+            />
         </label>
-    )
+    );
 }

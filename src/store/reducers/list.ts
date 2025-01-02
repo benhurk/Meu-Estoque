@@ -1,12 +1,12 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import ListItemType from "../../types/ListItem";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import ListItemType from '../../types/ListItem';
 
 type listState = {
     items: ListItemType[];
-}
+};
 
 const initialState: listState = {
-    items: []
+    items: [],
 };
 
 const listSlice = createSlice({
@@ -18,8 +18,10 @@ const listSlice = createSlice({
         },
 
         removeItem: (state, action: PayloadAction<number>) => {
-            state.items = state.items.filter(item => item.id !== action.payload);
-            state.items.forEach(item => {
+            state.items = state.items.filter(
+                (item) => item.id !== action.payload
+            );
+            state.items.forEach((item) => {
                 if (item.id > action.payload) {
                     item.id -= 1;
                 }
@@ -36,9 +38,10 @@ const listSlice = createSlice({
 
         clearList: (state) => {
             state.items = [];
-        }
-    }
+        },
+    },
 });
 
-export const { addItem, removeItem, editItem, pushItem, clearList } = listSlice.actions;
+export const { addItem, removeItem, editItem, pushItem, clearList } =
+    listSlice.actions;
 export default listSlice.reducer;

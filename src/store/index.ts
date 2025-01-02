@@ -1,22 +1,42 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import { configureStore } from '@reduxjs/toolkit';
+import {
+    FLUSH,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+    REHYDRATE,
+    persistReducer,
+    persistStore,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
-import listReducer from "./reducers/list";
-import formReducer from "./reducers/form";
+import listReducer from './reducers/list';
+import formReducer from './reducers/form';
 
-const persistedListReducer = persistReducer({ key: 'root', storage }, listReducer);
+const persistedListReducer = persistReducer(
+    { key: 'root', storage },
+    listReducer
+);
 
 const store = configureStore({
     reducer: {
         list: persistedListReducer,
-        form: formReducer
+        form: formReducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-        serializableCheck: {
-            ignoredActions: [FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE]
-        }
-    })
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [
+                    FLUSH,
+                    PAUSE,
+                    PERSIST,
+                    PURGE,
+                    REGISTER,
+                    REHYDRATE,
+                ],
+            },
+        }),
 });
 
 export const persistor = persistStore(store);

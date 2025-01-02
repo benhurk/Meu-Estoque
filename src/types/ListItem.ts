@@ -7,6 +7,6 @@ type ListItemType = {
     quantity: number;
     alertQuantity: number;
     description?: string;
-}
+};
 
 export default ListItemType;
