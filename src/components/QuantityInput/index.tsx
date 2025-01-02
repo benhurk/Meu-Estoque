@@ -16,7 +16,7 @@ export default function QuantityInput({
     value,
     change,
 }: Props) {
-    if (type === 'unity') {
+    if (type === 'number') {
         return (
             <>
                 <input
@@ -33,7 +33,7 @@ export default function QuantityInput({
         );
     }
 
-    if (type === 'abstract') {
+    if (type === 'options') {
         return (
             <select
                 className={`form-select form-select-${size}`}

@@ -1,4 +1,4 @@
-export type Quantity = 'unity' | 'abstract';
+export type Quantity = 'number' | 'options';
 
 type ListItemType = {
     id: number;
