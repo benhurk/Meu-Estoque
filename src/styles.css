@@ -2,3 +2,7 @@
     max-width: 768px;
     margin: auto;
 }
+
+ol {
+    padding-left: 1rem;
+}
