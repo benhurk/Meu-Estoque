@@ -7,6 +7,8 @@ import { addItem, editItem } from '../../store/reducers/list';
 import ListItemType, { Quantity } from '../../types/ListItem';
 
 import QuantityInput from '../QuantityInput';
+import OptionsList from '../OptionsList';
+import OptionsForm from '../OptionsForm';
 
 export default function ItemForm() {
     const dispatch = useDispatch();
@@ -17,7 +19,8 @@ export default function ItemForm() {
     );
 
     const [nameField, setNameField] = useState<string>('');
-    const [typeField, setTypeField] = useState<Quantity>('unity');
+    const [typeField, setTypeField] = useState<Quantity>('number');
+    const [options, setOptions] = useState<string[]>([]);
     const [quantityField, setQuantityField] = useState<number>(0);
     const [alertField, setAlertField] = useState<number>(0);
     const [descriptionField, setDescriptionField] = useState<string>('');
@@ -39,7 +42,8 @@ export default function ItemForm() {
 
         if (formMode === 'add') {
             setNameField('');
-            setTypeField('unity');
+            setTypeField('number');
+            setOptions([]);
             setQuantityField(0);
             setAlertField(0);
             setDescriptionField('');
@@ -86,6 +90,7 @@ export default function ItemForm() {
                     type='text'
                     id='item-name'
                     className='form-control'
+                    placeholder='Nome do item'
                     value={nameField}
                     onChange={(e) => setNameField(e.target.value)}
                 />
@@ -99,12 +104,23 @@ export default function ItemForm() {
                     onChange={(e) => setTypeField(e.target.value as Quantity)}
                     id='item-qtdtype'
                     className='form-select'>
-                    <option value='unity'>Unidades</option>
-                    <option value='abstract'>
-                        {'Quantidade ( Pouco / Suficiente / Bastante )'}
-                    </option>
+                    <option value='number'>Número</option>
+                    <option value='options'>Opções</option>
                 </select>
             </div>
+            {typeField === 'options' && (
+                <div className='mb-3'>
+                    <div className='form-group mb-1'>
+                        <OptionsForm setOptions={setOptions} />
+                    </div>
+                    {options.length > 0 && (
+                        <OptionsList
+                            options={options}
+                            setOptions={setOptions}
+                        />
+                    )}
+                </div>
+            )}
             <div className='form-group mb-3'>
                 <label htmlFor='item-qtd' className='mb-1 d-block'>
                     Quantidade:
@@ -139,7 +155,7 @@ export default function ItemForm() {
                     onChange={(e) => setDescriptionField(e.target.value)}
                 />
             </div>
-            {formMode === 'add' && (
+            {formMode === 'add' ? (
                 <button
                     type='submit'
                     className='btn btn-dark'
@@ -147,8 +163,7 @@ export default function ItemForm() {
                     onClick={(e) => createNewItem(e)}>
                     <i className='bi bi-plus-lg' /> Adicionar
                 </button>
-            )}
-            {formMode === 'edit' && (
+            ) : (
                 <button
                     type='submit'
                     className='btn btn-dark'
