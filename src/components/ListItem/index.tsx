@@ -13,6 +13,7 @@ export default function ListItem({
     name,
     qtdType,
     quantity,
+    options,
     alertQuantity,
     description,
 }: ListItemType) {
@@ -26,6 +27,7 @@ export default function ListItem({
             name,
             qtdType,
             quantity: Number(e.target.value),
+            options,
             alertQuantity,
             description,
         };
@@ -59,6 +61,7 @@ export default function ListItem({
                         <QuantityInput
                             value={quantity}
                             type={qtdType}
+                            options={options}
                             change={changeValue}
                         />
                     </div>

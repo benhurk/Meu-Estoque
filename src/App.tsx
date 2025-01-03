@@ -41,6 +41,7 @@ function App() {
                             name={item.name}
                             qtdType={item.qtdType}
                             quantity={item.quantity}
+                            options={item.options}
                             alertQuantity={item.alertQuantity}
                             description={item.description}
                         />

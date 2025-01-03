@@ -5,6 +5,7 @@ type ListItemType = {
     name: string;
     qtdType: Quantity;
     quantity: number;
+    options: string[];
     alertQuantity: number;
     description?: string;
 };

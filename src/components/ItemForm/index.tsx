@@ -58,6 +58,7 @@ export default function ItemForm() {
             name: nameField,
             qtdType: typeField,
             quantity: quantityField,
+            options: options,
             alertQuantity: alertField,
             description: descriptionField,
         };
@@ -73,6 +74,7 @@ export default function ItemForm() {
             name: nameField,
             qtdType: typeField,
             quantity: quantityField,
+            options,
             alertQuantity: alertField,
             description: descriptionField,
         };
@@ -132,6 +134,7 @@ export default function ItemForm() {
                     size='md'
                     type={typeField}
                     value={quantityField}
+                    options={options}
                     change={(e) => setQuantityField(Number(e.target.value))}
                 />
             </div>
@@ -143,6 +146,7 @@ export default function ItemForm() {
                     size='md'
                     type={typeField}
                     value={alertField}
+                    options={options}
                     change={(e) => setAlertField(Number(e.target.value))}
                 />
             </div>

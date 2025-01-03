@@ -23,7 +23,7 @@ export default function OptionsForm({ options, setOptions }: Props) {
     };
 
     return (
-        <form>
+        <div>
             <label htmlFor='item-options' className='mb-1 d-block'>
                 Adicionar opções:
             </label>
@@ -43,6 +43,6 @@ export default function OptionsForm({ options, setOptions }: Props) {
                     <i className='bi bi-plus' />
                 </button>
             </div>
-        </form>
+        </div>
     );
 }

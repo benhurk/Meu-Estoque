@@ -7,6 +7,7 @@ type Props = {
     size?: 'sm' | 'md';
     type: Quantity;
     value: number;
+    options: string[];
     change: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 };
 
@@ -14,6 +15,7 @@ export default function QuantityInput({
     size = 'sm',
     type,
     value,
+    options,
     change,
 }: Props) {
     if (type === 'number') {
@@ -37,13 +39,20 @@ export default function QuantityInput({
         return (
             <select
                 className={`form-select form-select-${size}`}
-                style={{ width: 'fit-content' }}
+                style={{ width: 'fit-content', minWidth: '50%' }}
                 value={value}
                 onChange={change}>
-                <option value='0'>Acabou</option>
-                <option value='1'>Pouco</option>
-                <option value='2'>Suficiente</option>
-                <option value='3'>Bastante</option>
+                {options.length > 0 ? (
+                    options.map((option, index) => (
+                        <option key={option} value={index}>
+                            {option}
+                        </option>
+                    ))
+                ) : (
+                    <option value='' disabled>
+                        Você ainda não adicionou nenhuma opção
+                    </option>
+                )}
             </select>
         );
     }
