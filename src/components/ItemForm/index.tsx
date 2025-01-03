@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { addItem, editItem } from '../../store/reducers/list';
 
+import FormMode from '../../types/FormMode';
 import ListItemType, { Quantity } from '../../types/ListItem';
 
 import QuantityInput from '../QuantityInput';
@@ -14,6 +15,7 @@ export default function ItemForm() {
     const dispatch = useDispatch();
 
     const listItems = useSelector((state: RootState) => state.list.items);
+
     const { formMode, targetId } = useSelector(
         (state: RootState) => state.form
     );
@@ -51,11 +53,11 @@ export default function ItemForm() {
         }
     }, [formMode, listItems, targetId]);
 
-    const createNewItem = (e: FormEvent<HTMLButtonElement>) => {
+    const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
         e.preventDefault();
 
-        const newItem: ListItemType = {
-            id: listItems.length,
+        const item: ListItemType = {
+            id: mode === 'add' ? listItems.length : targetId,
             name: nameField,
             qtdType: typeField,
             quantity: quantityField,
@@ -64,23 +66,7 @@ export default function ItemForm() {
             description: descriptionField,
         };
 
-        dispatch(addItem(newItem));
-    };
-
-    const saveItem = (e: FormEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-
-        const editedItem: ListItemType = {
-            id: targetId,
-            name: nameField,
-            qtdType: typeField,
-            quantity: quantityField,
-            options,
-            alertQuantity: alertField,
-            description: descriptionField,
-        };
-
-        dispatch(editItem(editedItem));
+        dispatch(mode === 'add' ? addItem(item) : editItem(item));
     };
 
     return (
@@ -163,23 +149,18 @@ export default function ItemForm() {
                     onChange={(e) => setDescriptionField(e.target.value)}
                 />
             </div>
-            {formMode === 'add' ? (
-                <button
-                    type='submit'
-                    className='btn btn-dark'
-                    data-dismiss='modal'
-                    onClick={(e) => createNewItem(e)}>
-                    <i className='bi bi-plus-lg' /> Adicionar
-                </button>
-            ) : (
-                <button
-                    type='submit'
-                    className='btn btn-dark'
-                    data-dismiss='modal'
-                    onClick={(e) => saveItem(e)}>
-                    <i className='bi bi-check-lg' /> Salvar
-                </button>
-            )}
+            <button
+                type='submit'
+                className='btn btn-dark'
+                data-dismiss='modal'
+                onClick={(e) => handleSubmit(e, formMode)}>
+                <i
+                    className={
+                        formMode === 'add' ? 'bi bi-plus-lg' : 'bi bi-check-lg'
+                    }
+                />
+                {formMode === 'add' ? 'Adicionar' : 'Salvar'}
+            </button>
         </form>
     );
 }
