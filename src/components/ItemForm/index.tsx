@@ -34,6 +34,7 @@ export default function ItemForm() {
             if (targetItem) {
                 setNameField(targetItem.name);
                 setTypeField(targetItem.qtdType);
+                setOptions(targetItem.options);
                 setQuantityField(targetItem.quantity);
                 setAlertField(targetItem.alertQuantity);
                 setDescriptionField(targetItem.description as string);
