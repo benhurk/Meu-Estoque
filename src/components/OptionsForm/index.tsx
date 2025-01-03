@@ -1,16 +1,24 @@
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 
 type Props = {
+    options: string[];
     setOptions: Dispatch<SetStateAction<string[]>>;
 };
 
-export default function OptionsForm({ setOptions }: Props) {
+export default function OptionsForm({ options, setOptions }: Props) {
     const [option, setOption] = useState<string>('');
+    const [error, setError] = useState<string>('');
 
     const submitOption = (e: FormEvent<HTMLButtonElement>, value: string) => {
         e.preventDefault();
 
-        setOptions((prev) => [...prev, value]);
+        if (!options.some((item) => item === value)) {
+            setOptions((prev) => [...prev, value]);
+            if (error) setError('');
+        } else {
+            setError('Essa opção já existe');
+        }
+
         setOption('');
     };
 
@@ -24,7 +32,7 @@ export default function OptionsForm({ setOptions }: Props) {
                     id='item-options'
                     className='form-control'
                     type='text'
-                    placeholder='Ex: Pouco / Bastante'
+                    placeholder={error ? error : `Ex: Pouco / Bastante`}
                     value={option}
                     onChange={(e) => setOption(e.target.value)}
                 />

@@ -111,7 +111,10 @@ export default function ItemForm() {
             {typeField === 'options' && (
                 <div className='mb-3'>
                     <div className='form-group mb-1'>
-                        <OptionsForm setOptions={setOptions} />
+                        <OptionsForm
+                            options={options}
+                            setOptions={setOptions}
+                        />
                     </div>
                     {options.length > 0 && (
                         <OptionsList
