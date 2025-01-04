@@ -1,9 +1,9 @@
 import { useDispatch } from 'react-redux';
 
-import ListItemType from '../../types/ListItem';
+import ListItemType from '../../types/ListItemType';
 
 import { removeItem, editItem } from '../../store/reducers/list';
-import { setFormMode, setTargetId } from '../../store/reducers/form';
+import { setFormMode, setTargetItem } from '../../store/reducers/form';
 
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
@@ -35,8 +35,18 @@ export default function ListItem({
         dispatch(editItem(itemObj));
     };
 
-    const setEditModal = (id: number) => {
-        dispatch(setTargetId(id));
+    const setEditForm = () => {
+        dispatch(
+            setTargetItem({
+                id,
+                name,
+                qtdType,
+                quantity,
+                options,
+                alertQuantity,
+                description,
+            })
+        );
         dispatch(setFormMode('edit'));
     };
 
@@ -80,7 +90,7 @@ export default function ListItem({
                     className='btn btn-sm btn-dark me-1'
                     data-toggle='modal'
                     data-target='#modal-form'
-                    onClick={() => setEditModal(id)}>
+                    onClick={() => setEditForm()}>
                     <i className='bi bi-pencil-fill'></i>
                 </button>
                 <button

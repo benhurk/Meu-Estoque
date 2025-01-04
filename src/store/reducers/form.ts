@@ -1,14 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import FormMode from '../../types/FormMode';
+import { FormMode } from '../../types/FormTypes';
+import ListItemType from '../../types/ListItemType';
 
 type formState = {
     formMode: FormMode;
-    targetId: number;
+    targetItem: ListItemType;
 };
 
 const initialState: formState = {
     formMode: 'add',
-    targetId: -1,
+    targetItem: {
+        id: 0,
+        name: '',
+        qtdType: 'number',
+        quantity: 0,
+        options: [],
+        alertQuantity: 0,
+    },
 };
 
 const formSlice = createSlice({
@@ -19,11 +27,11 @@ const formSlice = createSlice({
             state.formMode = action.payload;
         },
 
-        setTargetId: (state, action: PayloadAction<number>) => {
-            state.targetId = action.payload;
+        setTargetItem: (state, action: PayloadAction<ListItemType>) => {
+            state.targetItem = action.payload;
         },
     },
 });
 
-export const { setFormMode, setTargetId } = formSlice.actions;
+export const { setFormMode, setTargetItem } = formSlice.actions;
 export default formSlice.reducer;
