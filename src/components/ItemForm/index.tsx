@@ -114,6 +114,7 @@ export default function ItemForm() {
             <FormGroup elementId='item-alert' labelText='Alertar em:'>
                 <QuantityInput
                     size='md'
+                    elementId='item-alert'
                     type={fields.qtdType}
                     value={fields.alertQuantity}
                     options={options}
@@ -146,7 +147,7 @@ export default function ItemForm() {
                         formMode === 'add' ? 'bi bi-plus-lg' : 'bi bi-check-lg'
                     }
                 />
-                {formMode === 'add' ? 'Adicionar' : 'Salvar'}
+                &nbsp;{formMode === 'add' ? 'Adicionar' : 'Salvar'}
             </button>
         </form>
     );
