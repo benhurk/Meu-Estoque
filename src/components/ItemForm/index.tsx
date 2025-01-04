@@ -4,66 +4,55 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { addItem, editItem } from '../../store/reducers/list';
 
-import FormMode from '../../types/FormMode';
-import ListItemType, { Quantity } from '../../types/ListItem';
+import itemFormInitialState from '../../const/itemFormState';
+
+import { FormMode } from '../../types/FormTypes';
+import ListItemType, { QuantityType } from '../../types/ListItemType';
 
 import QuantityInput from '../QuantityInput';
-import OptionsList from '../OptionsList';
 import OptionsForm from '../OptionsForm';
+import FormGroup from '../FormGroup';
 
 export default function ItemForm() {
     const dispatch = useDispatch();
 
-    const listItems = useSelector((state: RootState) => state.list.items);
+    const [fields, setFields] = useState(itemFormInitialState);
+    const [options, setOptions] = useState<string[]>([]);
 
-    const { formMode, targetId } = useSelector(
+    const listItems = useSelector((state: RootState) => state.list.items);
+    const { formMode, targetItem } = useSelector(
         (state: RootState) => state.form
     );
 
-    const [nameField, setNameField] = useState<string>('');
-    const [typeField, setTypeField] = useState<Quantity>('number');
-    const [options, setOptions] = useState<string[]>([]);
-    const [quantityField, setQuantityField] = useState<number>(0);
-    const [alertField, setAlertField] = useState<number>(0);
-    const [descriptionField, setDescriptionField] = useState<string>('');
-
     useEffect(() => {
         if (formMode === 'edit') {
-            const targetItem = listItems.filter(
-                (item) => item.id === targetId
-            )[0];
+            setFields({
+                name: targetItem.name,
+                qtdType: targetItem.qtdType,
+                quantity: targetItem.quantity,
+                alertQuantity: targetItem.alertQuantity,
+                description: targetItem.description,
+            });
 
-            if (targetItem) {
-                setNameField(targetItem.name);
-                setTypeField(targetItem.qtdType);
-                setOptions(targetItem.options);
-                setQuantityField(targetItem.quantity);
-                setAlertField(targetItem.alertQuantity);
-                setDescriptionField(targetItem.description as string);
-            }
+            setOptions(targetItem.options);
         }
 
         if (formMode === 'add') {
-            setNameField('');
-            setTypeField('number');
-            setOptions([]);
-            setQuantityField(0);
-            setAlertField(0);
-            setDescriptionField('');
+            setFields(itemFormInitialState);
         }
-    }, [formMode, listItems, targetId]);
+    }, [formMode, listItems, targetItem]);
 
     const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
         e.preventDefault();
 
         const item: ListItemType = {
-            id: mode === 'add' ? listItems.length : targetId,
-            name: nameField,
-            qtdType: typeField,
-            quantity: quantityField,
+            id: mode === 'add' ? listItems.length : targetItem.id,
+            name: fields.name,
+            qtdType: fields.qtdType,
+            quantity: fields.quantity,
             options: options,
-            alertQuantity: alertField,
-            description: descriptionField,
+            alertQuantity: fields.alertQuantity,
+            description: fields.description,
         };
 
         dispatch(mode === 'add' ? addItem(item) : editItem(item));
@@ -71,84 +60,82 @@ export default function ItemForm() {
 
     return (
         <form>
-            <div className='form-group mb-3'>
-                <label htmlFor='item-name' className='mb-1 text-sm'>
-                    O que é:
-                </label>
+            <FormGroup elementId={'item-name'} labelText={'O que é:'}>
                 <input
                     type='text'
                     id='item-name'
                     className='form-control'
                     placeholder='Nome do item'
-                    value={nameField}
-                    onChange={(e) => setNameField(e.target.value)}
+                    value={fields.name}
+                    onChange={(e) =>
+                        setFields({ ...fields, name: e.target.value })
+                    }
                 />
-            </div>
-            <div className='form-group mb-3'>
-                <label htmlFor='item-qtdtype' className='mb-1'>
-                    Contar por:
-                </label>
+            </FormGroup>
+            <FormGroup elementId='item-type' labelText='Contar por:'>
                 <select
-                    value={typeField}
-                    onChange={(e) => setTypeField(e.target.value as Quantity)}
-                    id='item-qtdtype'
+                    value={fields.qtdType}
+                    onChange={(e) =>
+                        setFields({
+                            ...fields,
+                            qtdType: e.target.value as QuantityType,
+                        })
+                    }
+                    id='item-type'
                     className='form-select'>
                     <option value='number'>Número</option>
                     <option value='options'>Opções</option>
                 </select>
-            </div>
-            {typeField === 'options' && (
-                <div className='mb-3'>
-                    <div className='form-group mb-1'>
-                        <OptionsForm
-                            options={options}
-                            setOptions={setOptions}
-                        />
-                    </div>
-                    {options.length > 0 && (
-                        <OptionsList
-                            options={options}
-                            setOptions={setOptions}
-                        />
-                    )}
-                </div>
+            </FormGroup>
+
+            {fields.qtdType === 'options' && (
+                <FormGroup
+                    elementId='item-options'
+                    labelText='Adicionar opções:'>
+                    <OptionsForm options={options} setOptions={setOptions} />
+                </FormGroup>
             )}
-            <div className='form-group mb-3'>
-                <label htmlFor='item-qtd' className='mb-1 d-block'>
-                    Quantidade:
-                </label>
+
+            <FormGroup elementId='item-quantity' labelText='Quantidade:'>
                 <QuantityInput
                     size='md'
-                    type={typeField}
-                    value={quantityField}
+                    elementId='item-quantity'
+                    type={fields.qtdType}
+                    value={fields.quantity}
                     options={options}
-                    change={(e) => setQuantityField(Number(e.target.value))}
+                    change={(e) =>
+                        setFields({
+                            ...fields,
+                            quantity: Number(e.target.value),
+                        })
+                    }
                 />
-            </div>
-            <div className='form-group mb-3'>
-                <label htmlFor='item-qtd-alert' className='mb-1 d-block'>
-                    Alertar quando tiver:
-                </label>
+            </FormGroup>
+            <FormGroup elementId='item-alert' labelText='Alertar em:'>
                 <QuantityInput
                     size='md'
-                    type={typeField}
-                    value={alertField}
+                    type={fields.qtdType}
+                    value={fields.alertQuantity}
                     options={options}
-                    change={(e) => setAlertField(Number(e.target.value))}
+                    change={(e) =>
+                        setFields({
+                            ...fields,
+                            alertQuantity: Number(e.target.value),
+                        })
+                    }
                 />
-            </div>
-            <div className='form-group mb-3'>
-                <label htmlFor='description' className='mb-1 d-block'>
-                    Descrição:
-                </label>
+            </FormGroup>
+            <FormGroup elementId='item-description' labelText='Descrição:'>
                 <textarea
                     className='form-control'
-                    id='description'
-                    value={descriptionField}
+                    id='item-description'
+                    value={fields.description}
                     style={{ resize: 'none', height: '7rem' }}
-                    onChange={(e) => setDescriptionField(e.target.value)}
+                    onChange={(e) =>
+                        setFields({ ...fields, description: e.target.value })
+                    }
                 />
-            </div>
+            </FormGroup>
             <button
                 type='submit'
                 className='btn btn-dark'
