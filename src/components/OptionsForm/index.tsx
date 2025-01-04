@@ -22,12 +22,13 @@ export default function OptionsForm({ options, setOptions }: Props) {
         setOption('');
     };
 
+    const removeOption = (toRemove: string) => {
+        setOptions((prev) => prev.filter((items) => items != toRemove));
+    };
+
     return (
-        <div>
-            <label htmlFor='item-options' className='mb-1 d-block'>
-                Adicionar opções:
-            </label>
-            <div className='d-flex'>
+        <>
+            <div className='d-flex mb-1'>
                 <input
                     id='item-options'
                     className='form-control'
@@ -43,6 +44,22 @@ export default function OptionsForm({ options, setOptions }: Props) {
                     <i className='bi bi-plus' />
                 </button>
             </div>
-        </div>
+
+            {options.length > 0 && (
+                <ol>
+                    {options.map((item, index) => (
+                        <li key={index}>
+                            <span className='text-primary'>{item}</span>
+                            <button
+                                type='button'
+                                className='ms-1 btn btn-sm'
+                                onClick={() => removeOption(item)}>
+                                <i className='bi bi-x' />
+                            </button>
+                        </li>
+                    ))}
+                </ol>
+            )}
+        </>
     );
 }
