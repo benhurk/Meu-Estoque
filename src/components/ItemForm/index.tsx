@@ -89,11 +89,7 @@ export default function ItemForm() {
             </FormGroup>
 
             {fields.qtdType === 'options' && (
-                <FormGroup
-                    elementId='item-options'
-                    labelText='Adicionar opções:'>
-                    <OptionsForm options={options} setOptions={setOptions} />
-                </FormGroup>
+                <OptionsForm options={options} setOptions={setOptions} />
             )}
 
             <FormGroup elementId='item-quantity' labelText='Quantidade:'>
