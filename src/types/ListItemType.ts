@@ -1,9 +1,9 @@
-export type Quantity = 'number' | 'options';
+export type QuantityType = 'number' | 'options';
 
 type ListItemType = {
     id: number;
     name: string;
-    qtdType: Quantity;
+    qtdType: QuantityType;
     quantity: number;
     options: string[];
     alertQuantity: number;
