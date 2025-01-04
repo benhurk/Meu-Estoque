@@ -1,11 +1,12 @@
 import { ChangeEvent } from 'react';
 
-import { Quantity } from '../../types/ListItem';
+import { QuantityType } from '../../types/ListItemType';
 import removeZeroBeforeNumber from '../../utils/removeZero';
 
 type Props = {
     size?: 'sm' | 'md';
-    type: Quantity;
+    elementId?: string;
+    type: QuantityType;
     value: number;
     options: string[];
     change: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
@@ -13,6 +14,7 @@ type Props = {
 
 export default function QuantityInput({
     size = 'sm',
+    elementId,
     type,
     value,
     options,
@@ -23,6 +25,7 @@ export default function QuantityInput({
             <>
                 <input
                     className={`form-control form-control-${size} d-inline-block me-1`}
+                    id={elementId}
                     style={{ width: '5rem' }}
                     type='number'
                     min={0}
@@ -39,6 +42,7 @@ export default function QuantityInput({
         return (
             <select
                 className={`form-select form-select-${size}`}
+                id={elementId}
                 style={{ width: 'fit-content', minWidth: '50%' }}
                 value={value}
                 onChange={change}>
