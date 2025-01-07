@@ -5,6 +5,12 @@ import {
     useEffect,
     useState,
 } from 'react';
+import OptionsList from '../OptionsList';
+
+const getSavedOptions = JSON.parse(
+    localStorage.getItem('saved-options') ||
+        JSON.stringify([['Acabou', 'Pouco', 'Suficiente', 'Bastante']])
+);
 
 type Props = {
     options: string[];
@@ -13,15 +19,18 @@ type Props = {
 
 export default function OptionsForm({ options, setOptions }: Props) {
     const [mode, setMode] = useState<'add' | 'select'>('select');
-    const [savedOptions, setSavedOptions] = useState<string[][]>([
-        ['Acabou', 'Pouco', 'Suficiente', 'Bastante'],
-    ]);
+    const [savedOptions, setSavedOptions] =
+        useState<string[][]>(getSavedOptions);
     const [newOption, setNewOption] = useState<string>('');
     const [error, setError] = useState<string>('');
 
     useEffect(() => {
         setOptions([]);
     }, [mode, setOptions]);
+
+    useEffect(() => {
+        localStorage.setItem('saved-options', JSON.stringify(savedOptions));
+    }, [savedOptions]);
 
     const submitOption = (e: FormEvent<HTMLButtonElement>, value: string) => {
         e.preventDefault();
@@ -36,16 +45,6 @@ export default function OptionsForm({ options, setOptions }: Props) {
         }
 
         setNewOption('');
-    };
-
-    const removeOption = (toRemove: string) => {
-        setOptions((prev) => prev.filter((items) => items != toRemove));
-    };
-
-    const saveOptions = (options: string[]) => {
-        if (!savedOptions.some((saved) => saved === options)) {
-            setSavedOptions((prev) => [...prev, options]);
-        }
     };
 
     return (
@@ -75,7 +74,6 @@ export default function OptionsForm({ options, setOptions }: Props) {
                         value='add'
                         onChange={() => {
                             setMode('add');
-                            setOptions([]);
                         }}
                     />
                     <label htmlFor='radio-add' className='form-check-label'>
@@ -103,29 +101,12 @@ export default function OptionsForm({ options, setOptions }: Props) {
                         </button>
                     </div>
                     {options.length > 0 && (
-                        <>
-                            <ol className='mb-1'>
-                                {options.map((item, index) => (
-                                    <li key={index}>
-                                        <span className='text-primary'>
-                                            {item}
-                                        </span>
-                                        <button
-                                            type='button'
-                                            className='ms-1 btn btn-sm'
-                                            onClick={() => removeOption(item)}>
-                                            <i className='bi bi-x' />
-                                        </button>
-                                    </li>
-                                ))}
-                            </ol>
-                            <button
-                                type='button'
-                                className='btn btn-sm btn-primary'
-                                onClick={() => saveOptions(options)}>
-                                Salvar opções
-                            </button>
-                        </>
+                        <OptionsList
+                            options={options}
+                            setOptions={setOptions}
+                            savedOptions={savedOptions}
+                            setSavedOptions={setSavedOptions}
+                        />
                     )}
                 </>
             ) : (
