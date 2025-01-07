@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import abstractSwitch from '../../utils/abstractSwitch';
 
 type Props = {
     sendMode: 'all' | 'warn';
@@ -14,37 +13,26 @@ export default function SendButton({ sendMode }: Props) {
 
     const url = (message: string) => `whatsapp://send?phone=&text=${message}`;
 
-    const sendAll = () => {
+    const send = (sendMode: 'all' | 'warn') => {
         let message = '';
+        const items = sendMode === 'all' ? listItems : warnedItems;
 
-        listItems.forEach((item) => {
-            const abstractQuantity = abstractSwitch(item);
+        items.forEach((item) => {
+            const optionsQuantity = item.options[item.quantity];
 
-            const itemMessage = `*• ${
+            const allItemsLine = `*• ${
                 item.quantity <= item.alertQuantity ? '⚠' : '✅'
             } ${item.name}:* ${
-                item.qtdType === 'unity' ? item.quantity : abstractQuantity
-            } ${item.qtdType === 'unity' ? 'un.' : ''}%0a`;
+                item.qtdType === 'number' ? item.quantity : optionsQuantity
+            } ${item.qtdType === 'number' ? 'un.' : ''}%0a`;
 
-            message += itemMessage;
-        });
-
-        window.open(url(message));
-    };
-
-    const sendImportant = () => {
-        let message = '⚠   *Precisa de:*   ⚠%0a%0a';
-
-        warnedItems.forEach((item) => {
-            const abstractQuantity = abstractSwitch(item);
-
-            const itemMessage = `*• ${item.name}* (${
-                item.qtdType === 'unity'
+            const warnedItemsLine = `*• ${item.name}* (${
+                item.qtdType === 'number'
                     ? item.quantity + ' un.'
-                    : abstractQuantity
+                    : optionsQuantity
             })%0a`;
 
-            message += itemMessage;
+            message += sendMode === 'all' ? allItemsLine : warnedItemsLine;
         });
 
         window.open(url(message));
@@ -57,7 +45,7 @@ export default function SendButton({ sendMode }: Props) {
                 className='btn btn-dark'
                 disabled={listItems.length > 0 ? false : true}
                 data-dismiss='modal'
-                onClick={() => sendAll()}>
+                onClick={() => send(sendMode)}>
                 <i className='bi bi-send-fill' />
                 &nbsp;Enviar tudo
             </button>
@@ -71,7 +59,7 @@ export default function SendButton({ sendMode }: Props) {
                 className='btn btn-danger'
                 disabled={warnedItems.length > 0 ? false : true}
                 data-dismiss='modal'
-                onClick={() => sendImportant()}>
+                onClick={() => send(sendMode)}>
                 <i className='bi bi-send-exclamation-fill' />
                 &nbsp;Enviar importantes
             </button>
