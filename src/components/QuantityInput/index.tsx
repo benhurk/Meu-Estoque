@@ -43,8 +43,12 @@ export default function QuantityInput({
             <select
                 className={`form-select form-select-${size}`}
                 id={elementId}
-                style={{ width: 'fit-content', minWidth: '50%' }}
-                value={value}
+                style={{
+                    width: 'fit-content',
+                    minWidth: '50%',
+                    maxWidth: '100%',
+                }}
+                value={options.length > 0 ? value : '-1'}
                 onChange={change}>
                 {options.length > 0 ? (
                     options.map((option, index) => (
@@ -53,7 +57,7 @@ export default function QuantityInput({
                         </option>
                     ))
                 ) : (
-                    <option value='' disabled>
+                    <option value='-1' disabled>
                         Você ainda não adicionou nenhuma opção
                     </option>
                 )}
