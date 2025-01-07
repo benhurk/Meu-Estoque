@@ -7,10 +7,11 @@ import {
 } from 'react';
 import OptionsList from '../OptionsList';
 
-const getSavedOptions = JSON.parse(
-    localStorage.getItem('saved-options') ||
-        JSON.stringify([['Acabou', 'Pouco', 'Suficiente', 'Bastante']])
-);
+const getSavedOptions = () =>
+    JSON.parse(
+        localStorage.getItem('saved-options') ||
+            JSON.stringify([['Acabou', 'Pouco', 'Suficiente', 'Bastante']])
+    );
 
 type Props = {
     options: string[];
@@ -19,14 +20,11 @@ type Props = {
 
 export default function OptionsForm({ options, setOptions }: Props) {
     const [mode, setMode] = useState<'add' | 'select'>('select');
-    const [savedOptions, setSavedOptions] =
-        useState<string[][]>(getSavedOptions);
+    const [savedOptions, setSavedOptions] = useState<string[][]>(
+        getSavedOptions()
+    );
     const [newOption, setNewOption] = useState<string>('');
     const [error, setError] = useState<string>('');
-
-    useEffect(() => {
-        setOptions([]);
-    }, [mode, setOptions]);
 
     useEffect(() => {
         localStorage.setItem('saved-options', JSON.stringify(savedOptions));
