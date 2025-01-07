@@ -13,11 +13,20 @@ import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
 
+const getSavedOptions = () =>
+    JSON.parse(
+        localStorage.getItem('saved-options') ||
+            JSON.stringify([['Acabou', 'Pouco', 'Suficiente', 'Bastante']])
+    );
+
 export default function ItemForm() {
     const dispatch = useDispatch();
 
     const [fields, setFields] = useState(itemFormInitialState);
     const [options, setOptions] = useState<string[]>([]);
+    const [savedOptions, setSavedOptions] = useState<string[][]>(
+        getSavedOptions()
+    );
 
     const listItems = useSelector((state: RootState) => state.list.items);
     const { formMode, targetItem } = useSelector(
@@ -40,7 +49,11 @@ export default function ItemForm() {
         if (formMode === 'add') {
             setFields(itemFormInitialState);
         }
-    }, [formMode, listItems, targetItem]);
+    }, [formMode, targetItem]);
+
+    useEffect(() => {
+        localStorage.setItem('saved-options', JSON.stringify(savedOptions));
+    }, [savedOptions]);
 
     const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
         e.preventDefault();
@@ -54,6 +67,10 @@ export default function ItemForm() {
             alertQuantity: fields.alertQuantity,
             description: fields.description,
         };
+
+        if (!savedOptions.some((saved) => saved === options)) {
+            setSavedOptions((prev) => [...prev, options]);
+        }
 
         dispatch(mode === 'add' ? addItem(item) : editItem(item));
     };
@@ -89,7 +106,11 @@ export default function ItemForm() {
             </FormGroup>
 
             {fields.qtdType === 'options' && (
-                <OptionsForm options={options} setOptions={setOptions} />
+                <OptionsForm
+                    options={options}
+                    setOptions={setOptions}
+                    savedOptions={savedOptions}
+                />
             )}
 
             <FormGroup elementId='item-quantity' labelText='Quantidade:'>

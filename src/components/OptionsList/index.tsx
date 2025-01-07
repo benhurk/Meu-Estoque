@@ -3,24 +3,11 @@ import { Dispatch, SetStateAction } from 'react';
 type Props = {
     options: string[];
     setOptions: Dispatch<SetStateAction<string[]>>;
-    savedOptions: string[][];
-    setSavedOptions: Dispatch<SetStateAction<string[][]>>;
 };
 
-export default function OptionsList({
-    options,
-    setOptions,
-    savedOptions,
-    setSavedOptions,
-}: Props) {
+export default function OptionsList({ options, setOptions }: Props) {
     const removeOption = (toRemove: string) => {
         setOptions((prev) => prev.filter((items) => items != toRemove));
-    };
-
-    const saveOptions = (options: string[]) => {
-        if (!savedOptions.some((saved) => saved === options)) {
-            setSavedOptions((prev) => [...prev, options]);
-        }
     };
 
     return (
@@ -31,19 +18,13 @@ export default function OptionsList({
                         <span className='text-primary'>{item}</span>
                         <button
                             type='button'
-                            className='ms-1 btn btn-sm'
+                            className='btn btn-sm text-danger'
                             onClick={() => removeOption(item)}>
                             <i className='bi bi-x' />
                         </button>
                     </li>
                 ))}
             </ol>
-            <button
-                type='button'
-                className='btn btn-sm btn-primary'
-                onClick={() => saveOptions(options)}>
-                Salvar opções
-            </button>
         </>
     );
 }
