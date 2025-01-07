@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../store';
-import ListItemType from '../../types/ListItem';
+import ListItemType from '../../types/ListItemType';
 import { pushItem } from '../../store/reducers/list';
 
 export default function LoadBtn() {
@@ -19,6 +19,7 @@ export default function LoadBtn() {
                     id: listItems.length + loadedItem.id,
                     name: loadedItem.name,
                     qtdType: loadedItem.qtdType,
+                    options: loadedItem.options,
                     quantity: loadedItem.quantity,
                     alertQuantity: loadedItem.alertQuantity,
                     description: loadedItem.description,
