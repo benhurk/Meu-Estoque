@@ -1,34 +1,21 @@
-import {
-    Dispatch,
-    FormEvent,
-    SetStateAction,
-    useEffect,
-    useState,
-} from 'react';
-import OptionsList from '../OptionsList';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 
-const getSavedOptions = () =>
-    JSON.parse(
-        localStorage.getItem('saved-options') ||
-            JSON.stringify([['Acabou', 'Pouco', 'Suficiente', 'Bastante']])
-    );
+import OptionsList from '../OptionsList';
 
 type Props = {
     options: string[];
     setOptions: Dispatch<SetStateAction<string[]>>;
+    savedOptions: string[][];
 };
 
-export default function OptionsForm({ options, setOptions }: Props) {
+export default function OptionsForm({
+    options,
+    setOptions,
+    savedOptions,
+}: Props) {
     const [mode, setMode] = useState<'add' | 'select'>('select');
-    const [savedOptions, setSavedOptions] = useState<string[][]>(
-        getSavedOptions()
-    );
     const [newOption, setNewOption] = useState<string>('');
     const [error, setError] = useState<string>('');
-
-    useEffect(() => {
-        localStorage.setItem('saved-options', JSON.stringify(savedOptions));
-    }, [savedOptions]);
 
     const submitOption = (e: FormEvent<HTMLButtonElement>, value: string) => {
         e.preventDefault();
@@ -56,7 +43,10 @@ export default function OptionsForm({ options, setOptions }: Props) {
                         name='mode'
                         checked={mode === 'select'}
                         value='select'
-                        onChange={() => setMode('select')}
+                        onChange={() => {
+                            setMode('select');
+                            setOptions(savedOptions[0]);
+                        }}
                     />
                     <label htmlFor='radio-select' className='form-check-label'>
                         Selecionar
@@ -72,6 +62,7 @@ export default function OptionsForm({ options, setOptions }: Props) {
                         value='add'
                         onChange={() => {
                             setMode('add');
+                            setOptions([]);
                         }}
                     />
                     <label htmlFor='radio-add' className='form-check-label'>
@@ -102,28 +93,32 @@ export default function OptionsForm({ options, setOptions }: Props) {
                         <OptionsList
                             options={options}
                             setOptions={setOptions}
-                            savedOptions={savedOptions}
-                            setSavedOptions={setSavedOptions}
                         />
                     )}
                 </>
             ) : (
                 <select
                     className='form-select'
-                    defaultValue=''
+                    defaultValue={
+                        options.length === 0
+                            ? '-1'
+                            : savedOptions.findIndex((item) => item === options)
+                    }
                     onChange={(e) =>
                         setOptions(savedOptions[Number(e.target.value)])
                     }>
-                    <option value='' disabled hidden>
+                    <option value='-1' disabled hidden>
                         Selecione as opções
                     </option>
+
                     {savedOptions.map((option, index) => (
                         <option key={index} value={index}>
                             {option.join(' / ')}
                         </option>
                     ))}
+
                     {savedOptions.length < 2 && (
-                        <option value='' disabled>
+                        <option value='-2' disabled>
                             Crie suas próprias opções no menu 'Criar'
                         </option>
                     )}
