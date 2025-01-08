@@ -48,6 +48,7 @@ export default function ItemForm() {
 
         if (formMode === 'add') {
             setFields(itemFormInitialState);
+            setOptions([]);
         }
     }, [formMode, targetItem]);
 
