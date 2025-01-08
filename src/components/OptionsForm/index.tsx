@@ -1,6 +1,7 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
-import OptionsList from '../OptionsList';
+import FormGroup from '../FormGroup';
+import AddOptionInput from '../AddOptionInput';
 
 type Props = {
     options: string[];
@@ -14,27 +15,10 @@ export default function OptionsForm({
     savedOptions,
 }: Props) {
     const [mode, setMode] = useState<'add' | 'select'>('select');
-    const [newOption, setNewOption] = useState<string>('');
-    const [error, setError] = useState<string>('');
-
-    const submitOption = (e: FormEvent<HTMLButtonElement>, value: string) => {
-        e.preventDefault();
-
-        if (!options.some((item) => item === value) && value != '') {
-            setOptions((prev) => [...prev, value]);
-            if (error) setError('');
-        } else if (value === '') {
-            setError('Dê um nome para a opção');
-        } else {
-            setError('Essa opção já existe');
-        }
-
-        setNewOption('');
-    };
 
     return (
-        <div className='mb-3'>
-            <div className='form-group mb-1'>
+        <FormGroup elementId='item-options' labelText='Opções:'>
+            <div className='mb-1'>
                 <div className='form-check form-check-inline'>
                     <input
                         type='radio'
@@ -45,7 +29,6 @@ export default function OptionsForm({
                         value='select'
                         onChange={() => {
                             setMode('select');
-                            setOptions(savedOptions[0]);
                         }}
                     />
                     <label htmlFor='radio-select' className='form-check-label'>
@@ -62,7 +45,6 @@ export default function OptionsForm({
                         value='add'
                         onChange={() => {
                             setMode('add');
-                            setOptions([]);
                         }}
                     />
                     <label htmlFor='radio-add' className='form-check-label'>
@@ -72,37 +54,15 @@ export default function OptionsForm({
             </div>
 
             {mode === 'add' ? (
-                <>
-                    <div className='mb-1 input-group'>
-                        <input
-                            id='item-options'
-                            className='form-control'
-                            type='text'
-                            placeholder={error ? error : 'Nova opção'}
-                            value={newOption}
-                            onChange={(e) => setNewOption(e.target.value)}
-                        />
-                        <button
-                            type='submit'
-                            className='btn btn-dark'
-                            onClick={(e) => submitOption(e, newOption)}>
-                            <i className='bi bi-plus' />
-                        </button>
-                    </div>
-                    {options.length > 0 && (
-                        <OptionsList
-                            options={options}
-                            setOptions={setOptions}
-                        />
-                    )}
-                </>
+                <AddOptionInput options={options} setOptions={setOptions} />
             ) : (
                 <select
                     className='form-select'
-                    defaultValue={
-                        options.length === 0
-                            ? '-1'
-                            : savedOptions.findIndex((item) => item === options)
+                    id='item-options'
+                    value={
+                        options
+                            ? savedOptions.findIndex((item) => item === options)
+                            : '-1'
                     }
                     onChange={(e) =>
                         setOptions(savedOptions[Number(e.target.value)])
@@ -124,6 +84,6 @@ export default function OptionsForm({
                     )}
                 </select>
             )}
-        </div>
+        </FormGroup>
     );
 }
