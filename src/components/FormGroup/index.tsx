@@ -9,7 +9,7 @@ type Props = {
 export default function FormGroup({ elementId, labelText, children }: Props) {
     return (
         <div className='form-group mb-3'>
-            <label htmlFor={elementId} className='mb-1 text-sm d-block'>
+            <label htmlFor={elementId} className='mb-1 d-block'>
                 {labelText}
             </label>
             {children}
