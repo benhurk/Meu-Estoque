@@ -44,7 +44,8 @@ export default function QuantityInput({
                 className={`form-select form-select-${size}`}
                 id={elementId}
                 value={value}
-                onChange={change}>
+                onChange={change}
+                style={{ width: '12rem', maxWidth: '100%' }}>
                 {options.length > 0 ? (
                     options.map((option, index) => (
                         <option key={option} value={index}>
