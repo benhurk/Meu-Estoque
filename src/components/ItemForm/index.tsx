@@ -74,6 +74,9 @@ export default function ItemForm() {
         }
 
         dispatch(mode === 'add' ? addItem(item) : editItem(item));
+
+        setFields(itemFormInitialState);
+        setOptions([]);
     };
 
     return (
