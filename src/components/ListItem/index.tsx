@@ -64,7 +64,7 @@ export default function ListItem({
                             {name}
                         </span>
                         {warn && (
-                            <i className='bi bi-exclamation-diamond-fill text-danger ms-1'></i>
+                            <i className='bi bi-exclamation-diamond-fill text-danger ms-2'></i>
                         )}
                     </div>
                     <div>
