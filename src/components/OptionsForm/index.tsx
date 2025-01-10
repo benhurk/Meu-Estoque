@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import FormGroup from '../FormGroup';
 import AddOptionInput from '../AddOptionInput';
+import Select from '../Select';
 
 type Props = {
     options: string[];
@@ -56,33 +57,13 @@ export default function OptionsForm({
             {mode === 'add' ? (
                 <AddOptionInput options={options} setOptions={setOptions} />
             ) : (
-                <select
-                    className='form-select'
-                    id='item-options'
-                    value={
-                        options
-                            ? savedOptions.findIndex((item) => item === options)
-                            : '-1'
-                    }
-                    onChange={(e) =>
-                        setOptions(savedOptions[Number(e.target.value)])
-                    }>
-                    <option value='-1' disabled hidden>
-                        Selecione as opções
-                    </option>
-
-                    {savedOptions.map((option, index) => (
-                        <option key={index} value={index}>
-                            {option.join(' / ')}
-                        </option>
-                    ))}
-
-                    {savedOptions.length < 2 && (
-                        <option value='-2' disabled>
-                            Crie suas próprias opções no menu 'Criar'
-                        </option>
-                    )}
-                </select>
+                <Select
+                    elementId='item-options'
+                    options={savedOptions}
+                    change={setOptions}
+                    value={options}
+                    placeholderOption='Teste'
+                />
             )}
         </FormGroup>
     );
