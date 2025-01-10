@@ -28,9 +28,7 @@ export default function OptionsForm({
                         name='mode'
                         checked={mode === 'select'}
                         value='select'
-                        onChange={() => {
-                            setMode('select');
-                        }}
+                        onChange={() => setMode('select')}
                     />
                     <label htmlFor='radio-select' className='form-check-label'>
                         Selecionar
@@ -46,6 +44,7 @@ export default function OptionsForm({
                         value='add'
                         onChange={() => {
                             setMode('add');
+                            setOptions([]);
                         }}
                     />
                     <label htmlFor='radio-add' className='form-check-label'>
