@@ -1,3 +1,7 @@
+.item span {
+    pointer-events: none;
+}
+
 .item:hover {
     background-color: var(--bs-secondary-bg-subtle);
 }
