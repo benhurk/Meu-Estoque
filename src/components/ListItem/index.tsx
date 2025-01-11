@@ -7,6 +7,9 @@ import { setFormMode, setTargetItem } from '../../store/reducers/form';
 
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
+import Select from '../Select';
+import mapOptions from '../../utils/mapOptions';
+import { useMemo } from 'react';
 
 export default function ListItem({
     id,
@@ -19,34 +22,20 @@ export default function ListItem({
 }: ListItemType) {
     const dispatch = useDispatch();
 
-    const changeValue = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
-        const itemObj: ListItemType = {
+    const object: ListItemType = useMemo(() => {
+        return {
             id,
             name,
             qtdType,
-            quantity: Number(e.target.value),
+            quantity,
             options,
             alertQuantity,
             description,
         };
-
-        dispatch(editItem(itemObj));
-    };
+    }, [alertQuantity, description, id, name, options, qtdType, quantity]);
 
     const setEditForm = () => {
-        dispatch(
-            setTargetItem({
-                id,
-                name,
-                qtdType,
-                quantity,
-                options,
-                alertQuantity,
-                description,
-            })
-        );
+        dispatch(setTargetItem(object));
         dispatch(setFormMode('edit'));
     };
 
@@ -68,12 +57,37 @@ export default function ListItem({
                         )}
                     </div>
                     <div>
-                        <QuantityInput
-                            value={quantity}
-                            type={qtdType}
-                            options={options}
-                            change={changeValue}
-                        />
+                        {qtdType === 'number' ? (
+                            <QuantityInput
+                                elementId='quantity'
+                                value={quantity}
+                                change={(e) =>
+                                    dispatch(
+                                        editItem({
+                                            ...object,
+                                            quantity: Number(e.target.value),
+                                        })
+                                    )
+                                }
+                            />
+                        ) : (
+                            <Select
+                                elementId='quantity'
+                                options={mapOptions(options, 'number')}
+                                change={(e) =>
+                                    dispatch(
+                                        editItem({
+                                            ...object,
+                                            quantity: Number(
+                                                (e.target as HTMLElement)
+                                                    .dataset.value
+                                            ),
+                                        })
+                                    )
+                                }
+                                value={options[quantity]}
+                            />
+                        )}
                     </div>
                 </div>
                 {description && (

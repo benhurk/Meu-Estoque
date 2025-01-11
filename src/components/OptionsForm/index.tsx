@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import FormGroup from '../FormGroup';
 import AddOptionInput from '../AddOptionInput';
 import Select from '../Select';
+import mapOptions from '../../utils/mapOptions';
 
 type Props = {
     options: string[];
@@ -58,9 +59,13 @@ export default function OptionsForm({
             ) : (
                 <Select
                     elementId='item-options'
-                    options={savedOptions}
-                    change={setOptions}
-                    value={options}
+                    options={mapOptions(savedOptions)}
+                    change={(e) =>
+                        setOptions(
+                            (e.target as HTMLElement).dataset.value!.split(',')
+                        )
+                    }
+                    value={options.length > 0 ? options : 'Selecione uma opção'}
                     placeholderOption='Teste'
                 />
             )}

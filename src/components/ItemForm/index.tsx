@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { addItem, editItem } from '../../store/reducers/list';
 
+import mapOptions from '../../utils/mapOptions';
 import itemFormInitialState from '../../const/itemFormState';
 
 import { FormMode } from '../../types/FormTypes';
@@ -12,6 +13,7 @@ import ListItemType, { QuantityType } from '../../types/ListItemType';
 import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
+import Select from '../Select';
 
 const getSavedOptions = () =>
     JSON.parse(
@@ -69,7 +71,11 @@ export default function ItemForm() {
             description: fields.description,
         };
 
-        if (!savedOptions.some((saved) => saved === options)) {
+        if (
+            !savedOptions.some((saved) =>
+                saved.every((item, index) => item === options[index])
+            )
+        ) {
             setSavedOptions((prev) => [...prev, options]);
         }
 
@@ -94,19 +100,21 @@ export default function ItemForm() {
                 />
             </FormGroup>
             <FormGroup elementId='item-type' labelText='Contar por:'>
-                <select
-                    value={fields.qtdType}
-                    onChange={(e) =>
+                <Select
+                    options={[
+                        { label: 'Número', value: 'number' },
+                        { label: 'Opções', value: 'options' },
+                    ]}
+                    elementId={'item-type'}
+                    change={(e) =>
                         setFields({
                             ...fields,
-                            qtdType: e.target.value as QuantityType,
+                            qtdType: (e.target as HTMLElement).dataset
+                                .value as QuantityType,
                         })
                     }
-                    id='item-type'
-                    className='form-select'>
-                    <option value='number'>Número</option>
-                    <option value='options'>Opções</option>
-                </select>
+                    value={fields.qtdType === 'number' ? 'Número' : 'Opções'}
+                />
             </FormGroup>
 
             {fields.qtdType === 'options' && (
@@ -118,34 +126,64 @@ export default function ItemForm() {
             )}
 
             <FormGroup elementId='item-quantity' labelText='Quantidade:'>
-                <QuantityInput
-                    size='md'
-                    elementId='item-quantity'
-                    type={fields.qtdType}
-                    value={fields.quantity}
-                    options={options}
-                    change={(e) =>
-                        setFields({
-                            ...fields,
-                            quantity: Number(e.target.value),
-                        })
-                    }
-                />
+                {fields.qtdType === 'number' ? (
+                    <QuantityInput
+                        size='md'
+                        elementId='item-quantity'
+                        value={fields.quantity}
+                        change={(e) =>
+                            setFields({
+                                ...fields,
+                                quantity: Number(e.target.value),
+                            })
+                        }
+                    />
+                ) : (
+                    <Select
+                        elementId='item-quantity'
+                        options={mapOptions(options, 'number')}
+                        change={(e) =>
+                            setFields({
+                                ...fields,
+                                quantity: Number(
+                                    (e.target as HTMLElement).dataset.value
+                                ),
+                            })
+                        }
+                        value={options[fields.quantity] || '-'}
+                        placeholderOption='Nenhuma opção encontrada'
+                    />
+                )}
             </FormGroup>
             <FormGroup elementId='item-alert' labelText='Alertar em:'>
-                <QuantityInput
-                    size='md'
-                    elementId='item-alert'
-                    type={fields.qtdType}
-                    value={fields.alertQuantity}
-                    options={options}
-                    change={(e) =>
-                        setFields({
-                            ...fields,
-                            alertQuantity: Number(e.target.value),
-                        })
-                    }
-                />
+                {fields.qtdType === 'number' ? (
+                    <QuantityInput
+                        size='md'
+                        elementId='item-alert'
+                        value={fields.alertQuantity}
+                        change={(e) =>
+                            setFields({
+                                ...fields,
+                                alertQuantity: Number(e.target.value),
+                            })
+                        }
+                    />
+                ) : (
+                    <Select
+                        elementId='item-alert'
+                        options={mapOptions(options, 'number')}
+                        change={(e) =>
+                            setFields({
+                                ...fields,
+                                alertQuantity: Number(
+                                    (e.target as HTMLElement).dataset.value
+                                ),
+                            })
+                        }
+                        value={options[fields.alertQuantity] || '-'}
+                        placeholderOption='Nenhuma opção encontrada'
+                    />
+                )}
             </FormGroup>
             <FormGroup elementId='item-description' labelText='Descrição:'>
                 <textarea
