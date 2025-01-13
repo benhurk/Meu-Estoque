@@ -14,6 +14,7 @@ import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
+import optionsIsSaved from '../../utils/optionsIsSaved';
 
 const getSavedOptions = () =>
     JSON.parse(
@@ -73,9 +74,7 @@ export default function ItemForm() {
 
         if (
             fields.qtdType === 'options' &&
-            !savedOptions.some((saved) =>
-                saved.every((item, index) => item === options[index])
-            )
+            !optionsIsSaved(options, savedOptions)
         ) {
             setSavedOptions((prev) => [...prev, options]);
         }
@@ -123,6 +122,7 @@ export default function ItemForm() {
                     options={options}
                     setOptions={setOptions}
                     savedOptions={savedOptions}
+                    setSavedOptions={setSavedOptions}
                 />
             )}
 
