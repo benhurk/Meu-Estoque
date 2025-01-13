@@ -4,19 +4,41 @@ import FormGroup from '../FormGroup';
 import AddOptionInput from '../AddOptionInput';
 import Select from '../Select';
 import mapOptions from '../../utils/mapOptions';
+import optionsIsSaved from '../../utils/optionsIsSaved';
 
 type Props = {
     options: string[];
     setOptions: Dispatch<SetStateAction<string[]>>;
     savedOptions: string[][];
+    setSavedOptions: Dispatch<SetStateAction<string[][]>>;
 };
 
 export default function OptionsForm({
     options,
     setOptions,
     savedOptions,
+    setSavedOptions,
 }: Props) {
     const [mode, setMode] = useState<'add' | 'select'>('select');
+
+    const removeSavedOptions = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (optionsIsSaved(options, savedOptions)) {
+            setOptions([]);
+        }
+
+        setSavedOptions(
+            savedOptions.filter(
+                (options) =>
+                    !options.every(
+                        (item, index) =>
+                            item ===
+                            (
+                                e.target as HTMLButtonElement
+                            ).dataset.option!.split(',')[index]
+                    )
+            )
+        );
+    };
 
     return (
         <FormGroup elementId='item-options' labelText='Opções:'>
@@ -66,7 +88,9 @@ export default function OptionsForm({
                         )
                     }
                     value={options.length > 0 ? options : 'Selecione uma opção'}
-                    placeholderOption='Teste'
+                    removableOptions
+                    removeFn={removeSavedOptions}
+                    placeholderOption='Você não tem opções salvas'
                 />
             )}
         </FormGroup>
