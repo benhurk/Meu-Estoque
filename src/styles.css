@@ -3,6 +3,10 @@
     margin: auto;
 }
 
+i.bi {
+    pointer-events: none;
+}
+
 ol {
     padding-left: 1rem;
     margin: 0;
