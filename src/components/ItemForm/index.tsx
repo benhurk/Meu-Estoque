@@ -72,6 +72,7 @@ export default function ItemForm() {
         };
 
         if (
+            fields.qtdType === 'options' &&
             !savedOptions.some((saved) =>
                 saved.every((item, index) => item === options[index])
             )
