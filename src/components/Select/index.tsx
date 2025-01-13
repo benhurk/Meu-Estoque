@@ -9,6 +9,8 @@ type Props = {
     change: (e: React.MouseEvent<HTMLElement>) => void;
     value: string | string[];
     placeholderOption?: string;
+    removableOptions?: boolean;
+    removeFn?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 export default function Select({
@@ -17,6 +19,8 @@ export default function Select({
     change,
     value,
     placeholderOption,
+    removableOptions = false,
+    removeFn,
 }: Props) {
     const [open, setOpen] = useState<boolean>(false);
 
@@ -28,13 +32,25 @@ export default function Select({
         }
     };
 
+    const toggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (!(e.target as HTMLElement).classList.contains('btn-remove-item')) {
+            setOpen(!open);
+        }
+    };
+
+    const handleBlur = (e: React.FocusEvent<HTMLDivElement, Element>) => {
+        if (!e.relatedTarget?.classList.contains('btn-remove-item')) {
+            setOpen(false);
+        }
+    };
+
     return (
         <div
             className='position-relative form-select'
             id={elementId}
             tabIndex={0}
-            onClick={() => setOpen(!open)}
-            onBlur={() => setOpen(false)}>
+            onClick={toggle}
+            onBlur={handleBlur}>
             <div className='overflow-hidden'>
                 <span className='user-select-none text-nowrap'>
                     {value.length > 0 ? formatedOption(value) : ''}
@@ -47,12 +63,24 @@ export default function Select({
                         options.map((option, index) => (
                             <div
                                 key={index}
-                                className={`p-1 overflow-hidden ${styles.item}`}
-                                data-value={option.value}
-                                onClick={change}>
-                                <span className='text-nowrap'>
-                                    {formatedOption(option.label)}
-                                </span>
+                                className={`d-flex justify-content-between align-items-center p-1 overflow-hidden ${styles.item}`}>
+                                <div
+                                    className='w-100'
+                                    data-value={option.value}
+                                    onClick={change}>
+                                    <span className='text-nowrap'>
+                                        {formatedOption(option.label)}
+                                    </span>
+                                </div>
+                                {removableOptions && removeFn && (
+                                    <button
+                                        type='button'
+                                        onClick={removeFn}
+                                        data-option={option.label}
+                                        className='btn-remove-item'>
+                                        <i className='bi bi-x' />
+                                    </button>
+                                )}
                             </div>
                         ))
                     ) : (
