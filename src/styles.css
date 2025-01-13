@@ -8,6 +8,21 @@ i.bi {
 }
 
 ol {
-    padding-left: 1rem;
+    padding-left: 0;
     margin: 0;
+}
+
+.btn-remove-item {
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    padding-inline: 3px;
+    padding-block: 0;
+    color: var(--bs-danger);
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-remove-item:hover {
+    background-color: var(--bs-light);
 }

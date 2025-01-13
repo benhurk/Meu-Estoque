@@ -26,7 +26,7 @@ export default function AddOptionInput({ options, setOptions }: Props) {
 
     return (
         <>
-            <div className='mb-1 input-group'>
+            <div className='mb-2 input-group'>
                 <input
                     id='item-options'
                     className='form-control'

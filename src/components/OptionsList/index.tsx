@@ -12,13 +12,18 @@ export default function OptionsList({ options, setOptions }: Props) {
 
     return (
         <>
-            <ol className='mb-1'>
+            <ol className='list-group'>
                 {options.map((item, index) => (
-                    <li key={index}>
-                        <span className='text-primary'>{item}</span>
+                    <li
+                        key={index}
+                        className='list-group-item p-1 d-flex align-items-center justify-content-between'>
+                        <div>
+                            <span>{`${index + 1}. `}</span>
+                            <span className='text-primary'>{item}</span>
+                        </div>
                         <button
                             type='button'
-                            className='btn btn-sm text-danger'
+                            className='btn-remove-item'
                             onClick={() => removeOption(item)}>
                             <i className='bi bi-x' />
                         </button>
