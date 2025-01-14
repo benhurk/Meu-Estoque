@@ -5,6 +5,7 @@ import { RootState } from '../../store';
 import { addItem, editItem } from '../../store/reducers/list';
 
 import mapOptions from '../../utils/mapOptions';
+import optionsIsSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
 
 import { FormMode } from '../../types/FormTypes';
@@ -14,7 +15,6 @@ import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
-import optionsIsSaved from '../../utils/optionsIsSaved';
 
 const getSavedOptions = () =>
     JSON.parse(
@@ -22,18 +22,21 @@ const getSavedOptions = () =>
             JSON.stringify([['Acabou', 'Pouco', 'Suficiente', 'Bastante']])
     );
 
-export default function ItemForm() {
+type Props = {
+    setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function ItemForm({ setItemFormOpen }: Props) {
     const dispatch = useDispatch();
+    const listItems = useSelector((state: RootState) => state.list.items);
+    const { formMode, targetItem } = useSelector(
+        (state: RootState) => state.form
+    );
 
     const [fields, setFields] = useState(itemFormInitialState);
     const [options, setOptions] = useState<string[]>([]);
     const [savedOptions, setSavedOptions] = useState<string[][]>(
         getSavedOptions()
-    );
-
-    const listItems = useSelector((state: RootState) => state.list.items);
-    const { formMode, targetItem } = useSelector(
-        (state: RootState) => state.form
     );
 
     useEffect(() => {
@@ -64,12 +67,8 @@ export default function ItemForm() {
 
         const item: ListItemType = {
             id: mode === 'add' ? listItems.length : targetItem.id,
-            name: fields.name,
-            qtdType: fields.qtdType,
-            quantity: fields.quantity,
             options: options,
-            alertQuantity: fields.alertQuantity,
-            description: fields.description,
+            ...fields,
         };
 
         if (
@@ -80,6 +79,7 @@ export default function ItemForm() {
         }
 
         dispatch(mode === 'add' ? addItem(item) : editItem(item));
+        setItemFormOpen(false);
 
         setFields(itemFormInitialState);
         setOptions([]);
@@ -109,7 +109,7 @@ export default function ItemForm() {
                     change={(e) =>
                         setFields({
                             ...fields,
-                            qtdType: (e.target as HTMLElement).dataset
+                            qtdType: e.currentTarget.dataset
                                 .value as QuantityType,
                         })
                     }
@@ -146,9 +146,7 @@ export default function ItemForm() {
                         change={(e) =>
                             setFields({
                                 ...fields,
-                                quantity: Number(
-                                    (e.target as HTMLElement).dataset.value
-                                ),
+                                quantity: Number(e.currentTarget.dataset.value),
                             })
                         }
                         value={options[fields.quantity] || '-'}
@@ -177,7 +175,7 @@ export default function ItemForm() {
                             setFields({
                                 ...fields,
                                 alertQuantity: Number(
-                                    (e.target as HTMLElement).dataset.value
+                                    e.currentTarget.dataset.value
                                 ),
                             })
                         }
@@ -200,7 +198,6 @@ export default function ItemForm() {
             <button
                 type='submit'
                 className='btn btn-dark'
-                data-dismiss='modal'
                 onClick={(e) => handleSubmit(e, formMode)}>
                 <i
                     className={

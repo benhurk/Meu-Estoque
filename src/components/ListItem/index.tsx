@@ -9,37 +9,22 @@ import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
 import Select from '../Select';
 import mapOptions from '../../utils/mapOptions';
-import { useMemo } from 'react';
 
-export default function ListItem({
-    id,
-    name,
-    qtdType,
-    quantity,
-    options,
-    alertQuantity,
-    description,
-}: ListItemType) {
+type Props = {
+    item: ListItemType;
+    setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function ListItem({ item, setItemFormOpen }: Props) {
     const dispatch = useDispatch();
 
-    const object: ListItemType = useMemo(() => {
-        return {
-            id,
-            name,
-            qtdType,
-            quantity,
-            options,
-            alertQuantity,
-            description,
-        };
-    }, [alertQuantity, description, id, name, options, qtdType, quantity]);
-
     const setEditForm = () => {
-        dispatch(setTargetItem(object));
+        dispatch(setTargetItem(item));
         dispatch(setFormMode('edit'));
+        setItemFormOpen(true);
     };
 
-    const warn = quantity <= alertQuantity;
+    const warn = item.quantity <= item.alertQuantity;
 
     return (
         <li className='list-group-item d-flex align-items-center justify-content-between'>
@@ -50,21 +35,21 @@ export default function ListItem({
                             className={`d-inline ${
                                 warn ? 'text-danger' : 'text-primary'
                             }`}>
-                            {name}
+                            {item.name}
                         </span>
                         {warn && (
                             <i className='bi bi-exclamation-diamond-fill text-danger ms-2'></i>
                         )}
                     </div>
                     <div>
-                        {qtdType === 'number' ? (
+                        {item.qtdType === 'number' ? (
                             <QuantityInput
                                 elementId='quantity'
-                                value={quantity}
+                                value={item.quantity}
                                 change={(e) =>
                                     dispatch(
                                         editItem({
-                                            ...object,
+                                            ...item,
                                             quantity: Number(e.target.value),
                                         })
                                     )
@@ -73,11 +58,11 @@ export default function ListItem({
                         ) : (
                             <Select
                                 elementId='quantity'
-                                options={mapOptions(options, 'number')}
+                                options={mapOptions(item.options, 'number')}
                                 change={(e) =>
                                     dispatch(
                                         editItem({
-                                            ...object,
+                                            ...item,
                                             quantity: Number(
                                                 (e.target as HTMLElement)
                                                     .dataset.value
@@ -85,16 +70,16 @@ export default function ListItem({
                                         })
                                     )
                                 }
-                                value={options[quantity]}
+                                value={item.options[item.quantity]}
                             />
                         )}
                     </div>
                 </div>
-                {description && (
+                {item.description && (
                     <TextTooltip
                         classNames='align-self-center'
                         bootstrapIconClass='bi bi-chat-left-text-fill'
-                        text={description}
+                        text={item.description || ''}
                     />
                 )}
             </div>
@@ -110,7 +95,7 @@ export default function ListItem({
                 <button
                     type='button'
                     className='btn btn-sm btn-danger'
-                    onClick={() => dispatch(removeItem(id))}>
+                    onClick={() => dispatch(removeItem(item.id))}>
                     <i className='bi bi-trash-fill'></i>
                 </button>
             </div>

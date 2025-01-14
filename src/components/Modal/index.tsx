@@ -1,23 +1,31 @@
+import styles from './Modal.module.css';
+import { ReactNode } from 'react';
+
 type Props = {
-    elementId: string;
-    children: React.ReactNode;
+    isOpen: boolean;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    children: ReactNode;
 };
 
-export default function Modal({ elementId, children }: Props) {
-    return (
-        <div className='modal fade' id={elementId} role='dialog'>
-            <div className='modal-dialog modal-dialog-centered' role='document'>
-                <div className='modal-content'>
-                    <div className='modal-body'>
+export default function Modal({ isOpen, setIsOpen, children }: Props) {
+    if (isOpen) {
+        return (
+            <div className={styles.modalContainer} id='modal'>
+                <div
+                    className={styles.modalBg}
+                    onClick={() => setIsOpen(false)}>
+                    <div
+                        className={styles.modalContent}
+                        onClick={(e) => e.stopPropagation()}>
                         <button
                             type='button'
                             className='btn-close position-absolute top-0 end-0 mt-1 me-1'
-                            data-dismiss='modal'
+                            onClick={() => setIsOpen(false)}
                         />
-                        {children}
+                        <div>{children}</div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    } else return false;
 }
