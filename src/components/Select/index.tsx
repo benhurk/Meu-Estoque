@@ -58,12 +58,12 @@ export default function Select({
             </div>
 
             {open && (
-                <div className='position-absolute top-100 start-0 w-100 p-1 d-flex flex-column gap-2 bg-body border border-dark-subtle rounded shadow-sm z-3'>
+                <div className='position-absolute top-100 start-0 w-100 p-1 d-flex flex-column bg-body border border-dark-subtle rounded shadow-sm z-3'>
                     {options.length > 0 ? (
                         options.map((option, index) => (
                             <div
                                 key={index}
-                                className={`d-flex justify-content-between align-items-center p-1 overflow-hidden ${styles.item}`}>
+                                className={`d-flex justify-content-between align-items-center px-1 py-2 overflow-hidden ${styles.item}`}>
                                 <div
                                     className='w-100'
                                     data-value={option.value}

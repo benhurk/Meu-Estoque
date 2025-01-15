@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../store';
@@ -15,12 +15,8 @@ import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
-
-const getSavedOptions = () =>
-    JSON.parse(
-        localStorage.getItem('saved-options') ||
-            JSON.stringify([['Acabou', 'Pouco', 'Suficiente', 'Bastante']])
-    );
+import useSavedOptions from '../../hooks/useSavedOptions';
+import useItemForm from '../../hooks/useItemForm';
 
 type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,34 +29,8 @@ export default function ItemForm({ setItemFormOpen }: Props) {
         (state: RootState) => state.form
     );
 
-    const [fields, setFields] = useState(itemFormInitialState);
-    const [options, setOptions] = useState<string[]>([]);
-    const [savedOptions, setSavedOptions] = useState<string[][]>(
-        getSavedOptions()
-    );
-
-    useEffect(() => {
-        if (formMode === 'edit') {
-            setFields({
-                name: targetItem.name,
-                qtdType: targetItem.qtdType,
-                quantity: targetItem.quantity,
-                alertQuantity: targetItem.alertQuantity,
-                description: targetItem.description,
-            });
-
-            setOptions(targetItem.options);
-        }
-
-        if (formMode === 'add') {
-            setFields(itemFormInitialState);
-            setOptions([]);
-        }
-    }, [formMode, targetItem]);
-
-    useEffect(() => {
-        localStorage.setItem('saved-options', JSON.stringify(savedOptions));
-    }, [savedOptions]);
+    const { fields, setFields, options, setOptions, errors } = useItemForm();
+    const { savedOptions, setSavedOptions } = useSavedOptions();
 
     const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
         e.preventDefault();
@@ -80,14 +50,16 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
         dispatch(mode === 'add' ? addItem(item) : editItem(item));
         setItemFormOpen(false);
-
         setFields(itemFormInitialState);
         setOptions([]);
     };
 
     return (
         <form>
-            <FormGroup elementId={'item-name'} labelText={'O que é:'}>
+            <FormGroup
+                elementId={'item-name'}
+                labelText={'O que é:'}
+                error={errors.nameError}>
                 <input
                     type='text'
                     id='item-name'
@@ -118,12 +90,17 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             </FormGroup>
 
             {fields.qtdType === 'options' && (
-                <OptionsForm
-                    options={options}
-                    setOptions={setOptions}
-                    savedOptions={savedOptions}
-                    setSavedOptions={setSavedOptions}
-                />
+                <FormGroup
+                    elementId='item-options'
+                    labelText='Opções:'
+                    error={errors.optionsError}>
+                    <OptionsForm
+                        options={options}
+                        setOptions={setOptions}
+                        savedOptions={savedOptions}
+                        setSavedOptions={setSavedOptions}
+                    />
+                </FormGroup>
             )}
 
             <FormGroup elementId='item-quantity' labelText='Quantidade:'>

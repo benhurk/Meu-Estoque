@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import FormGroup from '../FormGroup';
 import AddOptionInput from '../AddOptionInput';
 import Select from '../Select';
 import mapOptions from '../../utils/mapOptions';
@@ -41,7 +40,7 @@ export default function OptionsForm({
     };
 
     return (
-        <FormGroup elementId='item-options' labelText='Opções:'>
+        <>
             <div className='mb-1'>
                 <div className='form-check form-check-inline'>
                     <input
@@ -93,6 +92,6 @@ export default function OptionsForm({
                     placeholderOption='Você não tem opções salvas'
                 />
             )}
-        </FormGroup>
+        </>
     );
 }
