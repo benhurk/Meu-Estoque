@@ -29,29 +29,32 @@ export default function ItemForm({ setItemFormOpen }: Props) {
         (state: RootState) => state.form
     );
 
-    const { fields, setFields, options, setOptions, errors } = useItemForm();
+    const { fields, setFields, options, setOptions, validate, errors } =
+        useItemForm();
     const { savedOptions, setSavedOptions } = useSavedOptions();
 
     const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
         e.preventDefault();
 
-        const item: ListItemType = {
-            id: mode === 'add' ? listItems.length : targetItem.id,
-            options: options,
-            ...fields,
-        };
+        if (validate()) {
+            const item: ListItemType = {
+                id: mode === 'add' ? listItems.length : targetItem.id,
+                options: options,
+                ...fields,
+            };
 
-        if (
-            fields.qtdType === 'options' &&
-            !optionsIsSaved(options, savedOptions)
-        ) {
-            setSavedOptions((prev) => [...prev, options]);
+            if (
+                fields.qtdType === 'options' &&
+                !optionsIsSaved(options, savedOptions)
+            ) {
+                setSavedOptions((prev) => [...prev, options]);
+            }
+
+            dispatch(mode === 'add' ? addItem(item) : editItem(item));
+            setItemFormOpen(false);
+            setFields(itemFormInitialState);
+            setOptions([]);
         }
-
-        dispatch(mode === 'add' ? addItem(item) : editItem(item));
-        setItemFormOpen(false);
-        setFields(itemFormInitialState);
-        setOptions([]);
     };
 
     return (

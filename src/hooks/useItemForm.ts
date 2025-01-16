@@ -13,6 +13,7 @@ export default function useItemForm() {
         optionsError: '',
     });
 
+    const listItems = useSelector((state: RootState) => state.list.items);
     const { formMode, targetItem } = useSelector(
         (state: RootState) => state.form
     );
@@ -36,5 +37,29 @@ export default function useItemForm() {
         }
     }, [formMode, targetItem]);
 
-    return { fields, setFields, options, setOptions, errors };
+    const validate = () => {
+        const newErrors = {
+            nameError: '',
+            optionsError: '',
+        };
+
+        if (!fields.name) {
+            newErrors.nameError = 'O nome não pode ficar em branco';
+        } else if (listItems.some((item) => item.name === fields.name)) {
+            newErrors.nameError = 'Um item com esse nome já existe.';
+        }
+
+        if (fields.qtdType === 'options') {
+            if (options.length === 0) {
+                newErrors.optionsError = 'As opções não podem ficar vazias.';
+            } else if (options.length < 2) {
+                newErrors.optionsError = 'O mínimo de opções é 2.';
+            }
+        }
+
+        setErrors(newErrors);
+        return Object.values(newErrors).every((error) => error === '');
+    };
+
+    return { fields, setFields, options, setOptions, validate, errors };
 }
