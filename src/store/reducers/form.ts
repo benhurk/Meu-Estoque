@@ -10,7 +10,7 @@ type formState = {
 const initialState: formState = {
     formMode: 'add',
     targetItem: {
-        id: 0,
+        id: -1,
         name: '',
         qtdType: 'number',
         quantity: 0,
