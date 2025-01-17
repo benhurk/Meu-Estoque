@@ -63,9 +63,9 @@ export default function Select({
                         options.map((option, index) => (
                             <div
                                 key={index}
-                                className={`d-flex justify-content-between align-items-center px-1 py-2 overflow-hidden ${styles.item}`}>
+                                className={`d-flex justify-content-between align-items-center px-1 overflow-hidden ${styles.item}`}>
                                 <div
-                                    className='w-100'
+                                    className='w-100 py-2'
                                     data-value={option.value}
                                     onClick={change}>
                                     <span className='text-nowrap'>
