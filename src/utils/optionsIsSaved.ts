@@ -1,12 +1,10 @@
-export default function optionsIsSaved(
+export default function optionsIsNotSaved(
     options: string[],
     savedOptions: string[][]
 ) {
-    if (
-        savedOptions.some((saved) =>
-            saved.every((item, index) => item === options[index])
-        )
-    )
-        return true;
-    else return false;
+    return !savedOptions.some(
+        (saved) =>
+            saved.length === options.length &&
+            saved.every((value, index) => value === options[index])
+    );
 }
