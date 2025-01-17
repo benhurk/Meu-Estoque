@@ -1,41 +1,38 @@
 import { Dispatch, SetStateAction, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { RootState } from '../../store';
+import { removeSavedOptions } from '../../store/reducers/savedOptions';
 
 import AddOptionInput from '../AddOptionInput';
 import Select from '../Select';
+
 import mapOptions from '../../utils/mapOptions';
 import optionsIsSaved from '../../utils/optionsIsSaved';
 
 type Props = {
     options: string[];
     setOptions: Dispatch<SetStateAction<string[]>>;
-    savedOptions: string[][];
-    setSavedOptions: Dispatch<SetStateAction<string[][]>>;
 };
 
-export default function OptionsForm({
-    options,
-    setOptions,
-    savedOptions,
-    setSavedOptions,
-}: Props) {
+export default function OptionsForm({ options, setOptions }: Props) {
+    const dispatch = useDispatch();
+
     const [mode, setMode] = useState<'add' | 'select'>('select');
 
-    const removeSavedOptions = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { savedOptions } = useSelector(
+        (state: RootState) => state.savedOptions
+    );
+
+    const handleRemoveSavedOptions = (
+        e: React.MouseEvent<HTMLButtonElement>
+    ) => {
         if (optionsIsSaved(options, savedOptions)) {
             setOptions([]);
         }
 
-        setSavedOptions(
-            savedOptions.filter(
-                (options) =>
-                    !options.every(
-                        (item, index) =>
-                            item ===
-                            (
-                                e.target as HTMLButtonElement
-                            ).dataset.option!.split(',')[index]
-                    )
-            )
+        dispatch(
+            removeSavedOptions(e.currentTarget.dataset.option!.split(','))
         );
     };
 
@@ -50,7 +47,10 @@ export default function OptionsForm({
                         name='mode'
                         checked={mode === 'select'}
                         value='select'
-                        onChange={() => setMode('select')}
+                        onChange={() => {
+                            setMode('select');
+                            setOptions([]);
+                        }}
                     />
                     <label htmlFor='radio-select' className='form-check-label'>
                         Selecionar
@@ -82,13 +82,11 @@ export default function OptionsForm({
                     elementId='item-options'
                     options={mapOptions(savedOptions)}
                     change={(e) =>
-                        setOptions(
-                            (e.target as HTMLElement).dataset.value!.split(',')
-                        )
+                        setOptions(e.currentTarget.dataset.value!.split(','))
                     }
                     value={options.length > 0 ? options : 'Selecione uma opção'}
                     removableOptions
-                    removeFn={removeSavedOptions}
+                    removeFn={handleRemoveSavedOptions}
                     placeholderOption='Você não tem opções salvas'
                 />
             )}

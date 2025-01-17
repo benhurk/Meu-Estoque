@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../store';
 import { addItem, editItem } from '../../store/reducers/list';
+import { saveOptions } from '../../store/reducers/savedOptions';
 
 import mapOptions from '../../utils/mapOptions';
-import optionsIsSaved from '../../utils/optionsIsSaved';
+import optionsIsNotSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
 
 import { FormMode } from '../../types/FormTypes';
@@ -15,7 +16,6 @@ import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
-import useSavedOptions from '../../hooks/useSavedOptions';
 import useItemForm from '../../hooks/useItemForm';
 
 type Props = {
@@ -31,24 +31,26 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
     const { fields, setFields, options, setOptions, validate, errors } =
         useItemForm();
-    const { savedOptions, setSavedOptions } = useSavedOptions();
+
+    const { savedOptions } = useSelector(
+        (state: RootState) => state.savedOptions
+    );
 
     const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
         e.preventDefault();
 
         if (validate()) {
+            if (
+                fields.qtdType === 'options' &&
+                optionsIsNotSaved(options, savedOptions)
+            ) {
+                dispatch(saveOptions(options));
+            }
             const item: ListItemType = {
                 id: mode === 'add' ? listItems.length : targetItem.id,
                 options: options,
                 ...fields,
             };
-
-            if (
-                fields.qtdType === 'options' &&
-                !optionsIsSaved(options, savedOptions)
-            ) {
-                setSavedOptions((prev) => [...prev, options]);
-            }
 
             dispatch(mode === 'add' ? addItem(item) : editItem(item));
             setItemFormOpen(false);
@@ -97,12 +99,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     elementId='item-options'
                     labelText='Opções:'
                     error={errors.optionsError}>
-                    <OptionsForm
-                        options={options}
-                        setOptions={setOptions}
-                        savedOptions={savedOptions}
-                        setSavedOptions={setSavedOptions}
-                    />
+                    <OptionsForm options={options} setOptions={setOptions} />
                 </FormGroup>
             )}
 
