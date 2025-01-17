@@ -45,7 +45,11 @@ export default function useItemForm() {
 
         if (!fields.name) {
             newErrors.nameError = 'O nome não pode ficar em branco';
-        } else if (listItems.some((item) => item.name === fields.name)) {
+        } else if (
+            listItems.some(
+                (item) => item.name === fields.name && item.id != targetItem.id
+            )
+        ) {
             newErrors.nameError = 'Um item com esse nome já existe.';
         }
 
