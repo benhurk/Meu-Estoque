@@ -1,17 +1,37 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import SupportedPlatforms from '../../types/supportedPlatforms';
 
 type Props = {
     sendMode: 'all' | 'warn';
+    sendVia: SupportedPlatforms;
+    sendTo: string;
 };
 
-export default function SendButton({ sendMode }: Props) {
+export default function SendButton({ sendMode, sendVia, sendTo }: Props) {
     const listItems = useSelector((state: RootState) => state.list.items);
     const warnedItems = listItems.filter(
         (item) => item.quantity <= item.alertQuantity
     );
 
-    const url = (message: string) => `whatsapp://send?phone=&text=${message}`;
+    /*
+        LINKS:
+        TELEGRAM:
+            CHOSE IN APP: `tg://msg_url?url=+&text=${message}`
+            SPECIFIED CONTACT: `tg://resolve?domain=${sendTo}&text=${message}`
+    */
+
+    const url = (platform: SupportedPlatforms, message: string) => {
+        switch (platform) {
+            case 'whatsapp':
+                return `whatsapp://send?phone=&text=${message}`;
+            case 'telegram':
+                return `tg://msg_url?url=+&text=${message}`;
+            case 'email':
+            case 'messenger':
+                return `m.me/PAGE-NAME?text=${message}`;
+        }
+    };
 
     const send = (sendMode: 'all' | 'warn') => {
         let message = '';
@@ -20,22 +40,22 @@ export default function SendButton({ sendMode }: Props) {
         items.forEach((item) => {
             const optionsQuantity = item.options[item.quantity];
 
-            const allItemsLine = `*• ${
+            const allItemsLine = `• ${
                 item.quantity <= item.alertQuantity ? '⚠' : '✅'
-            } ${item.name}:* ${
+            } ${item.name}:   ${
                 item.qtdType === 'number' ? item.quantity : optionsQuantity
             } ${item.qtdType === 'number' ? item.numberOf : ''}%0a`;
 
-            const warnedItemsLine = `*• ${item.name}* (${
+            const warnedItemsLine = `• ${item.name}:    ${
                 item.qtdType === 'number'
-                    ? item.quantity + ' un.'
+                    ? item.quantity + item.numberOf
                     : optionsQuantity
-            })%0a`;
+            }%0a`;
 
             message += sendMode === 'all' ? allItemsLine : warnedItemsLine;
         });
 
-        window.open(url(message));
+        window.open(url(sendVia, message));
     };
 
     if (sendMode === 'all') {

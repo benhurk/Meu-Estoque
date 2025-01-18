@@ -1,21 +1,23 @@
 import { useState } from 'react';
 import SupportedPlatforms from '../../types/supportedPlatforms';
 import SendButton from '../SendButton';
+import FormGroup from '../FormGroup';
 
 export default function SendMenu() {
     const [sendVia, setSendVia] = useState<SupportedPlatforms>('whatsapp');
+    const [sendTo, setSendTo] = useState<string>('');
     const [initialMessage, setInitialMessage] = useState<string>('');
 
     return (
         <div>
-            <div>
+            <div className='mb-3'>
                 <span className='d-block fs-5 mb-2 text-center'>
                     Enviar via:{' '}
                     <span className='text-primary text-capitalize'>
                         {sendVia}
                     </span>
                 </span>
-                <div className='d-flex justify-content-center gap-5 mb-3'>
+                <div className='d-flex justify-content-center gap-5'>
                     <div className='d-flex align-items-center gap-2'>
                         <input
                             className='form-check-input'
@@ -74,6 +76,14 @@ export default function SendMenu() {
                     </div>
                 </div>
             </div>
+            <FormGroup elementId='send-to' labelText='Enviar para:'>
+                <input
+                    type='text'
+                    id='send-to'
+                    className='form-control'
+                    placeholder='Deixe em branco para especificar no app escolhido'
+                />
+            </FormGroup>
             <textarea
                 className='form-control mb-4'
                 value={initialMessage}
@@ -82,8 +92,8 @@ export default function SendMenu() {
                 style={{ resize: 'none', height: '7rem' }}
             />
             <div className='d-flex justify-content-center gap-2'>
-                <SendButton sendMode='all' />
-                <SendButton sendMode='warn' />
+                <SendButton sendTo={sendTo} sendVia={sendVia} sendMode='all' />
+                <SendButton sendTo={sendTo} sendVia={sendVia} sendMode='warn' />
             </div>
         </div>
     );
