@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import DownloadBtn from '../DownloadBtn';
-import LoadBtn from '../LoadBtn';
+import LoadButton from '../LoadButton';
 import Modal from '../Modal';
 import SendMenu from '../SendMenu';
 
@@ -21,7 +21,7 @@ export default function Header() {
                         &nbsp;Enviar
                     </button>
                     <DownloadBtn />
-                    <LoadBtn />
+                    <LoadButton />
                 </div>
             </div>
 
