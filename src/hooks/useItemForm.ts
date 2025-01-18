@@ -23,6 +23,7 @@ export default function useItemForm() {
             setFields({
                 name: targetItem.name,
                 qtdType: targetItem.qtdType,
+                numberOf: targetItem.numberOf,
                 quantity: targetItem.quantity,
                 alertQuantity: targetItem.alertQuantity,
                 description: targetItem.description,

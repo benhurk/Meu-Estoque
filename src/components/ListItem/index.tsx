@@ -9,6 +9,7 @@ import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
 import Select from '../Select';
 import mapOptions from '../../utils/mapOptions';
+import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
 
 type Props = {
     item: ListItemType;
@@ -43,18 +44,25 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                     </div>
                     <div>
                         {item.qtdType === 'number' ? (
-                            <QuantityInput
-                                elementId='quantity'
-                                value={item.quantity}
-                                change={(e) =>
-                                    dispatch(
-                                        editItem({
-                                            ...item,
-                                            quantity: Number(e.target.value),
-                                        })
-                                    )
-                                }
-                            />
+                            <>
+                                <QuantityInput
+                                    elementId='quantity'
+                                    value={item.quantity}
+                                    change={(e) =>
+                                        dispatch(
+                                            editItem({
+                                                ...item,
+                                                quantity: Number(
+                                                    e.target.value
+                                                ),
+                                            })
+                                        )
+                                    }
+                                />
+                                <small className='text-dark'>
+                                    {abbreviateNumberOf(item.numberOf)}
+                                </small>
+                            </>
                         ) : (
                             <Select
                                 elementId='quantity'

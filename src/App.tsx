@@ -45,6 +45,7 @@ function App() {
                                 id: item.id,
                                 name: item.name,
                                 qtdType: item.qtdType,
+                                numberOf: item.numberOf,
                                 quantity: item.quantity,
                                 options: item.options,
                                 alertQuantity: item.alertQuantity,

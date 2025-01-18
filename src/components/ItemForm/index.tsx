@@ -10,13 +10,14 @@ import optionsIsNotSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
 
 import { FormMode } from '../../types/FormTypes';
-import ListItemType, { QuantityType } from '../../types/ListItemType';
+import ListItemType, { NumberOf, QuantityType } from '../../types/ListItemType';
 
 import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
 import useItemForm from '../../hooks/useItemForm';
+import optionsForNumberOf from '../../const/optionsForNumberOf';
 
 type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -100,6 +101,23 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     labelText='Opções:'
                     error={errors.optionsError}>
                     <OptionsForm options={options} setOptions={setOptions} />
+                </FormGroup>
+            )}
+
+            {fields.qtdType === 'number' && (
+                <FormGroup elementId='item-numberOf' labelText='Número de:'>
+                    <Select
+                        elementId='item-numberOf'
+                        options={optionsForNumberOf}
+                        value={fields.numberOf}
+                        change={(e) =>
+                            setFields({
+                                ...fields,
+                                numberOf: e.currentTarget.dataset
+                                    .value! as NumberOf,
+                            })
+                        }
+                    />
                 </FormGroup>
             )}
 

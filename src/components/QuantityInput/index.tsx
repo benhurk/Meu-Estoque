@@ -16,18 +16,14 @@ export default function QuantityInput({
     change,
 }: Props) {
     return (
-        <>
-            <input
-                className={`form-control form-control-${size} d-inline-block me-1`}
-                id={elementId}
-                style={{ width: '5rem' }}
-                type='number'
-                min={0}
-                value={removeZeroBeforeNumber(String(value))}
-                onChange={change}
-            />
-
-            <span className='text-dark'>un.</span>
-        </>
+        <input
+            className={`form-control form-control-${size} d-inline-block me-1`}
+            id={elementId}
+            style={{ width: '5rem' }}
+            type='number'
+            min={0}
+            value={removeZeroBeforeNumber(String(value))}
+            onChange={change}
+        />
     );
 }

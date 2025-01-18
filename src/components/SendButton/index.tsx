@@ -24,7 +24,7 @@ export default function SendButton({ sendMode }: Props) {
                 item.quantity <= item.alertQuantity ? '⚠' : '✅'
             } ${item.name}:* ${
                 item.qtdType === 'number' ? item.quantity : optionsQuantity
-            } ${item.qtdType === 'number' ? 'un.' : ''}%0a`;
+            } ${item.qtdType === 'number' ? item.numberOf : ''}%0a`;
 
             const warnedItemsLine = `*• ${item.name}* (${
                 item.qtdType === 'number'
