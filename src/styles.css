@@ -3,6 +3,12 @@
     margin: auto;
 }
 
+@media (max-width: 767px) {
+    .wraper {
+        max-width: 95%;
+    }
+}
+
 i.bi {
     pointer-events: none;
 }
