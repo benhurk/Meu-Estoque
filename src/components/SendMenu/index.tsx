@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import SupportedPlatforms from '../../types/supportedPlatforms';
 import SendButton from '../SendButton';
-import FormGroup from '../FormGroup';
 
 export default function SendMenu() {
     const [sendVia, setSendVia] = useState<SupportedPlatforms>('whatsapp');
-    const [sendTo, setSendTo] = useState<string>('');
     const [initialMessage, setInitialMessage] = useState<string>('');
 
     return (
@@ -17,7 +15,7 @@ export default function SendMenu() {
                         {sendVia}
                     </span>
                 </span>
-                <div className='d-flex justify-content-center gap-5'>
+                <div className='d-flex justify-content-center gap-4'>
                     <div className='d-flex align-items-center gap-2'>
                         <input
                             className='form-check-input'
@@ -30,20 +28,6 @@ export default function SendMenu() {
                         <label
                             htmlFor='send-whatsapp'
                             className='bi bi-whatsapp form-check-label fs-4'
-                        />
-                    </div>
-                    <div className='d-flex align-items-center gap-2'>
-                        <input
-                            className='form-check-input'
-                            name='send-via'
-                            type='radio'
-                            id='send-messenger'
-                            checked={sendVia === 'messenger'}
-                            onChange={() => setSendVia('messenger')}
-                        />
-                        <label
-                            htmlFor='send-messenger'
-                            className='bi bi-messenger form-check-label fs-4'
                         />
                     </div>
                     <div className='d-flex align-items-center gap-2'>
@@ -76,14 +60,6 @@ export default function SendMenu() {
                     </div>
                 </div>
             </div>
-            <FormGroup elementId='send-to' labelText='Enviar para:'>
-                <input
-                    type='text'
-                    id='send-to'
-                    className='form-control'
-                    placeholder='Deixe em branco para especificar no app escolhido'
-                />
-            </FormGroup>
             <textarea
                 className='form-control mb-4'
                 value={initialMessage}
@@ -92,8 +68,16 @@ export default function SendMenu() {
                 style={{ resize: 'none', height: '7rem' }}
             />
             <div className='d-flex justify-content-center gap-2'>
-                <SendButton sendTo={sendTo} sendVia={sendVia} sendMode='all' />
-                <SendButton sendTo={sendTo} sendVia={sendVia} sendMode='warn' />
+                <SendButton
+                    initialMessage={initialMessage}
+                    sendVia={sendVia}
+                    sendMode='all'
+                />
+                <SendButton
+                    initialMessage={initialMessage}
+                    sendVia={sendVia}
+                    sendMode='warn'
+                />
             </div>
         </div>
     );

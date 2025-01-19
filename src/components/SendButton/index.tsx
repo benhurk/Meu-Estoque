@@ -5,21 +5,20 @@ import SupportedPlatforms from '../../types/supportedPlatforms';
 type Props = {
     sendMode: 'all' | 'warn';
     sendVia: SupportedPlatforms;
-    sendTo: string;
+    initialMessage: string;
 };
 
-export default function SendButton({ sendMode, sendVia, sendTo }: Props) {
+export default function SendButton({
+    sendMode,
+    sendVia,
+    initialMessage,
+}: Props) {
     const listItems = useSelector((state: RootState) => state.list.items);
     const warnedItems = listItems.filter(
         (item) => item.quantity <= item.alertQuantity
     );
 
-    /*
-        LINKS:
-        TELEGRAM:
-            CHOSE IN APP: `tg://msg_url?url=+&text=${message}`
-            SPECIFIED CONTACT: `tg://resolve?domain=${sendTo}&text=${message}`
-    */
+    const date = new Date().toLocaleDateString();
 
     const url = (platform: SupportedPlatforms, message: string) => {
         switch (platform) {
@@ -28,13 +27,12 @@ export default function SendButton({ sendMode, sendVia, sendTo }: Props) {
             case 'telegram':
                 return `tg://msg_url?url=+&text=${message}`;
             case 'email':
-            case 'messenger':
-                return `m.me/PAGE-NAME?text=${message}`;
+                return `mailto:?subject=Estoque+${date}&body=${message}`;
         }
     };
 
     const send = (sendMode: 'all' | 'warn') => {
-        let message = '';
+        let message = initialMessage && `${initialMessage}%0a%0a`;
         const items = sendMode === 'all' ? listItems : warnedItems;
 
         items.forEach((item) => {
@@ -55,7 +53,11 @@ export default function SendButton({ sendMode, sendVia, sendTo }: Props) {
             message += sendMode === 'all' ? allItemsLine : warnedItemsLine;
         });
 
-        window.open(url(sendVia, message));
+        if (sendVia != 'email') {
+            window.location.href = url(sendVia, message);
+        } else {
+            window.open(url(sendVia, message));
+        }
     };
 
     if (sendMode === 'all') {

@@ -1,3 +1,3 @@
-type SupportedPlatforms = 'whatsapp' | 'telegram' | 'email' | 'messenger';
+type SupportedPlatforms = 'whatsapp' | 'telegram' | 'email';
 
 export default SupportedPlatforms;
