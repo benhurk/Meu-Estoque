@@ -28,84 +28,93 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
     const warn = item.quantity <= item.alertQuantity;
 
     return (
-        <li className='list-group-item d-flex align-items-center justify-content-between'>
-            <div className='w-75 d-flex gap-4'>
-                <div>
-                    <div className='mb-2'>
-                        <span
-                            className={`d-inline ${
-                                warn ? 'text-danger' : 'text-primary'
-                            }`}>
-                            {item.name}
-                        </span>
-                        {warn && (
-                            <i className='bi bi-exclamation-diamond-fill text-danger ms-2'></i>
-                        )}
-                    </div>
+        <li className='position-relative list-group-item d-flex align-items-center'>
+            <input
+                type='checkbox'
+                className='form-check-input me-3'
+                onChange={() =>
+                    dispatch(editItem({ ...item, selected: !item.selected }))
+                }
+            />
+            <div className='d-flex justify-content-between w-100 align-items-center'>
+                <div className='w-75 d-flex gap-4'>
                     <div>
-                        {item.qtdType === 'number' ? (
-                            <>
-                                <QuantityInput
+                        <div className='mb-2'>
+                            <span
+                                className={`d-inline ${
+                                    warn ? 'text-danger' : 'text-primary'
+                                }`}>
+                                {item.name}
+                            </span>
+                            {warn && (
+                                <i className='bi bi-exclamation-diamond-fill text-danger ms-2'></i>
+                            )}
+                        </div>
+                        <div>
+                            {item.qtdType === 'number' ? (
+                                <>
+                                    <QuantityInput
+                                        elementId='quantity'
+                                        value={item.quantity}
+                                        change={(e) =>
+                                            dispatch(
+                                                editItem({
+                                                    ...item,
+                                                    quantity: Number(
+                                                        e.target.value
+                                                    ),
+                                                })
+                                            )
+                                        }
+                                    />
+                                    <small className='text-dark'>
+                                        {abbreviateNumberOf(item.numberOf)}
+                                    </small>
+                                </>
+                            ) : (
+                                <Select
                                     elementId='quantity'
-                                    value={item.quantity}
+                                    options={mapOptions(item.options, 'number')}
                                     change={(e) =>
                                         dispatch(
                                             editItem({
                                                 ...item,
                                                 quantity: Number(
-                                                    e.target.value
+                                                    (e.target as HTMLElement)
+                                                        .dataset.value
                                                 ),
                                             })
                                         )
                                     }
+                                    value={item.options[item.quantity]}
                                 />
-                                <small className='text-dark'>
-                                    {abbreviateNumberOf(item.numberOf)}
-                                </small>
-                            </>
-                        ) : (
-                            <Select
-                                elementId='quantity'
-                                options={mapOptions(item.options, 'number')}
-                                change={(e) =>
-                                    dispatch(
-                                        editItem({
-                                            ...item,
-                                            quantity: Number(
-                                                (e.target as HTMLElement)
-                                                    .dataset.value
-                                            ),
-                                        })
-                                    )
-                                }
-                                value={item.options[item.quantity]}
-                            />
-                        )}
+                            )}
+                        </div>
                     </div>
+                    {item.description && (
+                        <TextTooltip
+                            classNames='align-self-center'
+                            bootstrapIconClass='bi bi-chat-left-text-fill'
+                            text={item.description || ''}
+                        />
+                    )}
                 </div>
-                {item.description && (
-                    <TextTooltip
-                        classNames='align-self-center'
-                        bootstrapIconClass='bi bi-chat-left-text-fill'
-                        text={item.description || ''}
-                    />
-                )}
-            </div>
-            <div>
-                <button
-                    type='button'
-                    className='btn btn-sm btn-dark me-1'
-                    data-toggle='modal'
-                    data-target='#modal-form'
-                    onClick={() => setEditForm()}>
-                    <i className='bi bi-pencil-fill'></i>
-                </button>
-                <button
-                    type='button'
-                    className='btn btn-sm btn-danger'
-                    onClick={() => dispatch(removeItem(item.id))}>
-                    <i className='bi bi-trash-fill'></i>
-                </button>
+                <div className='d-flex'>
+                    <button
+                        type='button'
+                        className='btn btn-sm btn-dark me-1'
+                        data-toggle='modal'
+                        data-target='#modal-form'
+                        onClick={() => setEditForm()}>
+                        <i className='bi bi-pencil-fill'></i>
+                    </button>
+                    <button
+                        type='button'
+                        className='btn btn-sm btn-danger'
+                        onClick={() => dispatch(removeItem(item.id))}>
+                        <i className='bi bi-trash-fill'></i>
+                    </button>
+                </div>
             </div>
         </li>
     );

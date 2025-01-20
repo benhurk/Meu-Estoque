@@ -50,6 +50,7 @@ function App() {
                                 options: item.options,
                                 alertQuantity: item.alertQuantity,
                                 description: item.description,
+                                selected: item.selected,
                             }}
                             setItemFormOpen={setItemFormOpen}
                         />

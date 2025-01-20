@@ -15,6 +15,7 @@ type ListItemType = {
     options: string[];
     alertQuantity: number;
     description?: string;
+    selected?: boolean;
 };
 
 export default ListItemType;

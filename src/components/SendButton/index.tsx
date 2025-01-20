@@ -3,7 +3,7 @@ import { RootState } from '../../store';
 import SupportedPlatforms from '../../types/supportedPlatforms';
 
 type Props = {
-    sendMode: 'all' | 'warn';
+    sendMode: 'all' | 'warn' | 'selected';
     sendVia: SupportedPlatforms;
     initialMessage: string;
 };
@@ -17,6 +17,7 @@ export default function SendButton({
     const warnedItems = listItems.filter(
         (item) => item.quantity <= item.alertQuantity
     );
+    const selectedItems = listItems.filter((item) => item.selected === true);
 
     const date = new Date().toLocaleDateString();
 
@@ -31,9 +32,14 @@ export default function SendButton({
         }
     };
 
-    const send = (sendMode: 'all' | 'warn') => {
+    const send = (sendMode: 'all' | 'warn' | 'selected') => {
         let message = initialMessage && `${initialMessage}%0a%0a`;
-        const items = sendMode === 'all' ? listItems : warnedItems;
+        const items =
+            sendMode === 'all'
+                ? listItems
+                : sendMode === 'warn'
+                ? warnedItems
+                : selectedItems;
 
         items.forEach((item) => {
             const optionsQuantity = item.options[item.quantity];
@@ -50,7 +56,7 @@ export default function SendButton({
                     : optionsQuantity
             }%0a`;
 
-            message += sendMode === 'all' ? allItemsLine : warnedItemsLine;
+            message += sendMode === 'warn' ? warnedItemsLine : allItemsLine;
         });
 
         if (sendVia != 'email') {
@@ -66,10 +72,9 @@ export default function SendButton({
                 type='button'
                 className='btn btn-dark'
                 disabled={listItems.length > 0 ? false : true}
-                data-dismiss='modal'
                 onClick={() => send(sendMode)}>
                 <i className='bi bi-send-fill' />
-                &nbsp;Enviar tudo
+                &nbsp;Tudo
             </button>
         );
     }
@@ -80,10 +85,22 @@ export default function SendButton({
                 type='button'
                 className='btn btn-danger'
                 disabled={warnedItems.length > 0 ? false : true}
-                data-dismiss='modal'
                 onClick={() => send(sendMode)}>
                 <i className='bi bi-send-exclamation-fill' />
-                &nbsp;Enviar importantes
+                &nbsp;Importantes
+            </button>
+        );
+    }
+
+    if (sendMode === 'selected') {
+        return (
+            <button
+                type='button'
+                className='btn btn-primary'
+                disabled={selectedItems.length > 0 ? false : true}
+                onClick={() => send(sendMode)}>
+                <i className='bi bi-send-check-fill' />
+                &nbsp;Selecionados
             </button>
         );
     }

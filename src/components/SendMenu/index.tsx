@@ -78,6 +78,11 @@ export default function SendMenu() {
                     sendVia={sendVia}
                     sendMode='warn'
                 />
+                <SendButton
+                    initialMessage={initialMessage}
+                    sendVia={sendVia}
+                    sendMode='selected'
+                />
             </div>
         </div>
     );
