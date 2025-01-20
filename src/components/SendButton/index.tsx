@@ -3,7 +3,7 @@ import { RootState } from '../../store';
 import SupportedPlatforms from '../../types/supportedPlatforms';
 
 type Props = {
-    sendMode: 'all' | 'warn' | 'selected';
+    sendMode: 'all' | 'warned' | 'selected';
     sendVia: SupportedPlatforms;
     initialMessage: string;
 };
@@ -32,12 +32,12 @@ export default function SendButton({
         }
     };
 
-    const send = (sendMode: 'all' | 'warn' | 'selected') => {
+    const send = (sendMode: 'all' | 'warned' | 'selected') => {
         let message = initialMessage && `${initialMessage}%0a%0a`;
         const items =
             sendMode === 'all'
                 ? listItems
-                : sendMode === 'warn'
+                : sendMode === 'warned'
                 ? warnedItems
                 : selectedItems;
 
@@ -56,7 +56,7 @@ export default function SendButton({
                     : optionsQuantity
             }%0a`;
 
-            message += sendMode === 'warn' ? warnedItemsLine : allItemsLine;
+            message += sendMode === 'warned' ? warnedItemsLine : allItemsLine;
         });
 
         if (sendVia != 'email') {
@@ -66,42 +66,14 @@ export default function SendButton({
         }
     };
 
-    if (sendMode === 'all') {
-        return (
-            <button
-                type='button'
-                className='btn btn-dark'
-                disabled={listItems.length > 0 ? false : true}
-                onClick={() => send(sendMode)}>
-                <i className='bi bi-send-fill' />
-                &nbsp;Tudo
-            </button>
-        );
-    }
-
-    if (sendMode === 'warn') {
-        return (
-            <button
-                type='button'
-                className='btn btn-danger'
-                disabled={warnedItems.length > 0 ? false : true}
-                onClick={() => send(sendMode)}>
-                <i className='bi bi-send-exclamation-fill' />
-                &nbsp;Importantes
-            </button>
-        );
-    }
-
-    if (sendMode === 'selected') {
-        return (
-            <button
-                type='button'
-                className='btn btn-primary'
-                disabled={selectedItems.length > 0 ? false : true}
-                onClick={() => send(sendMode)}>
-                <i className='bi bi-send-check-fill' />
-                &nbsp;Selecionados
-            </button>
-        );
-    }
+    return (
+        <button
+            type='button'
+            className='btn btn-dark'
+            disabled={listItems.length > 0 ? false : true}
+            onClick={() => send(sendMode)}>
+            <i className='bi bi-send-fill' />
+            &nbsp;Enviar
+        </button>
+    );
 }

@@ -2,20 +2,38 @@ import { useState } from 'react';
 import SupportedPlatforms from '../../types/supportedPlatforms';
 import SendButton from '../SendButton';
 
-export default function SendMenu() {
+type Props = {
+    sendMode: 'all' | 'warned' | 'selected';
+};
+
+export default function SendMenu({ sendMode }: Props) {
     const [sendVia, setSendVia] = useState<SupportedPlatforms>('whatsapp');
     const [initialMessage, setInitialMessage] = useState<string>('');
 
+    const platformTextColorClass = (platform: SupportedPlatforms) => {
+        switch (platform) {
+            case 'whatsapp':
+                return 'text-success';
+            case 'telegram':
+                return 'text-primary';
+            case 'email':
+                return 'text-danger';
+        }
+    };
+
     return (
         <div>
-            <div className='mb-3'>
+            <div className='mb-4'>
                 <span className='d-block fs-5 mb-2 text-center'>
-                    Enviar via:{' '}
-                    <span className='text-primary text-capitalize'>
+                    Enviar via:&nbsp;
+                    <span
+                        className={`text-capitalize ${platformTextColorClass(
+                            sendVia
+                        )}`}>
                         {sendVia}
                     </span>
                 </span>
-                <div className='d-flex justify-content-center gap-4'>
+                <div className='d-flex justify-content-center gap-5'>
                     <div className='d-flex align-items-center gap-2'>
                         <input
                             className='form-check-input'
@@ -27,7 +45,7 @@ export default function SendMenu() {
                         />
                         <label
                             htmlFor='send-whatsapp'
-                            className='bi bi-whatsapp form-check-label fs-4'
+                            className='bi bi-whatsapp form-check-label fs-4 text-success'
                         />
                     </div>
                     <div className='d-flex align-items-center gap-2'>
@@ -41,7 +59,7 @@ export default function SendMenu() {
                         />
                         <label
                             htmlFor='send-telegram'
-                            className='bi bi-telegram form-check-label fs-4'
+                            className='bi bi-telegram form-check-label fs-4 text-primary'
                         />
                     </div>
                     <div className='d-flex align-items-center gap-2'>
@@ -55,7 +73,7 @@ export default function SendMenu() {
                         />
                         <label
                             htmlFor='send-email'
-                            className='bi bi-envelope-fill form-check-label fs-4'
+                            className='bi bi-envelope-fill form-check-label fs-4 text-danger'
                         />
                     </div>
                 </div>
@@ -71,17 +89,7 @@ export default function SendMenu() {
                 <SendButton
                     initialMessage={initialMessage}
                     sendVia={sendVia}
-                    sendMode='all'
-                />
-                <SendButton
-                    initialMessage={initialMessage}
-                    sendVia={sendVia}
-                    sendMode='warn'
-                />
-                <SendButton
-                    initialMessage={initialMessage}
-                    sendVia={sendVia}
-                    sendMode='selected'
+                    sendMode={sendMode}
                 />
             </div>
         </div>

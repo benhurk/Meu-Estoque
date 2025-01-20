@@ -1,33 +1,18 @@
-import { useState } from 'react';
-
-import DownloadBtn from '../DownloadBtn';
+import DownloadButton from '../DownloadButton';
 import LoadButton from '../LoadButton';
-import Modal from '../Modal';
-import SendMenu from '../SendMenu';
+import SendDropdown from '../SendDropdown';
 
 export default function Header() {
-    const [openSendMenu, setOpenSendMenu] = useState<boolean>(false);
-
     return (
         <header className='py-5 bg-dark'>
             <div className='wraper'>
                 <h1 className='text-center text-light fw-bold mb-4'>EZtoque</h1>
                 <div className='d-flex justify-content-center gap-3'>
-                    <button
-                        type='button'
-                        className='btn btn-sm btn-primary'
-                        onClick={() => setOpenSendMenu(true)}>
-                        <i className='bi bi-send-fill' />
-                        &nbsp;Enviar
-                    </button>
-                    <DownloadBtn />
+                    <SendDropdown />
+                    <DownloadButton />
                     <LoadButton />
                 </div>
             </div>
-
-            <Modal isOpen={openSendMenu} setIsOpen={setOpenSendMenu}>
-                <SendMenu />
-            </Modal>
         </header>
     );
 }
