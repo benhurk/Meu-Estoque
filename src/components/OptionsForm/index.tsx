@@ -84,7 +84,7 @@ export default function OptionsForm({ options, setOptions }: Props) {
                     change={(e) =>
                         setOptions(e.currentTarget.dataset.value!.split(','))
                     }
-                    value={options.length > 0 ? options : 'Selecione uma opção'}
+                    value={options.length > 0 ? options : 'Selecione as opções'}
                     removableOptions
                     removeFn={handleRemoveSavedOptions}
                     placeholderOption='Você não tem opções salvas'
