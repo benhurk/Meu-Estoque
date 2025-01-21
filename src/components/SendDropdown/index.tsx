@@ -70,7 +70,10 @@ export default function SendDropdown() {
             </div>
 
             <Modal isOpen={openSendMenu} setIsOpen={setOpenSendMenu}>
-                <SendMenu sendMode={sendMode} />
+                <SendMenu
+                    setOpenSendMenu={setOpenSendMenu}
+                    sendMode={sendMode}
+                />
             </Modal>
         </>
     );

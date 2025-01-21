@@ -6,12 +6,14 @@ type Props = {
     sendMode: 'all' | 'warned' | 'selected';
     sendVia: SupportedPlatforms;
     initialMessage: string;
+    setOpenSendMenu: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function SendButton({
     sendMode,
     sendVia,
     initialMessage,
+    setOpenSendMenu,
 }: Props) {
     const listItems = useSelector((state: RootState) => state.list.items);
     const warnedItems = listItems.filter(
@@ -64,6 +66,8 @@ export default function SendButton({
         } else {
             window.open(url(sendVia, message));
         }
+
+        setOpenSendMenu(false);
     };
 
     return (

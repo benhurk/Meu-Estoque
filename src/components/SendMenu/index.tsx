@@ -4,9 +4,10 @@ import SendButton from '../SendButton';
 
 type Props = {
     sendMode: 'all' | 'warned' | 'selected';
+    setOpenSendMenu: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function SendMenu({ sendMode }: Props) {
+export default function SendMenu({ sendMode, setOpenSendMenu }: Props) {
     const [sendVia, setSendVia] = useState<SupportedPlatforms>('whatsapp');
     const [initialMessage, setInitialMessage] = useState<string>('');
 
@@ -23,7 +24,7 @@ export default function SendMenu({ sendMode }: Props) {
 
     return (
         <div>
-            <div className='mb-4'>
+            <div className='mb-3'>
                 <span className='d-block fs-5 mb-2 text-center'>
                     Enviar via:&nbsp;
                     <span
@@ -77,9 +78,19 @@ export default function SendMenu({ sendMode }: Props) {
                         />
                     </div>
                 </div>
+                {sendVia != 'email' && (
+                    <small className='d-block text-center text-danger mt-1'>
+                        <i className='bi bi-exclamation-circle-fill' />
+                        &nbsp;Certifique-se que o
+                        <span className='text-capitalize'>
+                            &nbsp;{sendVia}
+                        </span>{' '}
+                        esteja instalado no seu dispositivo.
+                    </small>
+                )}
             </div>
             <textarea
-                className='form-control mb-4'
+                className='form-control mb-3'
                 value={initialMessage}
                 onChange={(e) => setInitialMessage(e.target.value)}
                 placeholder='Escreva uma mensagem para aparecer antes da sua lista. (Opcional)'
@@ -90,6 +101,7 @@ export default function SendMenu({ sendMode }: Props) {
                     initialMessage={initialMessage}
                     sendVia={sendVia}
                     sendMode={sendMode}
+                    setOpenSendMenu={setOpenSendMenu}
                 />
             </div>
         </div>
