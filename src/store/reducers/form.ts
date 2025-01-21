@@ -13,9 +13,11 @@ const initialState: formState = {
         id: -1,
         name: '',
         qtdType: 'number',
+        numberOf: 'Unidades',
         quantity: 0,
         options: [],
         alertQuantity: 0,
+        description: '',
     },
 };
 
