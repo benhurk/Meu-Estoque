@@ -48,7 +48,13 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                                 {item.name}
                             </span>
                             {warn && (
-                                <i className='bi bi-exclamation-diamond-fill text-danger ms-2'></i>
+                                <i className='bi bi-exclamation-diamond-fill text-danger mx-2'></i>
+                            )}
+                            {item.description && (
+                                <TextTooltip
+                                    classNames='d-inline'
+                                    text={item.description || ''}
+                                />
                             )}
                         </div>
                         <div>
@@ -92,13 +98,6 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                             )}
                         </div>
                     </div>
-                    {item.description && (
-                        <TextTooltip
-                            classNames='align-self-center'
-                            bootstrapIconClass='bi bi-chat-left-text-fill'
-                            text={item.description || ''}
-                        />
-                    )}
                 </div>
                 <div className='d-flex'>
                     <button
