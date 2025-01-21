@@ -33,9 +33,7 @@ function App() {
                         <i className='bi bi-plus-lg' />
                         &nbsp;Adicionar item
                     </button>
-                    <RemoveAll
-                        disabled={listItems.length <= 1 ? true : false}
-                    />
+                    <RemoveAll />
                 </div>
                 <ul className='list-group'>
                     {listItems.map((item) => (

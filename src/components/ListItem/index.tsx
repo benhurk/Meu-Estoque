@@ -32,6 +32,7 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
             <input
                 type='checkbox'
                 className='form-check-input me-3'
+                checked={item.selected === true}
                 onChange={() =>
                     dispatch(editItem({ ...item, selected: !item.selected }))
                 }
