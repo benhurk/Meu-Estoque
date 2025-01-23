@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FormMode } from '../../types/FormTypes';
-import ListItemType from '../../types/ListItemType';
+import ListItemType from '../../types/ListItemTypes';
 
 type formState = {
     formMode: FormMode;

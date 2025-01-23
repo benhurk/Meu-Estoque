@@ -1,4 +1,4 @@
-import { NumberOf } from '../types/ListItemType';
+import { NumberOf } from '../types/ListItemTypes';
 
 const optionsForNumberOf: { label: NumberOf; value: NumberOf }[] = [
     { label: 'Unidades', value: 'Unidades' },

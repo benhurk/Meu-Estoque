@@ -1,4 +1,4 @@
-import { NumberOf } from '../types/ListItemType';
+import { NumberOf } from '../types/ListItemTypes';
 
 export default function abbreviateNumberOf(value: NumberOf) {
     switch (value) {

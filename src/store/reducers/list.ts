@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import ListItemType from '../../types/ListItemType';
+import ListItemType from '../../types/ListItemTypes';
 
 type listState = {
     items: ListItemType[];

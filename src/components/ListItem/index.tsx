@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 
-import ListItemType from '../../types/ListItemType';
+import ListItemType from '../../types/ListItemTypes';
 
 import { removeItem, editItem } from '../../store/reducers/list';
 import { setFormMode, setTargetItem } from '../../store/reducers/form';

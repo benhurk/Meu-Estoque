@@ -10,7 +10,10 @@ import optionsIsNotSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
 
 import { FormMode } from '../../types/FormTypes';
-import ListItemType, { NumberOf, QuantityType } from '../../types/ListItemType';
+import ListItemType, {
+    NumberOf,
+    QuantityType,
+} from '../../types/ListItemTypes';
 
 import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
