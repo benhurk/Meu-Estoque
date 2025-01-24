@@ -14,7 +14,7 @@ export default function FormGroup({
     children,
 }: Props) {
     return (
-        <div className='form-group mb-3'>
+        <div className='form-group'>
             <label htmlFor={elementId} className='mb-1 d-block'>
                 {labelText}
             </label>
