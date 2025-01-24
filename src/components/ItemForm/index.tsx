@@ -64,7 +64,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
     };
 
     return (
-        <form>
+        <form className='d-flex flex-column gap-3'>
             <FormGroup
                 elementId={'item-name'}
                 labelText={'O que é:'}
