@@ -24,7 +24,7 @@ export default function SendMenu({ sendMode, setOpenSendMenu }: Props) {
 
     return (
         <div>
-            <div className='mb-3'>
+            <div className='mb-4'>
                 <span className='d-block fs-5 mb-2 text-center'>
                     Enviar via:&nbsp;
                     <span
@@ -90,7 +90,7 @@ export default function SendMenu({ sendMode, setOpenSendMenu }: Props) {
                 )}
             </div>
             <textarea
-                className='form-control mb-3'
+                className='form-control mb-4'
                 value={initialMessage}
                 onChange={(e) => setInitialMessage(e.target.value)}
                 placeholder='Escreva uma mensagem para aparecer antes da sua lista. (Opcional)'
