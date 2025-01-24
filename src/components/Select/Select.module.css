@@ -1,7 +1,16 @@
+.item {
+    flex-shrink: 0;
+}
+
 .item span {
     pointer-events: none;
 }
 
 .item:hover {
     background-color: var(--bs-secondary-bg-subtle);
+}
+
+.itemMenu {
+    max-height: 20rem;
+    overflow-y: auto;
 }
