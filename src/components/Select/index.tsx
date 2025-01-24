@@ -8,6 +8,7 @@ type Props = {
     options: SelectOptions;
     change: (e: React.MouseEvent<HTMLElement>) => void;
     value: string | string[];
+    emptyOption?: string;
     placeholderOption?: string;
     removableOptions?: boolean;
     removeFn?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -18,6 +19,7 @@ export default function Select({
     options,
     change,
     value,
+    emptyOption,
     placeholderOption,
     removableOptions = false,
     removeFn,
@@ -58,7 +60,21 @@ export default function Select({
             </div>
 
             {open && (
-                <div className='position-absolute top-100 start-0 w-100 p-1 d-flex flex-column bg-body border border-dark-subtle rounded shadow-sm z-3'>
+                <div
+                    className={`position-absolute top-100 start-0 w-100 p-1 d-flex flex-column bg-body border border-dark-subtle rounded shadow-sm z-3 ${styles.itemMenu}`}>
+                    {emptyOption && (
+                        <div
+                            className={`d-flex justify-content-between align-items-center px-1 overflow-hidden ${styles.item}`}>
+                            <div
+                                className='w-100 py-2'
+                                data-value={null}
+                                onClick={change}>
+                                <span className='text-nowrap'>
+                                    {emptyOption}
+                                </span>
+                            </div>
+                        </div>
+                    )}
                     {options.length > 0 ? (
                         options.map((option, index) => (
                             <div
