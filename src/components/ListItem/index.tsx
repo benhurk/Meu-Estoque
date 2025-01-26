@@ -8,6 +8,7 @@ import { setFormMode, setTargetItem } from '../../store/reducers/form';
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
 import Select from '../Select';
+
 import mapOptions from '../../utils/mapOptions';
 import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
 
@@ -23,6 +24,15 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
         dispatch(setTargetItem(item));
         dispatch(setFormMode('edit'));
         setItemFormOpen(true);
+    };
+
+    const changeQuantity = (value: number) => {
+        dispatch(
+            editItem({
+                ...item,
+                quantity: value,
+            })
+        );
     };
 
     const warn = item.quantity <= item.alertQuantity;
@@ -64,13 +74,8 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                                         elementId='quantity'
                                         value={item.quantity}
                                         change={(e) =>
-                                            dispatch(
-                                                editItem({
-                                                    ...item,
-                                                    quantity: Number(
-                                                        e.target.value
-                                                    ),
-                                                })
+                                            changeQuantity(
+                                                Number(e.target.value)
                                             )
                                         }
                                     />
@@ -83,14 +88,10 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                                     elementId='quantity'
                                     options={mapOptions(item.options, 'number')}
                                     change={(e) =>
-                                        dispatch(
-                                            editItem({
-                                                ...item,
-                                                quantity: Number(
-                                                    (e.target as HTMLElement)
-                                                        .dataset.value
-                                                ),
-                                            })
+                                        changeQuantity(
+                                            Number(
+                                                e.currentTarget.dataset.value
+                                            )
                                         )
                                     }
                                     value={item.options[item.quantity]}
