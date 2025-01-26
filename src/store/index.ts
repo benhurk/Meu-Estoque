@@ -6,30 +6,22 @@ import {
     PURGE,
     REGISTER,
     REHYDRATE,
-    persistReducer,
     persistStore,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 
-import listReducer from './reducers/list';
 import formReducer from './reducers/form';
-import savedOptionsReducer from './reducers/savedOptions';
-
-const persistedListReducer = persistReducer(
-    { key: 'root', storage },
-    listReducer
-);
-
-const persistedSavedOptionsReducer = persistReducer(
-    { key: 'root', storage },
-    savedOptionsReducer
-);
+import {
+    persistedListReducer,
+    persistedLogsReducer,
+    persistedSavedOptionsReducer,
+} from './persistedReducers';
 
 const store = configureStore({
     reducer: {
         list: persistedListReducer,
         savedOptions: persistedSavedOptionsReducer,
         form: formReducer,
+        logs: persistedLogsReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

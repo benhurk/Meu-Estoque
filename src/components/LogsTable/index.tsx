@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import useLogs from '../../hooks/useLogs';
-import Select from '../Select';
-import mapOptions from '../../utils/mapOptions';
+import { useSelector } from 'react-redux';
 
-import Months from '../../types/Months';
-import months from '../../const/months';
-import filterLogs from '../../utils/filterLogs';
+import Select from '../Select';
 import FormGroup from '../FormGroup';
 
+import { RootState } from '../../store';
+import Months from '../../types/Months';
+
+import mapOptions from '../../utils/mapOptions';
+import months from '../../const/months';
+import filterLogs from '../../utils/filterLogs';
+
 export default function LogsTable() {
-    const { logs } = useLogs();
+    const { logs } = useSelector((state: RootState) => state.logs);
     const [logsFilter, setLogsFilter] = useState<Months>();
 
     const filteredLogs = filterLogs(logs, logsFilter);
