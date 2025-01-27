@@ -1,5 +1,4 @@
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import useListStore from '../../stores/listStore';
 import SupportedPlatforms from '../../types/supportedPlatforms';
 
 type Props = {
@@ -15,7 +14,7 @@ export default function SendButton({
     initialMessage,
     setOpenSendMenu,
 }: Props) {
-    const listItems = useSelector((state: RootState) => state.list.items);
+    const listItems = useListStore((state) => state.items);
     const warnedItems = listItems.filter(
         (item) => item.quantity <= item.alertQuantity
     );
