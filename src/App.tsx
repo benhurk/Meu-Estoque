@@ -1,20 +1,18 @@
-import { useDispatch, useSelector } from 'react-redux';
-
+import { useState } from 'react';
 import './styles.css';
 
-import { RootState } from './store';
-import { setFormMode } from './store/reducers/form';
+import useListStore from './stores/listStore';
+import useFormStore from './stores/formStore';
 
 import Header from './components/Header';
 import RemoveAll from './components/RemoveAll';
 import ListItem from './components/ListItem';
-import { useState } from 'react';
 import Modal from './components/Modal';
 import ItemForm from './components/ItemForm';
 
 function App() {
-    const dispatch = useDispatch();
-    const listItems = useSelector((state: RootState) => state.list.items);
+    const listItems = useListStore((state) => state.items);
+    const setFormMode = useFormStore((state) => state.setFormMode);
 
     const [itemFormOpen, setItemFormOpen] = useState<boolean>(false);
 
@@ -27,7 +25,7 @@ function App() {
                         type='button'
                         className='btn btn-dark'
                         onClick={() => {
-                            dispatch(setFormMode('add'));
+                            setFormMode('add');
                             setItemFormOpen(true);
                         }}>
                         <i className='bi bi-plus-lg' />

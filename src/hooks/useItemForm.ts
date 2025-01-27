@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+
+import useListStore from '../stores/listStore';
+import useFormStore from '../stores/formStore';
 
 import itemFormInitialState from '../const/itemFormState';
-
-import { RootState } from '../store';
 
 export default function useItemForm() {
     const [fields, setFields] = useState(itemFormInitialState);
@@ -13,10 +13,8 @@ export default function useItemForm() {
         optionsError: '',
     });
 
-    const listItems = useSelector((state: RootState) => state.list.items);
-    const { formMode, targetItem } = useSelector(
-        (state: RootState) => state.form
-    );
+    const listItems = useListStore((state) => state.items);
+    const { formMode, targetItem } = useFormStore();
 
     useEffect(() => {
         if (formMode === 'edit') {

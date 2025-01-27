@@ -1,12 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux';
-
-import { RootState } from '../../store';
 import ListItemType from '../../types/ListItemTypes';
-import { pushItem } from '../../store/reducers/list';
+import useListStore from '../../stores/listStore';
 
 export default function LoadButton() {
-    const dispatch = useDispatch();
-    const listItems = useSelector((state: RootState) => state.list.items);
+    const { items: listItems, addItem } = useListStore();
 
     const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reader = new FileReader();
@@ -30,7 +26,7 @@ export default function LoadButton() {
                     (val) => typeof val === 'undefined'
                 );
 
-                if (isValid) dispatch(pushItem(item));
+                if (isValid) addItem(item);
             });
         };
 

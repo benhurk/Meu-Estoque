@@ -1,9 +1,7 @@
-import { useSelector } from 'react-redux';
-
-import { RootState } from '../../store';
+import useListStore from '../../stores/listStore';
 
 export default function DownloadButton() {
-    const listItems = useSelector((state: RootState) => state.list.items);
+    const listItems = useListStore((state) => state.items);
 
     const date = new Date().toLocaleDateString();
     const data = JSON.stringify(listItems);

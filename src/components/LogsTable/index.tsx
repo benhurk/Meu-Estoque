@@ -12,7 +12,7 @@ import months from '../../const/months';
 import filterLogs from '../../utils/filterLogs';
 
 export default function LogsTable() {
-    const { logs } = useSelector((state: RootState) => state.logs);
+    const logs = useSelector((state: RootState) => state.changeLogs.logs);
     const [logsFilter, setLogsFilter] = useState<Months>();
 
     const filteredLogs = filterLogs(logs, logsFilter);
@@ -31,7 +31,7 @@ export default function LogsTable() {
                 />
             </FormGroup>
             {filteredLogs.length > 0 ? (
-                <table className='table table-striped table-dark'>
+                <table className='table table-striped table-dark mt-4'>
                     <thead>
                         <tr>
                             <th>Data</th>
@@ -40,8 +40,8 @@ export default function LogsTable() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredLogs.map((log) => (
-                            <tr key={JSON.stringify(log)}>
+                        {filteredLogs.map((log, index) => (
+                            <tr key={log.date + log.item + index}>
                                 <td>{log.date}</td>
                                 <td>{log.item}</td>
                                 <td>{log.diff}</td>

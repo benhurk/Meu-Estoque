@@ -1,9 +1,4 @@
 import { FormEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { RootState } from '../../store';
-import { addItem, editItem } from '../../store/reducers/list';
-import { saveOptions } from '../../store/reducers/savedOptions';
 
 import mapOptions from '../../utils/mapOptions';
 import optionsIsNotSaved from '../../utils/optionsIsSaved';
@@ -21,24 +16,21 @@ import FormGroup from '../FormGroup';
 import Select from '../Select';
 import useItemForm from '../../hooks/useItemForm';
 import optionsForNumberOf from '../../const/optionsForNumberOf';
+import useListStore from '../../stores/listStore';
+import useFormStore from '../../stores/formStore';
+import useSavedOptionsStore from '../../stores/savedOptionsStore';
 
 type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ItemForm({ setItemFormOpen }: Props) {
-    const dispatch = useDispatch();
-    const listItems = useSelector((state: RootState) => state.list.items);
-    const { formMode, targetItem } = useSelector(
-        (state: RootState) => state.form
-    );
+    const { items: listItems, addItem, editItem } = useListStore();
+    const { formMode, targetItem } = useFormStore();
+    const { savedOptions, saveOptions } = useSavedOptionsStore();
 
     const { fields, setFields, options, setOptions, validate, errors } =
         useItemForm();
-
-    const { savedOptions } = useSelector(
-        (state: RootState) => state.savedOptions
-    );
 
     const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
         e.preventDefault();
@@ -48,7 +40,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 fields.qtdType === 'options' &&
                 optionsIsNotSaved(options, savedOptions)
             ) {
-                dispatch(saveOptions(options));
+                saveOptions(options);
             }
             const item: ListItemType = {
                 id: mode === 'add' ? listItems.length : targetItem.id,
@@ -56,7 +48,12 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 ...fields,
             };
 
-            dispatch(mode === 'add' ? addItem(item) : editItem(item));
+            if (mode === 'add') {
+                addItem(item);
+            } else {
+                editItem(item);
+            }
+
             setItemFormOpen(false);
             setFields(itemFormInitialState);
             setOptions([]);

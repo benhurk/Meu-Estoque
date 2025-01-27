@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import styles from './SendDropdown.module.css';
 
-import { RootState } from '../../store';
-
 import Modal from '../Modal';
 import SendMenu from '../SendMenu';
+import useListStore from '../../stores/listStore';
 
 export default function SendDropdown() {
     const [openSendMenu, setOpenSendMenu] = useState<boolean>(false);
@@ -14,7 +12,7 @@ export default function SendDropdown() {
         'all'
     );
 
-    const listItems = useSelector((state: RootState) => state.list.items);
+    const listItems = useListStore((state) => state.items);
     const warnedItems = listItems.filter(
         (item) => item.quantity <= item.alertQuantity
     );

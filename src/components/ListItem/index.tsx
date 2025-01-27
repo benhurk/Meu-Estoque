@@ -1,9 +1,4 @@
-import { useDispatch } from 'react-redux';
-
 import ListItemType from '../../types/ListItemTypes';
-
-import { removeItem, editItem } from '../../store/reducers/list';
-import { setFormMode, setTargetItem } from '../../store/reducers/form';
 
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
@@ -11,6 +6,9 @@ import Select from '../Select';
 
 import mapOptions from '../../utils/mapOptions';
 import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
+import useListStore from '../../stores/listStore';
+import useFormStore from '../../stores/formStore';
+import useLogsStore from '../../stores/logsStore';
 
 type Props = {
     item: ListItemType;
@@ -18,21 +16,28 @@ type Props = {
 };
 
 export default function ListItem({ item, setItemFormOpen }: Props) {
-    const dispatch = useDispatch();
+    const { editItem, removeItem } = useListStore();
+    const { setFormMode, setTargetItem } = useFormStore();
+    const addNewLog = useLogsStore((state) => state.addNewLog);
+
+    const date = new Date().toLocaleDateString();
 
     const setEditForm = () => {
-        dispatch(setTargetItem(item));
-        dispatch(setFormMode('edit'));
+        setTargetItem(item);
+        setFormMode('edit');
         setItemFormOpen(true);
     };
 
     const changeQuantity = (value: number) => {
-        dispatch(
-            editItem({
-                ...item,
-                quantity: value,
-            })
-        );
+        const previousQuantity = item.quantity;
+        const difference =
+            item.qtdType === 'number'
+                ? String(value - previousQuantity)
+                : `${item.options[previousQuantity]} -> ${item.options[value]}`;
+
+        editItem({ ...item, quantity: value });
+
+        addNewLog({ date: date, item: item.name, diff: difference });
     };
 
     const warn = item.quantity <= item.alertQuantity;
@@ -43,9 +48,7 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                 type='checkbox'
                 className='form-check-input me-3'
                 checked={item.selected === true}
-                onChange={() =>
-                    dispatch(editItem({ ...item, selected: !item.selected }))
-                }
+                onChange={() => editItem({ ...item, selected: !item.selected })}
             />
             <div className='d-flex justify-content-between w-100 align-items-center'>
                 <div className='w-75 d-flex gap-4'>
@@ -112,7 +115,7 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                     <button
                         type='button'
                         className='btn btn-sm btn-danger'
-                        onClick={() => dispatch(removeItem(item.id))}>
+                        onClick={() => removeItem(item.id)}>
                         <i className='bi bi-trash-fill'></i>
                     </button>
                 </div>

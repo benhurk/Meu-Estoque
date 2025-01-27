@@ -1,5 +1,5 @@
-import { Logs } from '../hooks/useLogs';
 import months from '../const/months';
+import Logs from '../types/Logs';
 import Months from '../types/Months';
 
 export default function filterLogs(logs: Logs[], month?: Months) {

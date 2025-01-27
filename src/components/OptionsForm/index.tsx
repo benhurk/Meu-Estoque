@@ -1,14 +1,11 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { RootState } from '../../store';
-import { removeSavedOptions } from '../../store/reducers/savedOptions';
 
 import AddOptionInput from '../AddOptionInput';
 import Select from '../Select';
 
 import mapOptions from '../../utils/mapOptions';
 import optionsIsSaved from '../../utils/optionsIsSaved';
+import useSavedOptionsStore from '../../stores/savedOptionsStore';
 
 type Props = {
     options: string[];
@@ -16,13 +13,9 @@ type Props = {
 };
 
 export default function OptionsForm({ options, setOptions }: Props) {
-    const dispatch = useDispatch();
-
     const [mode, setMode] = useState<'add' | 'select'>('select');
 
-    const { savedOptions } = useSelector(
-        (state: RootState) => state.savedOptions
-    );
+    const { savedOptions, removeSavedOptions } = useSavedOptionsStore();
 
     const handleRemoveSavedOptions = (
         e: React.MouseEvent<HTMLButtonElement>
@@ -31,9 +24,7 @@ export default function OptionsForm({ options, setOptions }: Props) {
             setOptions([]);
         }
 
-        dispatch(
-            removeSavedOptions(e.currentTarget.dataset.option!.split(','))
-        );
+        removeSavedOptions(e.currentTarget.dataset.option!.split(','));
     };
 
     return (

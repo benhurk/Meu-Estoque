@@ -1,14 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 
-import { clearList } from '../../store/reducers/list';
-
 import Modal from '../Modal';
-import { RootState } from '../../store';
+import useListStore from '../../stores/listStore';
 
 export default function RemoveAllButton() {
-    const dispatch = useDispatch();
-    const listItems = useSelector((state: RootState) => state.list.items);
+    const { items: listItems, clearList } = useListStore();
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -37,7 +33,7 @@ export default function RemoveAllButton() {
                         type='button'
                         className='btn btn-danger me-2'
                         onClick={() => {
-                            dispatch(clearList());
+                            clearList();
                             setModalOpen(false);
                         }}>
                         Apagar tudo
