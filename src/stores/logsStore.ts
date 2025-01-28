@@ -4,26 +4,33 @@ import Logs from '../types/Logs';
 
 type LogsState = {
     logs: Logs[];
-    addNewLog: (log: Logs) => void;
+    addNewLog: (log: Omit<Logs, 'date'>) => void;
 };
 
 const useLogsStore = create<LogsState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             logs: [],
             addNewLog: (log) => {
-                const { logs } = get();
+                const now = new Date();
+                const date = now.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                });
+                const time = now.toLocaleTimeString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                });
 
-                const logExists = logs.some(
-                    (existingLog) =>
-                        existingLog.date === log.date &&
-                        existingLog.item === log.item &&
-                        existingLog.diff === log.diff
-                );
-
-                if (!logExists) {
-                    set({ logs: [...logs, log] });
-                }
+                set((state) => ({
+                    logs: [
+                        ...state.logs,
+                        {
+                            date: `${date} - ${time}`,
+                            ...log,
+                        },
+                    ],
+                }));
             },
         }),
         {

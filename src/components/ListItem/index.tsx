@@ -9,6 +9,7 @@ import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
 import useListStore from '../../stores/listStore';
 import useFormStore from '../../stores/formStore';
 import useLogsStore from '../../stores/logsStore';
+import { useRef } from 'react';
 
 type Props = {
     item: ListItemType;
@@ -18,9 +19,8 @@ type Props = {
 export default function ListItem({ item, setItemFormOpen }: Props) {
     const { editItem, removeItem } = useListStore();
     const { setFormMode, setTargetItem } = useFormStore();
-    const addNewLog = useLogsStore((state) => state.addNewLog);
 
-    const date = new Date().toLocaleDateString();
+    const addNewLog = useLogsStore((state) => state.addNewLog);
 
     const setEditForm = () => {
         setTargetItem(item);
@@ -28,16 +28,30 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
         setItemFormOpen(true);
     };
 
-    const changeQuantity = (value: number) => {
-        const previousQuantity = item.quantity;
+    const logTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const initialQuantity = useRef<number>(item.quantity);
+
+    const changeQuantity = (newValue: number) => {
         const difference =
             item.qtdType === 'number'
-                ? String(value - previousQuantity)
-                : `${item.options[previousQuantity]} -> ${item.options[value]}`;
+                ? String(newValue - initialQuantity.current)
+                : `${item.options[initialQuantity.current]} > ${
+                      item.options[newValue]
+                  }`;
 
-        editItem({ ...item, quantity: value });
+        editItem({ ...item, quantity: newValue });
 
-        addNewLog({ date: date, item: item.name, diff: difference });
+        if (logTimeoutId.current) {
+            clearTimeout(logTimeoutId.current);
+        }
+
+        logTimeoutId.current = setTimeout(() => {
+            addNewLog({
+                item: item.name,
+                diff: Number(difference) > 0 ? `+${difference}` : difference,
+            });
+            initialQuantity.current = newValue;
+        }, 2000);
     };
 
     const warn = item.quantity <= item.alertQuantity;
@@ -55,13 +69,13 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                     <div>
                         <div className='mb-2'>
                             <span
-                                className={`d-inline ${
+                                className={`d-inline me-2 ${
                                     warn ? 'text-danger' : 'text-primary'
                                 }`}>
                                 {item.name}
                             </span>
                             {warn && (
-                                <i className='bi bi-exclamation-diamond-fill text-danger mx-2'></i>
+                                <i className='bi bi-exclamation-diamond-fill text-danger me-2'></i>
                             )}
                             {item.description && (
                                 <TextTooltip
@@ -76,11 +90,11 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                                     <QuantityInput
                                         elementId='quantity'
                                         value={item.quantity}
-                                        change={(e) =>
+                                        change={(e) => {
                                             changeQuantity(
                                                 Number(e.target.value)
-                                            )
-                                        }
+                                            );
+                                        }}
                                     />
                                     <small className='text-dark'>
                                         {abbreviateNumberOf(item.numberOf)}

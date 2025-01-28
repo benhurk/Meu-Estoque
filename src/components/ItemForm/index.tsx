@@ -1,5 +1,11 @@
 import { FormEvent } from 'react';
 
+import useListStore from '../../stores/listStore';
+import useFormStore from '../../stores/formStore';
+import useSavedOptionsStore from '../../stores/savedOptionsStore';
+import useLogsStore from '../../stores/logsStore';
+import useItemForm from '../../hooks/useItemForm';
+
 import mapOptions from '../../utils/mapOptions';
 import optionsIsNotSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
@@ -9,16 +15,12 @@ import ListItemType, {
     NumberOf,
     QuantityType,
 } from '../../types/ListItemTypes';
+import optionsForNumberOf from '../../const/optionsForNumberOf';
 
 import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
-import useItemForm from '../../hooks/useItemForm';
-import optionsForNumberOf from '../../const/optionsForNumberOf';
-import useListStore from '../../stores/listStore';
-import useFormStore from '../../stores/formStore';
-import useSavedOptionsStore from '../../stores/savedOptionsStore';
 
 type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,6 +30,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
     const { items: listItems, addItem, editItem } = useListStore();
     const { formMode, targetItem } = useFormStore();
     const { savedOptions, saveOptions } = useSavedOptionsStore();
+    const addNewLog = useLogsStore((state) => state.addNewLog);
 
     const { fields, setFields, options, setOptions, validate, errors } =
         useItemForm();
@@ -42,16 +45,38 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             ) {
                 saveOptions(options);
             }
-            const item: ListItemType = {
+
+            const newItem: ListItemType = {
                 id: mode === 'add' ? listItems.length : targetItem.id,
                 options: options,
                 ...fields,
             };
 
             if (mode === 'add') {
-                addItem(item);
+                addItem(newItem);
+                addNewLog({
+                    item: newItem.name,
+                    diff: 'Item adicionado',
+                });
             } else {
-                editItem(item);
+                editItem(newItem);
+
+                const difference =
+                    newItem.qtdType === 'number'
+                        ? String(newItem.quantity - targetItem.quantity)
+                        : `${newItem.options[targetItem.quantity]} > ${
+                              newItem.options[newItem.quantity]
+                          }`;
+
+                if (Number(difference) != 0) {
+                    addNewLog({
+                        item: newItem.name,
+                        diff:
+                            Number(difference) > 0
+                                ? `+${difference}`
+                                : difference,
+                    });
+                }
             }
 
             setItemFormOpen(false);
