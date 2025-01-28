@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { SetStateAction, useState } from 'react';
 
 import AddOptionInput from '../AddOptionInput';
 import Select from '../Select';
@@ -9,13 +9,18 @@ import useSavedOptionsStore from '../../stores/savedOptionsStore';
 
 type Props = {
     options: string[];
-    setOptions: Dispatch<SetStateAction<string[]>>;
+    setOptions: React.Dispatch<SetStateAction<string[]>>;
 };
 
 export default function OptionsForm({ options, setOptions }: Props) {
     const [mode, setMode] = useState<'add' | 'select'>('select');
 
     const { savedOptions, removeSavedOptions } = useSavedOptionsStore();
+
+    const handleChangeMode = (mode: 'add' | 'select') => {
+        setMode(mode);
+        setOptions([]);
+    };
 
     const handleRemoveSavedOptions = (
         e: React.MouseEvent<HTMLButtonElement>
@@ -38,10 +43,7 @@ export default function OptionsForm({ options, setOptions }: Props) {
                         name='mode'
                         checked={mode === 'select'}
                         value='select'
-                        onChange={() => {
-                            setMode('select');
-                            setOptions([]);
-                        }}
+                        onChange={() => handleChangeMode('select')}
                     />
                     <label htmlFor='radio-select' className='form-check-label'>
                         Selecionar
@@ -55,10 +57,7 @@ export default function OptionsForm({ options, setOptions }: Props) {
                         name='mode'
                         checked={mode === 'add'}
                         value='add'
-                        onChange={() => {
-                            setMode('add');
-                            setOptions([]);
-                        }}
+                        onChange={() => handleChangeMode('add')}
                     />
                     <label htmlFor='radio-add' className='form-check-label'>
                         Criar
