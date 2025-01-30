@@ -1,0 +1,11 @@
+.radiosArea {
+    display: flex;
+    margin-bottom: 0.125rem;
+    gap: 1.75rem;
+}
+
+.radioGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}

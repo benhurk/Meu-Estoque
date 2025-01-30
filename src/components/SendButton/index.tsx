@@ -74,9 +74,10 @@ export default function SendButton({
             type='button'
             className='btn btn-dark'
             disabled={listItems.length > 0 ? false : true}
-            onClick={() => send(sendMode)}>
+            onClick={() => send(sendMode)}
+            style={{ display: 'block', width: '100%', textAlign: 'center' }}>
             <i className='bi bi-send-fill' />
-            &nbsp;Enviar
+            &nbsp;Enviar lista
         </button>
     );
 }

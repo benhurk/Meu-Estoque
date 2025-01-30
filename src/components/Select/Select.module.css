@@ -1,16 +1,57 @@
-.item {
-    flex-shrink: 0;
+.wraper {
+    position: relative;
+    width: 100%;
+    min-width: 8rem;
 }
 
-.item span {
+.selectInput {
+    padding-right: 2.125rem;
+}
+
+.selectInput > span {
     pointer-events: none;
+    text-wrap: nowrap;
+    user-select: none;
+}
+
+.options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-gray);
+    border-radius: 8px;
+    background-color: var(--color-light);
+    max-height: 20rem;
+    overflow-y: auto;
+    filter: drop-shadow(0.1rem 0.1rem 0.25rem var(--color-gray));
+    z-index: 10;
+}
+
+.item {
+    flex-shrink: 0;
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    text-wrap: nowrap;
 }
 
 .item:hover {
-    background-color: var(--bs-secondary-bg-subtle);
+    background-color: var(--color-gray);
 }
 
-.itemMenu {
-    max-height: 20rem;
-    overflow-y: auto;
+.placeholderItem {
+    flex-shrink: 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    overflow: hidden;
+    user-select: none;
+    text-wrap: nowrap;
+    color: #777;
 }

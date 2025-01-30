@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import styles from './SendMenu.module.css';
+
 import SupportedPlatforms from '../../types/supportedPlatforms';
 import SendButton from '../SendButton';
 
@@ -14,30 +16,29 @@ export default function SendMenu({ sendMode, setOpenSendMenu }: Props) {
     const platformTextColorClass = (platform: SupportedPlatforms) => {
         switch (platform) {
             case 'whatsapp':
-                return 'text-success';
+                return 'text-green';
             case 'telegram':
-                return 'text-primary';
+                return 'text-blue';
             case 'email':
-                return 'text-danger';
+                return 'text-red';
         }
     };
 
     return (
-        <div>
-            <div className='mb-4'>
-                <span className='d-block fs-5 mb-2 text-center'>
+        <div className={styles.wraper}>
+            <div>
+                <span className={styles.platformSelectionLabel}>
                     Enviar via:&nbsp;
                     <span
-                        className={`text-capitalize ${platformTextColorClass(
-                            sendVia
-                        )}`}>
+                        className={`${
+                            styles.platformName
+                        } ${platformTextColorClass(sendVia)}`}>
                         {sendVia}
                     </span>
                 </span>
-                <div className='d-flex justify-content-center gap-5'>
-                    <div className='d-flex align-items-center gap-2'>
+                <div className={styles.platformSelectionWraper}>
+                    <div className={styles.platformRadio}>
                         <input
-                            className='form-check-input'
                             name='send-via'
                             type='radio'
                             id='send-whatsapp'
@@ -46,12 +47,11 @@ export default function SendMenu({ sendMode, setOpenSendMenu }: Props) {
                         />
                         <label
                             htmlFor='send-whatsapp'
-                            className='bi bi-whatsapp form-check-label fs-4 text-success'
+                            className='bi bi-whatsapp text-green'
                         />
                     </div>
-                    <div className='d-flex align-items-center gap-2'>
+                    <div className={styles.platformRadio}>
                         <input
-                            className='form-check-input'
                             name='send-via'
                             type='radio'
                             id='send-telegram'
@@ -60,12 +60,11 @@ export default function SendMenu({ sendMode, setOpenSendMenu }: Props) {
                         />
                         <label
                             htmlFor='send-telegram'
-                            className='bi bi-telegram form-check-label fs-4 text-primary'
+                            className='bi bi-telegram text-blue'
                         />
                     </div>
-                    <div className='d-flex align-items-center gap-2'>
+                    <div className={styles.platformRadio}>
                         <input
-                            className='form-check-input'
                             name='send-via'
                             type='radio'
                             id='send-email'
@@ -74,15 +73,15 @@ export default function SendMenu({ sendMode, setOpenSendMenu }: Props) {
                         />
                         <label
                             htmlFor='send-email'
-                            className='bi bi-envelope-fill form-check-label fs-4 text-danger'
+                            className='bi bi-envelope-fill text-red'
                         />
                     </div>
                 </div>
                 {sendVia != 'email' && (
-                    <small className='d-block text-center text-danger mt-1'>
-                        <i className='bi bi-exclamation-circle-fill' />
+                    <small className={`text-red ${styles.platformWarning}`}>
+                        <i className='bi bi-exclamation-circle-fill text-red' />
                         &nbsp;Certifique-se que o
-                        <span className='text-capitalize'>
+                        <span className={`text-red ${styles.platformName}`}>
                             &nbsp;{sendVia}
                         </span>{' '}
                         esteja instalado no seu dispositivo.
@@ -90,20 +89,17 @@ export default function SendMenu({ sendMode, setOpenSendMenu }: Props) {
                 )}
             </div>
             <textarea
-                className='form-control mb-4'
+                className='input'
                 value={initialMessage}
                 onChange={(e) => setInitialMessage(e.target.value)}
                 placeholder='Escreva uma mensagem para aparecer antes da sua lista. (Opcional)'
-                style={{ resize: 'none', height: '7rem' }}
             />
-            <div className='d-flex justify-content-center gap-2'>
-                <SendButton
-                    initialMessage={initialMessage}
-                    sendVia={sendVia}
-                    sendMode={sendMode}
-                    setOpenSendMenu={setOpenSendMenu}
-                />
-            </div>
+            <SendButton
+                initialMessage={initialMessage}
+                sendVia={sendVia}
+                sendMode={sendMode}
+                setOpenSendMenu={setOpenSendMenu}
+            />
         </div>
     );
 }

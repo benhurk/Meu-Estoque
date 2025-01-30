@@ -19,10 +19,10 @@ export default function Modal({ isOpen, setIsOpen, children }: Props) {
                         onClick={(e) => e.stopPropagation()}>
                         <button
                             type='button'
-                            className='btn-close position-absolute top-0 end-0 mt-1 me-1'
+                            className={`bi bi-x-lg ${styles.closeButton}`}
                             onClick={() => setIsOpen(false)}
                         />
-                        <div>{children}</div>
+                        {children}
                     </div>
                 </div>
             </div>

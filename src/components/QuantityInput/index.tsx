@@ -9,17 +9,11 @@ type Props = {
     change: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export default function QuantityInput({
-    size = 'sm',
-    elementId,
-    value,
-    change,
-}: Props) {
+export default function QuantityInput({ elementId, value, change }: Props) {
     return (
         <input
-            className={`form-control form-control-${size} d-inline-block me-1`}
+            className='input'
             id={elementId}
-            style={{ width: '5rem' }}
             type='number'
             min={0}
             value={removeZeroBeforeNumber(String(value))}

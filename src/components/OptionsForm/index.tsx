@@ -1,5 +1,7 @@
 import { SetStateAction, useState } from 'react';
 
+import styles from './OptionsForm.module.css';
+
 import AddOptionInput from '../AddOptionInput';
 import Select from '../Select';
 
@@ -34,34 +36,28 @@ export default function OptionsForm({ options, setOptions }: Props) {
 
     return (
         <>
-            <div className='mb-1'>
-                <div className='form-check form-check-inline'>
+            <div className={styles.radiosArea}>
+                <div className={styles.radioGroup}>
                     <input
                         type='radio'
-                        className='form-check-input'
                         id='radio-select'
                         name='mode'
                         checked={mode === 'select'}
                         value='select'
                         onChange={() => handleChangeMode('select')}
                     />
-                    <label htmlFor='radio-select' className='form-check-label'>
-                        Selecionar
-                    </label>
+                    <label htmlFor='radio-select'>Selecionar</label>
                 </div>
-                <div className='form-check form-check-inline'>
+                <div className={styles.radioGroup}>
                     <input
                         type='radio'
-                        className='form-check-input'
                         id='radio-add'
                         name='mode'
                         checked={mode === 'add'}
                         value='add'
                         onChange={() => handleChangeMode('add')}
                     />
-                    <label htmlFor='radio-add' className='form-check-label'>
-                        Criar
-                    </label>
+                    <label htmlFor='radio-add'>Criar</label>
                 </div>
             </div>
 

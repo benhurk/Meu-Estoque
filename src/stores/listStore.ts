@@ -9,7 +9,7 @@ type ListState = {
 
 type ListActions = {
     addItem: (item: ListItemType) => void;
-    removeItem: (id: number) => void;
+    removeItem: (id: string) => void;
     editItem: (item: ListItemType) => void;
     clearList: () => void;
 };
@@ -22,14 +22,7 @@ const useListStore = create(
                 set((state) => ({ items: [...state.items, item] })),
             removeItem: (id) =>
                 set((state) => ({
-                    items: state.items
-                        .filter((item) => item.id !== id)
-                        .map((item) => {
-                            if (item.id > id) {
-                                return { ...item, id: item.id - 1 };
-                            }
-                            return item;
-                        }),
+                    items: state.items.filter((item) => item.id !== id),
                 })),
             editItem: (item) =>
                 set((state) => ({

@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import styles from './FormGroup.module.css';
 
 type Props = {
     elementId: string;
@@ -14,12 +15,12 @@ export default function FormGroup({
     children,
 }: Props) {
     return (
-        <div className='form-group'>
-            <label htmlFor={elementId} className='mb-1 d-block'>
+        <div>
+            <label htmlFor={elementId} className={styles.labelText}>
                 {labelText}
             </label>
             {children}
-            {error && <small className='text-danger'>{error}</small>}
+            {error && <small className='text-red'>{error}</small>}
         </div>
     );
 }

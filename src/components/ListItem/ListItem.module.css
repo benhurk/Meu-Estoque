@@ -1,0 +1,48 @@
+.wraper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--color-gray);
+}
+
+.wraper:first-of-type {
+    border-top: 1px solid var(--color-gray);
+}
+
+.check {
+    margin-right: 1rem;
+}
+
+.inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.itemInfo {
+    width: 75%;
+}
+
+.itemTitle {
+    margin-bottom: 0.25rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.itemUnityType {
+    margin-left: 0.5rem;
+}
+
+.itemButtons {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.itemButtons button {
+    font-size: 0.875rem;
+    border-radius: 100%;
+    text-align: center;
+    padding: 0.5rem;
+}

@@ -1,16 +1,15 @@
 import { useState } from 'react';
-// import styles from './Statistics.module.css';
 import Modal from '../Modal';
 import LogsTable from '../LogsTable';
 
-export default function Statistics() {
+export default function StatisticsButton() {
     const [open, setOpen] = useState<boolean>(false);
 
     return (
         <>
             <button
                 type='button'
-                className='btn btn-sm btn-warning'
+                className='btn btn-yellow'
                 onClick={() => setOpen(true)}>
                 <i className='bi bi-bar-chart-fill' />
                 &nbsp;Registros

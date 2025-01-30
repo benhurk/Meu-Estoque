@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
+import styles from './AddOptionInput.module.css';
+
 import OptionsList from '../OptionsList';
 
 type Props = {
@@ -26,10 +28,10 @@ export default function AddOptionInput({ options, setOptions }: Props) {
 
     return (
         <>
-            <div className='mb-2 input-group'>
+            <div className={styles.inputWraper}>
                 <input
                     id='item-options'
-                    className='form-control'
+                    className='input'
                     type='text'
                     placeholder={error ? error : 'Nova opção'}
                     value={newOption}
@@ -37,10 +39,9 @@ export default function AddOptionInput({ options, setOptions }: Props) {
                 />
                 <button
                     type='button'
-                    className='btn btn-dark'
-                    onClick={() => submitOption(newOption)}>
-                    <i className='bi bi-plus' />
-                </button>
+                    className='btn btn-dark bi bi-plus-lg'
+                    onClick={() => submitOption(newOption)}
+                />
             </div>
             {options.length > 0 && (
                 <OptionsList options={options} setOptions={setOptions} />

@@ -1,0 +1,11 @@
+.labelButton {
+    background-color: var(--color-light);
+
+    input {
+        display: none;
+    }
+}
+
+.fileInput {
+    display: none;
+}

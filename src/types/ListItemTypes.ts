@@ -7,7 +7,7 @@ export type NumberOf =
     | 'Litros';
 
 type ListItemType = {
-    id: number;
+    id: string;
     name: string;
     qtdType: QuantityType;
     numberOf: NumberOf;

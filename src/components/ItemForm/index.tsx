@@ -1,5 +1,7 @@
 import { FormEvent } from 'react';
 
+import styles from './ItemForm.module.css';
+
 import useListStore from '../../stores/listStore';
 import useFormStore from '../../stores/formStore';
 import useSavedOptionsStore from '../../stores/savedOptionsStore';
@@ -27,7 +29,7 @@ type Props = {
 };
 
 export default function ItemForm({ setItemFormOpen }: Props) {
-    const { items: listItems, addItem, editItem } = useListStore();
+    const { addItem, editItem } = useListStore();
     const { formMode, targetItem } = useFormStore();
     const { savedOptions, saveOptions } = useSavedOptionsStore();
     const addNewLog = useLogsStore((state) => state.addNewLog);
@@ -47,7 +49,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             }
 
             const newItem: ListItemType = {
-                id: mode === 'add' ? listItems.length : targetItem.id,
+                id: mode === 'add' ? crypto.randomUUID() : targetItem.id,
                 options: options,
                 ...fields,
             };
@@ -86,7 +88,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
     };
 
     return (
-        <form className='d-flex flex-column gap-3'>
+        <form className={styles.form}>
             <FormGroup
                 elementId={'item-name'}
                 labelText={'O que é:'}
@@ -94,7 +96,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 <input
                     type='text'
                     id='item-name'
-                    className='form-control'
+                    className='input'
                     placeholder='Nome do item'
                     value={fields.name}
                     onChange={(e) =>
@@ -206,10 +208,9 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             </FormGroup>
             <FormGroup elementId='item-description' labelText='Descrição:'>
                 <textarea
-                    className='form-control'
+                    className={`input ${styles.description}`}
                     id='item-description'
                     value={fields.description}
-                    style={{ resize: 'none', height: '7rem' }}
                     onChange={(e) =>
                         setFields({ ...fields, description: e.target.value })
                     }
@@ -217,7 +218,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             </FormGroup>
             <button
                 type='submit'
-                className='btn btn-dark'
+                className={`btn btn-dark ${styles.submitButton}`}
                 onClick={(e) => handleSubmit(e, formMode)}>
                 <i
                     className={

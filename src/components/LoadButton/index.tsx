@@ -1,3 +1,5 @@
+import styles from './LoadButton.module.css';
+
 import ListItemType from '../../types/ListItemTypes';
 import useListStore from '../../stores/listStore';
 
@@ -36,11 +38,11 @@ export default function LoadButton() {
     };
 
     return (
-        <label className='btn btn-sm btn-light'>
+        <label className='btn btn-light'>
             <i className='bi bi-upload' />
             &nbsp;Importar
             <input
-                className='d-none'
+                className={styles.fileInput}
                 type='file'
                 accept='.json, application/JSON'
                 onChange={(e) => upload(e)}

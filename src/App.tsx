@@ -5,10 +5,10 @@ import useListStore from './stores/listStore';
 import useFormStore from './stores/formStore';
 
 import Header from './components/Header';
-import RemoveAll from './components/RemoveAll';
 import ListItem from './components/ListItem';
 import Modal from './components/Modal';
 import ItemForm from './components/ItemForm';
+import ListButtons from './components/ListButtons';
 
 function App() {
     const listItems = useListStore((state) => state.items);
@@ -19,20 +19,11 @@ function App() {
     return (
         <>
             <Header />
-            <main className='wraper py-5'>
-                <div className='mb-4 d-flex justify-content-center gap-3'>
-                    <button
-                        type='button'
-                        className='btn btn-dark'
-                        onClick={() => {
-                            setFormMode('add');
-                            setItemFormOpen(true);
-                        }}>
-                        <i className='bi bi-plus-lg' />
-                        &nbsp;Adicionar item
-                    </button>
-                    <RemoveAll />
-                </div>
+            <main className='container'>
+                <ListButtons
+                    setFormMode={setFormMode}
+                    openFormFn={setItemFormOpen}
+                />
                 <ul className='list-group'>
                     {listItems.map((item) => (
                         <ListItem

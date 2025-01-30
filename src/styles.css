@@ -1,34 +1,151 @@
-.wraper {
+:root {
+    --color-dark: #111827;
+    --color-light: #f9fafb;
+    --color-gray: #d1d5db;
+    --color-blue: #3f83f8;
+    --color-red: #e02424;
+    --color-yellow: #fce869;
+    --color-green: #0ea06f;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', serif;
+    color: var(--color-dark);
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
     max-width: 768px;
     margin: auto;
 }
 
 @media (max-width: 767px) {
-    .wraper {
+    .container {
         max-width: 95%;
     }
 }
 
-i.bi {
-    pointer-events: none;
+main {
+    padding-block: 2rem;
 }
 
+ul,
 ol {
-    padding-left: 0;
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+textarea {
+    resize: none;
+    width: 100%;
+    height: 8rem;
+}
+
+.input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-gray);
+    border-radius: 8px;
+    background-color: white;
+    outline: none;
+    transition: border-color 0.2s ease-in-out;
+    filter: drop-shadow(0.1rem 0.1rem 0.25rem var(--color-gray));
+    font-size: 0.875rem;
+}
+
+.input[type='text'] {
+    width: 100%;
+}
+
+.input[type='number'] {
+    width: 5rem;
+}
+
+.input:focus {
+    border-color: var(--color-blue);
+}
+
+button i.bi,
+a i.bi {
+    pointer-events: none;
+    color: inherit;
+}
+
+.dropdown-icon {
+    position: absolute;
+    right: 0.75rem;
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #fff;
+    width: fit-content;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.btn:hover {
+    box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.2);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.btn-dark {
+    background-color: var(--color-dark);
+}
+
+.btn-light {
+    background-color: var(--color-light);
+    color: #000;
+}
+
+.btn-blue {
+    background-color: var(--color-blue);
+}
+
+.btn-red {
+    background-color: var(--color-red);
+}
+
+.btn-yellow {
+    background-color: var(--color-yellow);
+    color: #000;
+}
+
+.btn-green {
+    background-color: var(--color-green);
 }
 
 .btn-remove-item {
     background-color: transparent;
     border: none;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    padding-inline: 3px;
-    padding-block: 0;
-    color: var(--bs-danger);
-    transition: background-color 0.2s ease-in-out;
+    color: var(--color-red);
+    font-size: 1.125rem;
+    padding: 0;
+    cursor: pointer;
 }
 
-.btn-remove-item:hover {
-    background-color: var(--bs-light);
+.text-blue {
+    color: var(--color-blue);
+}
+
+.text-red {
+    color: var(--color-red);
+}
+
+.text-green {
+    color: var(--color-green);
 }

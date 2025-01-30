@@ -1,3 +1,5 @@
+import styles from './ListItem.module.css';
+
 import ListItemType from '../../types/ListItemTypes';
 
 import QuantityInput from '../QuantityInput';
@@ -57,50 +59,42 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
     const warn = item.quantity <= item.alertQuantity;
 
     return (
-        <li className='position-relative list-group-item d-flex align-items-center'>
+        <li className={styles.wraper}>
             <input
                 type='checkbox'
-                className='form-check-input me-3'
+                className={styles.check}
                 checked={item.selected === true}
                 onChange={() => editItem({ ...item, selected: !item.selected })}
             />
-            <div className='d-flex justify-content-between w-100 align-items-center'>
-                <div className='w-75 d-flex gap-4'>
+            <div className={styles.inner}>
+                <div className={styles.itemInfo}>
+                    <div className={styles.itemTitle}>
+                        <span className={warn ? 'text-red' : 'text-blue'}>
+                            {item.name}
+                        </span>
+                        {warn && (
+                            <i className='bi bi-exclamation-diamond-fill text-red' />
+                        )}
+                        {item.description && (
+                            <TextTooltip text={item.description || ''} />
+                        )}
+                    </div>
                     <div>
-                        <div className='mb-2'>
-                            <span
-                                className={`d-inline me-2 ${
-                                    warn ? 'text-danger' : 'text-primary'
-                                }`}>
-                                {item.name}
-                            </span>
-                            {warn && (
-                                <i className='bi bi-exclamation-diamond-fill text-danger me-2'></i>
-                            )}
-                            {item.description && (
-                                <TextTooltip
-                                    classNames='d-inline'
-                                    text={item.description || ''}
+                        {item.qtdType === 'number' ? (
+                            <>
+                                <QuantityInput
+                                    elementId='quantity'
+                                    value={item.quantity}
+                                    change={(e) => {
+                                        changeQuantity(Number(e.target.value));
+                                    }}
                                 />
-                            )}
-                        </div>
-                        <div>
-                            {item.qtdType === 'number' ? (
-                                <>
-                                    <QuantityInput
-                                        elementId='quantity'
-                                        value={item.quantity}
-                                        change={(e) => {
-                                            changeQuantity(
-                                                Number(e.target.value)
-                                            );
-                                        }}
-                                    />
-                                    <small className='text-dark'>
-                                        {abbreviateNumberOf(item.numberOf)}
-                                    </small>
-                                </>
-                            ) : (
+                                <small className={styles.itemUnityType}>
+                                    {abbreviateNumberOf(item.numberOf)}
+                                </small>
+                            </>
+                        ) : (
+                            <div style={{ width: '30%' }}>
                                 <Select
                                     elementId='quantity'
                                     options={mapOptions(item.options, 'number')}
@@ -113,25 +107,19 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                                     }
                                     value={item.options[item.quantity]}
                                 />
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
                 </div>
-                <div className='d-flex'>
+                <div className={styles.itemButtons}>
                     <button
                         type='button'
-                        className='btn btn-sm btn-dark me-1'
-                        data-toggle='modal'
-                        data-target='#modal-form'
-                        onClick={() => setEditForm()}>
-                        <i className='bi bi-pencil-fill'></i>
-                    </button>
+                        className='btn btn-dark bi bi-pencil-fill'
+                        onClick={() => setEditForm()}></button>
                     <button
                         type='button'
-                        className='btn btn-sm btn-danger'
-                        onClick={() => removeItem(item.id)}>
-                        <i className='bi bi-trash-fill'></i>
-                    </button>
+                        className='btn btn-red bi bi-trash-fill'
+                        onClick={() => removeItem(item.id)}></button>
                 </div>
             </div>
         </li>

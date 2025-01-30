@@ -10,7 +10,7 @@ export default function DownloadButton() {
 
     return (
         <a
-            className='btn btn-sm btn-success'
+            className='btn btn-green'
             href={url}
             role='button'
             download={`Estoque${date}.json`}>

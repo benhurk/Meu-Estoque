@@ -41,53 +41,52 @@ export default function Select({
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLDivElement, Element>) => {
-        if (!e.relatedTarget?.classList.contains('btn-remove-item')) {
+        if (e.currentTarget && !e.currentTarget.contains(e.relatedTarget)) {
             setOpen(false);
         }
     };
 
+    const handleOptionClick = (e: React.MouseEvent<HTMLElement>) => {
+        change(e);
+        setOpen(false);
+    };
+
     return (
         <div
-            className='position-relative form-select'
             id={elementId}
+            className={styles.wraper}
             tabIndex={0}
-            onClick={toggle}
             onBlur={handleBlur}>
-            <div className='overflow-hidden'>
+            <div
+                className={`input ${styles.selectInput}`}
+                tabIndex={0}
+                onClick={toggle}>
                 <span className='user-select-none text-nowrap'>
                     {value.length > 0 ? formatedOption(value) : ''}
                 </span>
+                <i className='dropdown-icon bi bi-chevron-down' />
             </div>
 
             {open && (
                 <div
-                    className={`position-absolute top-100 start-0 w-100 p-1 d-flex flex-column bg-body border border-dark-subtle rounded shadow-sm z-3 ${styles.itemMenu}`}>
+                    className={styles.options}
+                    onClick={(e) => e.stopPropagation()}>
                     {emptyOption && (
                         <div
-                            className={`d-flex justify-content-between align-items-center px-1 overflow-hidden ${styles.item}`}>
-                            <div
-                                className='w-100 py-2'
-                                data-value={null}
-                                onClick={change}>
-                                <span className='text-nowrap'>
-                                    {emptyOption}
-                                </span>
-                            </div>
+                            className={styles.item}
+                            data-value={null}
+                            onClick={change}>
+                            {emptyOption}
                         </div>
                     )}
                     {options.length > 0 ? (
                         options.map((option, index) => (
                             <div
                                 key={index}
-                                className={`d-flex justify-content-between align-items-center px-1 overflow-hidden ${styles.item}`}>
-                                <div
-                                    className='w-100 py-2'
-                                    data-value={option.value}
-                                    onClick={change}>
-                                    <span className='text-nowrap'>
-                                        {formatedOption(option.label)}
-                                    </span>
-                                </div>
+                                className={styles.item}
+                                data-value={option.value}
+                                onClick={(e) => handleOptionClick(e)}>
+                                <div>{formatedOption(option.label)}</div>
                                 {removableOptions && removeFn && (
                                     <button
                                         type='button'
@@ -100,10 +99,8 @@ export default function Select({
                             </div>
                         ))
                     ) : (
-                        <div className='p-1 overflow-hidden'>
-                            <span className='text-nowrap text-secondary user-select-none'>
-                                {placeholderOption}
-                            </span>
+                        <div className={styles.placeholderItem}>
+                            {placeholderOption}
                         </div>
                     )}
                 </div>

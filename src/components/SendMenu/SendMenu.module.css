@@ -1,0 +1,35 @@
+.wraper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.platformSelectionWraper {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.platformSelectionLabel {
+    display: block;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.platformRadio {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.platformWarning {
+    display: block;
+    font-size: 0.775rem;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.platformName {
+    text-transform: capitalize;
+}

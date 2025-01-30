@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import styles from './OptionsList.module.css';
 
 type Props = {
     options: string[];
@@ -12,14 +13,12 @@ export default function OptionsList({ options, setOptions }: Props) {
 
     return (
         <>
-            <ol className='list-group'>
+            <ol>
                 {options.map((item, index) => (
-                    <li
-                        key={index}
-                        className='list-group-item p-1 d-flex align-items-center justify-content-between'>
+                    <li key={index} className={styles.listItem}>
                         <div>
                             <span>{`${index + 1}. `}</span>
-                            <span className='text-primary'>{item}</span>
+                            <span className='text-blue'>{item}</span>
                         </div>
                         <button
                             type='button'

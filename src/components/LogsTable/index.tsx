@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import styles from './LogsTable.module.css';
+
 import Select from '../Select';
 import FormGroup from '../FormGroup';
 
@@ -18,7 +20,7 @@ export default function LogsTable() {
 
     return (
         <>
-            <FormGroup elementId='logs-filter' labelText='Filtrar por mês:'>
+            <FormGroup elementId='logs-filter' labelText='Mês:'>
                 <Select
                     elementId='logs-filter'
                     options={mapOptions(months)}
@@ -29,33 +31,41 @@ export default function LogsTable() {
                     emptyOption='Todos'
                 />
             </FormGroup>
-            {filteredLogs.length > 0 ? (
-                <table className='table table-striped table-dark mt-4'>
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Item</th>
-                            <th>Alteração</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredLogs.map((log, index) => (
-                            <tr key={log.date + log.item + index}>
-                                <td>{log.date}</td>
-                                <td>{log.item}</td>
-                                <td>{log.diff}</td>
+            <div style={{ height: '20rem' }}>
+                {filteredLogs.length > 0 ? (
+                    <table className={styles.table}>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Item</th>
+                                <th>Alteração</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
-                <div
-                    className='d-flex flex-column justify-content-center align-items-center text-center'
-                    style={{ height: '20rem' }}>
-                    <i className='bi bi-clipboard-x fs-4' />
-                    <span className='d-block'>Nenhum registro disponível.</span>
-                </div>
-            )}
+                        </thead>
+                        <tbody>
+                            {filteredLogs.map((log, index) => (
+                                <tr key={log.date + log.item + index}>
+                                    <td>
+                                        <span>{log.date.split(' - ')[0]}</span>
+                                        &nbsp;-&nbsp;
+                                        <span className={styles.dateTime}>
+                                            {log.date.split(' - ')[1]}
+                                        </span>
+                                    </td>
+                                    <td>{log.item}</td>
+                                    <td>{log.diff}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <div className='d-flex flex-column justify-content-center align-items-center h-100 text-center'>
+                        <i className='bi bi-clipboard-x fs-4' />
+                        <span className='d-block'>
+                            Nenhum registro disponível.
+                        </span>
+                    </div>
+                )}
+            </div>
         </>
     );
 }
