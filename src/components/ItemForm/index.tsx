@@ -58,7 +58,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 addItem(newItem);
                 addNewLog({
                     item: newItem.name,
-                    diff: 'Item adicionado',
+                    diff: 'Adicionado',
                 });
             } else {
                 editItem(newItem);
@@ -107,7 +107,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             <FormGroup elementId='item-type' labelText='Contar por:'>
                 <Select
                     options={[
-                        { label: 'Número', value: 'number' },
+                        { label: 'Unidades de medida', value: 'number' },
                         { label: 'Opções', value: 'options' },
                     ]}
                     elementId={'item-type'}
@@ -118,7 +118,11 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                                 .value as QuantityType,
                         })
                     }
-                    value={fields.qtdType === 'number' ? 'Número' : 'Opções'}
+                    value={
+                        fields.qtdType === 'number'
+                            ? 'Unidades de medida'
+                            : 'Opções'
+                    }
                 />
             </FormGroup>
 
@@ -132,7 +136,9 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             )}
 
             {fields.qtdType === 'number' && (
-                <FormGroup elementId='item-numberOf' labelText='Número de:'>
+                <FormGroup
+                    elementId='item-numberOf'
+                    labelText='Unidade de medida:'>
                     <Select
                         elementId='item-numberOf'
                         options={optionsForNumberOf}
