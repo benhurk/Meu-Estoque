@@ -12,7 +12,7 @@ type FormState = {
 const useFormStore = create<FormState>((set) => ({
     formMode: 'add',
     targetItem: {
-        id: -1,
+        id: '',
         name: '',
         qtdType: 'number',
         numberOf: 'Unidades',
