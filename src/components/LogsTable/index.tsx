@@ -11,6 +11,7 @@ import mapOptions from '../../utils/mapOptions';
 import months from '../../const/months';
 import filterLogs from '../../utils/filterLogs';
 import useLogsStore from '../../stores/logsStore';
+import PlaceholderContent from '../PlaceholderContent';
 
 export default function LogsTable() {
     const logs = useLogsStore((state) => state.logs);
@@ -58,12 +59,7 @@ export default function LogsTable() {
                         </tbody>
                     </table>
                 ) : (
-                    <div className='d-flex flex-column justify-content-center align-items-center h-100 text-center'>
-                        <i className='bi bi-clipboard-x fs-4' />
-                        <span className='d-block'>
-                            Nenhum registro disponível.
-                        </span>
-                    </div>
+                    <PlaceholderContent text='Nenhum registro disponível.' />
                 )}
             </div>
         </>
