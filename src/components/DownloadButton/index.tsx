@@ -10,8 +10,7 @@ export default function DownloadButton() {
 
     return (
         <a
-            className='btn btn-dropdown-item'
-            style={{ color: 'darkgreen' }}
+            className='btn btn-dropdown-item text-green'
             href={url}
             role='button'
             download={`Estoque${date}.json`}>
