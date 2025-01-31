@@ -37,7 +37,7 @@ export default function LogsTable() {
                     emptyOption='Todos'
                 />
             </FormGroup>
-            <div style={{ height: '20rem' }}>
+            <div style={{ minHeight: '20rem' }}>
                 {filteredLogs.length > 0 ? (
                     <table className={styles.table}>
                         <thead>

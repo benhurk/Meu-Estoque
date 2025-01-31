@@ -28,7 +28,7 @@
 .modalContent {
     position: relative;
     width: 500px;
-    max-height: 90%;
+    max-height: 80%;
     overflow-x: hidden;
     overflow-y: auto;
     margin: auto;
