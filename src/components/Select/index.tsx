@@ -75,7 +75,7 @@ export default function Select({
                         <div
                             className={styles.item}
                             data-value={null}
-                            onClick={change}>
+                            onClick={(e) => handleOptionClick(e)}>
                             {emptyOption}
                         </div>
                     )}
