@@ -39,10 +39,3 @@
     display: flex;
     gap: 0.25rem;
 }
-
-.itemButtons button {
-    font-size: 0.875rem;
-    border-radius: 100%;
-    text-align: center;
-    padding: 0.5rem;
-}

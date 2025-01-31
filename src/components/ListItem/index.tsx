@@ -114,11 +114,11 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                 <div className={styles.itemButtons}>
                     <button
                         type='button'
-                        className='btn btn-dark bi bi-pencil-fill'
+                        className='btn btn-dark btn-circle bi bi-pencil-fill'
                         onClick={() => setEditForm()}></button>
                     <button
                         type='button'
-                        className='btn btn-red bi bi-trash-fill'
+                        className='btn btn-red btn-circle bi bi-trash-fill'
                         onClick={() => removeItem(item.id)}></button>
                 </div>
             </div>

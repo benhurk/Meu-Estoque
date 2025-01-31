@@ -1,0 +1,15 @@
+.triggerButton {
+    position: relative;
+}
+
+.iconSpacer {
+    padding-left: 1.25rem;
+}
+
+.dropdownMenu {
+    position: absolute;
+    background-color: var(--color-light);
+    border: 1px solid var(--color-gray);
+    border-radius: 8px;
+    overflow: hidden;
+}

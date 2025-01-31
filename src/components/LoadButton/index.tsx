@@ -38,7 +38,7 @@ export default function LoadButton() {
     };
 
     return (
-        <label className='btn btn-light'>
+        <label className='btn btn-dropdown-item text-dark'>
             <i className='bi bi-upload' />
             &nbsp;Importar
             <input

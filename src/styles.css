@@ -110,6 +110,11 @@ a i.bi {
 .btn-light {
     background-color: var(--color-light);
     color: #000;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-light:hover {
+    background-color: hsl(216, 12%, 90%);
 }
 
 .btn-blue {
@@ -129,6 +134,16 @@ a i.bi {
     background-color: var(--color-green);
 }
 
+.btn-transparent {
+    background-color: transparent;
+}
+
+.btn-circle {
+    border-radius: 100%;
+    text-align: center;
+    padding: 0.5rem;
+}
+
 .btn-remove-item {
     background-color: transparent;
     border: none;
@@ -136,6 +151,31 @@ a i.bi {
     font-size: 1.125rem;
     padding: 0;
     cursor: pointer;
+}
+
+.btn-dropdown-item {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    text-align: start;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.btn-dropdown-item:hover {
+    background-color: var(--color-gray);
+}
+
+.btn-dropdown-item:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.text-dark {
+    color: var(--color-dark);
 }
 
 .text-blue {
