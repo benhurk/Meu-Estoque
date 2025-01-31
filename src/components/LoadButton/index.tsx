@@ -39,7 +39,7 @@ export default function LoadButton() {
 
     return (
         <label className='btn btn-dropdown-item text-dark'>
-            <i className='bi bi-upload' />
+            <i className='bi bi-file-earmark-arrow-up-fill' />
             &nbsp;Importar
             <input
                 className={styles.fileInput}

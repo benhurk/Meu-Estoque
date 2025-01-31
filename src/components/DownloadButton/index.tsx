@@ -14,7 +14,7 @@ export default function DownloadButton() {
             href={url}
             role='button'
             download={`Estoque${date}.json`}>
-            <i className='bi bi-download' />
+            <i className='bi bi-file-earmark-arrow-down-fill' />
             &nbsp;Baixar
         </a>
     );
