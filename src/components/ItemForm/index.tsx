@@ -11,6 +11,7 @@ import useItemForm from '../../hooks/useItemForm';
 import mapOptions from '../../utils/mapOptions';
 import optionsIsNotSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
+import capitalizeString from '../../utils/capitalizeString';
 
 import { FormMode } from '../../types/FormTypes';
 import ListItemType, {
@@ -52,6 +53,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 id: mode === 'add' ? crypto.randomUUID() : targetItem.id,
                 options: options,
                 ...fields,
+                name: capitalizeString(fields.name),
             };
 
             if (mode === 'add') {
@@ -100,7 +102,10 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     placeholder='Nome do item'
                     value={fields.name}
                     onChange={(e) =>
-                        setFields({ ...fields, name: e.target.value })
+                        setFields({
+                            ...fields,
+                            name: e.target.value,
+                        })
                     }
                 />
             </FormGroup>
