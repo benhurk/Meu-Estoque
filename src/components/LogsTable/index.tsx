@@ -19,6 +19,11 @@ export default function LogsTable() {
 
     const filteredLogs = filterLogs(logs, logsFilter);
 
+    const getDiffColor = (diff: string) => {
+        if (Number(diff) > 0 || diff === 'Adicionado') return 'text-green';
+        else return 'text-red';
+    };
+
     return (
         <>
             <FormGroup elementId='logs-filter' labelText='Mês:'>
@@ -53,7 +58,9 @@ export default function LogsTable() {
                                         </span>
                                     </td>
                                     <td>{log.item}</td>
-                                    <td>{log.diff}</td>
+                                    <td className={getDiffColor(log.diff)}>
+                                        {log.diff}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

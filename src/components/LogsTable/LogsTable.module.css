@@ -3,7 +3,7 @@
     border-spacing: 0;
     text-align: center;
     margin-top: 1rem;
-    border: 1px solid var(--color-gray);
+    border: 1px solid var(--color-dark);
 }
 
 thead th {
@@ -14,7 +14,7 @@ thead th {
 }
 
 tbody {
-    background-color: var(--color-light);
+    background-color: #fff;
     font-size: 0.875rem;
 }
 

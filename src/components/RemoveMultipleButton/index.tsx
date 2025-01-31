@@ -4,9 +4,11 @@ import styles from './RemoveMultiple.module.css';
 
 import Modal from '../Modal';
 import useListStore from '../../stores/listStore';
+import useLogsStore from '../../stores/logsStore';
 
 export default function RemoveMultipleButton() {
     const { items: listItems, removeItem, clearList } = useListStore();
+    const addNewLog = useLogsStore((state) => state.addNewLog);
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -16,7 +18,10 @@ export default function RemoveMultipleButton() {
 
     const removeItems = () => {
         if (selectedItems.length > 0) {
-            selectedItems.forEach((item) => removeItem(item.id));
+            selectedItems.forEach((item) => {
+                removeItem(item.id);
+                addNewLog({ item: item.name, diff: 'Removido' });
+            });
         } else clearList();
 
         setModalOpen(false);
