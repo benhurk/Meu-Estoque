@@ -9,7 +9,7 @@ export default function filterLogs(logs: Logs[], month?: Months) {
                 .toString()
                 .padStart(2, '0');
 
-            return log.date.split('/')[1] === monthNumber;
+            return log.date.split(' - ')[0].split('/')[1] === monthNumber;
         });
     } else return logs;
 }
