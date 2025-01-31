@@ -71,7 +71,7 @@ textarea {
 }
 
 button i.bi,
-a i.bi {
+.btn i.bi {
     pointer-events: none;
     color: inherit;
 }
