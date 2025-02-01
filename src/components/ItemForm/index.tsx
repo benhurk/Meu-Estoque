@@ -12,6 +12,8 @@ import mapOptions from '../../utils/mapOptions';
 import optionsIsNotSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
 import capitalizeString from '../../utils/capitalizeString';
+import getOptionsDiff from '../../utils/getOptionsDiff';
+import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
 
 import { FormMode } from '../../types/FormTypes';
 import ListItemType, {
@@ -24,7 +26,6 @@ import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
-import getOptionsDiff from '../../utils/getOptionsDiff';
 
 type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -63,7 +64,8 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     item: newItem.name,
                     diff:
                         newItem.qtdType === 'number'
-                            ? String(newItem.quantity)
+                            ? String(newItem.quantity) +
+                              ` ${abbreviateNumberOf(newItem.numberOf)}`
                             : newItem.options[newItem.quantity],
                 });
             } else {
@@ -82,9 +84,17 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     addNewLog({
                         item: newItem.name,
                         diff:
-                            Number(difference) > 0
-                                ? `+${difference}`
-                                : difference,
+                            newItem.qtdType === 'number'
+                                ? `${
+                                      Number(difference) > 0
+                                          ? `+${difference}`
+                                          : difference
+                                  } ${abbreviateNumberOf(newItem.numberOf)}`
+                                : getOptionsDiff(
+                                      targetItem.quantity,
+                                      newItem.quantity,
+                                      newItem.options
+                                  ),
                     });
                 }
             }
