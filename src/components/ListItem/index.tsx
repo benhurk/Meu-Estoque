@@ -1,4 +1,9 @@
+import { useRef } from 'react';
 import styles from './ListItem.module.css';
+
+import useListStore from '../../stores/listStore';
+import useFormStore from '../../stores/formStore';
+import useLogsStore from '../../stores/logsStore';
 
 import ListItemType from '../../types/ListItemTypes';
 
@@ -8,10 +13,6 @@ import Select from '../Select';
 
 import mapOptions from '../../utils/mapOptions';
 import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
-import useListStore from '../../stores/listStore';
-import useFormStore from '../../stores/formStore';
-import useLogsStore from '../../stores/logsStore';
-import { useRef } from 'react';
 import getOptionsDiff from '../../utils/getOptionsDiff';
 
 type Props = {
@@ -52,7 +53,18 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
         logTimeoutId.current = setTimeout(() => {
             addNewLog({
                 item: item.name,
-                diff: Number(difference) > 0 ? `+${difference}` : difference,
+                diff:
+                    item.qtdType === 'number'
+                        ? `${
+                              Number(difference) > 0
+                                  ? `+${difference}`
+                                  : difference
+                          } ${abbreviateNumberOf(item.numberOf)}`
+                        : getOptionsDiff(
+                              initialQuantity.current,
+                              newValue,
+                              item.options
+                          ),
             });
             initialQuantity.current = newValue;
         }, 2000);
@@ -123,8 +135,10 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                         type='button'
                         className='btn btn-red btn-circle bi bi-trash-fill'
                         onClick={() => {
-                            removeLog(
-                                logs.find((log) => log.item === item.name)!.id
+                            logs.filter(
+                                (log) => log.item === item.name
+                            ).forEach((filteredLog) =>
+                                removeLog(filteredLog.id)
                             );
                             removeItem(item.id);
                         }}
