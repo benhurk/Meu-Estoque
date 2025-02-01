@@ -1,4 +1,5 @@
 type Logs = {
+    id: string;
     date: string;
     item: string;
     diff: string;

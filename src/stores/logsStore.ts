@@ -4,7 +4,9 @@ import Logs from '../types/Logs';
 
 type LogsState = {
     logs: Logs[];
-    addNewLog: (log: Omit<Logs, 'date'>) => void;
+    addNewLog: (log: Omit<Logs, 'id' | 'date'>) => void;
+    removeLog: (id: string) => void;
+    clearLogs: () => void;
 };
 
 const useLogsStore = create<LogsState>()(
@@ -26,10 +28,23 @@ const useLogsStore = create<LogsState>()(
                     logs: [
                         ...state.logs,
                         {
+                            id: crypto.randomUUID(),
                             date: `${date} - ${time}`,
                             ...log,
                         },
                     ],
+                }));
+            },
+
+            removeLog: (id) => {
+                set((state) => ({
+                    logs: state.logs.filter((log) => log.id != id),
+                }));
+            },
+
+            clearLogs: () => {
+                set(() => ({
+                    logs: [],
                 }));
             },
         }),

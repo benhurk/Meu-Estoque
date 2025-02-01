@@ -22,7 +22,7 @@ type Props = {
 export default function ListItem({ item, setItemFormOpen }: Props) {
     const { editItem, removeItem } = useListStore();
     const { setFormMode, setTargetItem } = useFormStore();
-    const addNewLog = useLogsStore((state) => state.addNewLog);
+    const { logs, addNewLog, removeLog } = useLogsStore();
 
     const setEditForm = () => {
         setTargetItem(item);
@@ -117,14 +117,18 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                     <button
                         type='button'
                         className='btn btn-dark btn-circle bi bi-pencil-fill'
-                        onClick={() => setEditForm()}></button>
+                        onClick={() => setEditForm()}
+                    />
                     <button
                         type='button'
                         className='btn btn-red btn-circle bi bi-trash-fill'
                         onClick={() => {
+                            removeLog(
+                                logs.find((log) => log.item === item.name)!.id
+                            );
                             removeItem(item.id);
-                            addNewLog({ item: item.name, diff: 'Removido' });
-                        }}></button>
+                        }}
+                    />
                 </div>
             </div>
         </li>

@@ -14,7 +14,7 @@ import useLogsStore from '../../stores/logsStore';
 import PlaceholderContent from '../PlaceholderContent';
 
 export default function LogsTable() {
-    const logs = useLogsStore((state) => state.logs);
+    const { logs, removeLog } = useLogsStore();
     const [monthFilter, setMonthFilter] = useState<Months>();
     const [searchFor, setSearchFor] = useState<string>('');
 
@@ -96,6 +96,15 @@ export default function LogsTable() {
                                         <td>{log.item}</td>
                                         <td className={getDiffColor(log.diff)}>
                                             {log.diff}
+                                        </td>
+                                        <td className={styles.removeButton}>
+                                            <button
+                                                type='button'
+                                                className='btn-remove-item bi bi-x'
+                                                onClick={() =>
+                                                    removeLog(log.id)
+                                                }
+                                            />
                                         </td>
                                     </tr>
                                 ))}

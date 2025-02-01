@@ -8,7 +8,7 @@ import useLogsStore from '../../stores/logsStore';
 
 export default function RemoveMultipleButton() {
     const { items: listItems, removeItem, clearList } = useListStore();
-    const addNewLog = useLogsStore((state) => state.addNewLog);
+    const { logs, removeLog, clearLogs } = useLogsStore();
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -19,10 +19,15 @@ export default function RemoveMultipleButton() {
     const removeItems = () => {
         if (selectedItems.length > 0) {
             selectedItems.forEach((item) => {
+                logs.filter((log) => log.item === item.name).forEach(
+                    (filteredLog) => removeLog(filteredLog.id)
+                );
                 removeItem(item.id);
-                addNewLog({ item: item.name, diff: 'Removido' });
             });
-        } else clearList();
+        } else {
+            clearList();
+            clearLogs();
+        }
 
         setModalOpen(false);
     };
