@@ -34,7 +34,9 @@ export default function SendButton({
     };
 
     const send = (sendMode: 'all' | 'warned' | 'selected') => {
-        let message = initialMessage && `${initialMessage}%0a%0a`;
+        let message = initialMessage
+            ? `${initialMessage}%0a%0a`
+            : `Estoque ${date}%0a%0a`;
         const items =
             sendMode === 'all'
                 ? listItems
