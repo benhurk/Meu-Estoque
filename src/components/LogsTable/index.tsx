@@ -15,9 +15,10 @@ import PlaceholderContent from '../PlaceholderContent';
 
 export default function LogsTable() {
     const logs = useLogsStore((state) => state.logs);
-    const [logsFilter, setLogsFilter] = useState<Months>();
+    const [monthFilter, setMonthFilter] = useState<Months>();
+    const [searchFor, setSearchFor] = useState<string>('');
 
-    const filteredLogs = filterLogs(logs, logsFilter);
+    const filteredLogs = filterLogs(logs, searchFor, monthFilter);
 
     const getDiffColor = (diff: string) => {
         if (diff.includes('+')) return 'text-green';
@@ -27,48 +28,83 @@ export default function LogsTable() {
 
     return (
         <>
-            <FormGroup elementId='logs-filter' labelText='Mês:'>
-                <Select
-                    elementId='logs-filter'
-                    options={mapOptions(months)}
-                    change={(e) =>
-                        setLogsFilter(e.currentTarget.dataset.value as Months)
-                    }
-                    value={logsFilter || 'Todos'}
-                    emptyOption='Todos'
-                />
-            </FormGroup>
-            <div style={{ minHeight: '20rem' }}>
-                {filteredLogs.length > 0 ? (
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Item</th>
-                                <th>Alteração</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredLogs.map((log, index) => (
-                                <tr key={log.date + log.item + index}>
-                                    <td>
-                                        <span>{log.date.split(' - ')[0]}</span>
-                                        &nbsp;-&nbsp;
-                                        <span className={styles.dateTime}>
-                                            {log.date.split(' - ')[1]}
-                                        </span>
-                                    </td>
-                                    <td>{log.item}</td>
-                                    <td className={getDiffColor(log.diff)}>
-                                        {log.diff}
-                                    </td>
+            <div className={styles.filterArea}>
+                <FormGroup elementId='logs-filter' labelText='Mês:'>
+                    <Select
+                        elementId='logs-filter'
+                        options={mapOptions(months)}
+                        change={(e) =>
+                            setMonthFilter(
+                                e.currentTarget.dataset.value as Months
+                            )
+                        }
+                        value={monthFilter || 'Todos'}
+                        emptyOption='Todos'
+                    />
+                </FormGroup>
+                <FormGroup elementId='search-for' labelText='Pesquisar item:'>
+                    <input
+                        id='search-for'
+                        type='text'
+                        className='input'
+                        placeholder='Nome do item'
+                        value={searchFor}
+                        onChange={(e) => setSearchFor(e.target.value)}
+                    />
+                </FormGroup>
+            </div>
+            <div>
+                <div className={styles.tableInfo}>
+                    <div className={styles.info}>
+                        <i className='bi bi-circle-fill text-dark' />
+                        &nbsp;
+                        <span>Quantidade inicial</span>
+                    </div>
+                    <div className={styles.info}>
+                        <i className='bi bi-circle-fill text-green' />
+                        &nbsp;
+                        <span>Aumentou</span>
+                    </div>
+                    <div className={styles.info}>
+                        <i className='bi bi-circle-fill text-red' />
+                        &nbsp;
+                        <span>Diminuiu</span>
+                    </div>
+                </div>
+                <div style={{ minHeight: '20rem' }}>
+                    {filteredLogs.length > 0 ? (
+                        <table className={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Item</th>
+                                    <th>Alteração</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                ) : (
-                    <PlaceholderContent text='Nenhum registro disponível.' />
-                )}
+                            </thead>
+                            <tbody>
+                                {filteredLogs.map((log, index) => (
+                                    <tr key={log.date + log.item + index}>
+                                        <td>
+                                            <span>
+                                                {log.date.split(' - ')[0]}
+                                            </span>
+                                            &nbsp;-&nbsp;
+                                            <span className={styles.dateTime}>
+                                                {log.date.split(' - ')[1]}
+                                            </span>
+                                        </td>
+                                        <td>{log.item}</td>
+                                        <td className={getDiffColor(log.diff)}>
+                                            {log.diff}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <PlaceholderContent text='Nenhum registro disponível.' />
+                    )}
+                </div>
             </div>
         </>
     );
