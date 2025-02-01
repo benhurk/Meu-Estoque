@@ -20,8 +20,9 @@ export default function LogsTable() {
     const filteredLogs = filterLogs(logs, logsFilter);
 
     const getDiffColor = (diff: string) => {
-        if (Number(diff) > 0 || diff === 'Adicionado') return 'text-green';
-        else return 'text-red';
+        if (diff.includes('+')) return 'text-green';
+        else if (diff.includes('-')) return 'text-red';
+        else return 'text-dark';
     };
 
     return (

@@ -12,6 +12,7 @@ import useListStore from '../../stores/listStore';
 import useFormStore from '../../stores/formStore';
 import useLogsStore from '../../stores/logsStore';
 import { useRef } from 'react';
+import getOptionsDiff from '../../utils/getOptionsDiff';
 
 type Props = {
     item: ListItemType;
@@ -36,9 +37,11 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
         const difference =
             item.qtdType === 'number'
                 ? String(newValue - initialQuantity.current)
-                : `${item.options[initialQuantity.current]} > ${
-                      item.options[newValue]
-                  }`;
+                : getOptionsDiff(
+                      initialQuantity.current,
+                      newValue,
+                      item.options
+                  );
 
         editItem({ ...item, quantity: newValue });
 

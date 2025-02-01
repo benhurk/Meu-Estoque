@@ -24,6 +24,7 @@ import QuantityInput from '../QuantityInput';
 import OptionsForm from '../OptionsForm';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
+import getOptionsDiff from '../../utils/getOptionsDiff';
 
 type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -60,7 +61,10 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 addItem(newItem);
                 addNewLog({
                     item: newItem.name,
-                    diff: 'Adicionado',
+                    diff:
+                        newItem.qtdType === 'number'
+                            ? String(newItem.quantity)
+                            : newItem.options[newItem.quantity],
                 });
             } else {
                 editItem(newItem);
@@ -68,9 +72,11 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 const difference =
                     newItem.qtdType === 'number'
                         ? String(newItem.quantity - targetItem.quantity)
-                        : `${newItem.options[targetItem.quantity]} > ${
-                              newItem.options[newItem.quantity]
-                          }`;
+                        : getOptionsDiff(
+                              targetItem.quantity,
+                              newItem.quantity,
+                              newItem.options
+                          );
 
                 if (Number(difference) != 0) {
                     addNewLog({
