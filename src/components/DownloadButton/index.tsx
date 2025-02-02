@@ -1,10 +1,15 @@
 import useListStore from '../../stores/listStore';
+import useLogsStore from '../../stores/logsStore';
 
 export default function DownloadButton() {
     const listItems = useListStore((state) => state.items);
+    const logs = useLogsStore((state) => state.logs);
 
     const date = new Date().toLocaleDateString();
-    const data = JSON.stringify(listItems);
+    const data = JSON.stringify({
+        list: listItems,
+        logs: logs,
+    });
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 

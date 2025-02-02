@@ -2,19 +2,24 @@ import styles from './LoadButton.module.css';
 
 import ListItemType from '../../types/ListItemTypes';
 import useListStore from '../../stores/listStore';
+import Logs from '../../types/Logs';
+import useLogsStore from '../../stores/logsStore';
 
 export default function LoadButton() {
     const { items: listItems, addItem } = useListStore();
+    const { logs, addNewLog } = useLogsStore();
 
     const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reader = new FileReader();
 
         reader.onload = () => {
-            const result = JSON.parse(reader.result as string);
+            const result: { list: ListItemType[]; logs: Logs[] } = JSON.parse(
+                reader.result as string
+            );
 
-            result.forEach((loadedItem: ListItemType) => {
-                const item: ListItemType = {
-                    id: listItems.length + loadedItem.id,
+            result.list.forEach((loadedItem: ListItemType) => {
+                const newItem: ListItemType = {
+                    id: loadedItem.id,
                     name: loadedItem.name,
                     qtdType: loadedItem.qtdType,
                     numberOf: loadedItem.numberOf,
@@ -24,11 +29,32 @@ export default function LoadButton() {
                     description: loadedItem.description,
                 };
 
-                const isValid = !Object.values(item).some(
-                    (val) => typeof val === 'undefined'
-                );
+                const isValid =
+                    !Object.values(newItem).some(
+                        (val) => typeof val === 'undefined'
+                    ) &&
+                    !listItems.some(
+                        (item) =>
+                            item.name === newItem.name || item.id === newItem.id
+                    );
 
-                if (isValid) addItem(item);
+                if (isValid) addItem(newItem);
+            });
+
+            result.logs.forEach((loadedLog: Logs) => {
+                const newLog: Logs = {
+                    id: loadedLog.id,
+                    date: loadedLog.date,
+                    item: loadedLog.item,
+                    diff: loadedLog.diff,
+                };
+
+                const validate =
+                    !Object.values(newLog).some(
+                        (val) => typeof val === 'undefined'
+                    ) && !logs.some((log) => log.id === newLog.id);
+
+                if (validate) addNewLog(newLog);
             });
         };
 
