@@ -46,11 +46,13 @@ export default function Dropdown({
                     </>
                 )}
             </button>
-            {openDropdown && (
-                <ul className={styles.dropdownMenu} onClick={handleMenuClick}>
-                    {children}
-                </ul>
-            )}
+            <ul
+                className={`${styles.dropdownMenu} ${
+                    openDropdown ? styles.open : ''
+                }`}
+                onClick={handleMenuClick}>
+                {children}
+            </ul>
         </div>
     );
 }
