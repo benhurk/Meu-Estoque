@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import html2pdf from 'html2pdf.js';
 
 import styles from './LogsTable.module.css';
 
@@ -24,6 +25,30 @@ export default function LogsTable() {
         if (diff.includes('+')) return 'text-green';
         else if (diff.includes('-')) return 'text-red';
         else return 'text-dark';
+    };
+
+    const date = new Date().toLocaleDateString();
+
+    const downloadPdf = () => {
+        const removeItemButtons = document.querySelectorAll('.btn-remove-item');
+
+        removeItemButtons.forEach((btn) =>
+            btn.setAttribute('style', 'opacity: 0;')
+        );
+
+        const table = document.getElementById('logs-table');
+        const opt = {
+            margin: [5, 0, 0, 0],
+            filename: `RegistrosEstoque${date}.pdf`,
+        };
+
+        html2pdf().set(opt).from(table).save();
+
+        setTimeout(() => {
+            removeItemButtons.forEach((btn) =>
+                btn.setAttribute('style', 'opacity: 1;')
+            );
+        }, 100);
     };
 
     return (
@@ -53,7 +78,15 @@ export default function LogsTable() {
                     />
                 </FormGroup>
             </div>
-            <div>
+            <button
+                type='button'
+                className={`btn btn-green ${styles.pdfButton}`}
+                disabled={filteredLogs.length > 0 ? false : true}
+                onClick={() => downloadPdf()}>
+                <i className='bi bi-file-earmark-arrow-down-fill' />
+                &nbsp;Baixar .pdf
+            </button>
+            <div id='logs-table'>
                 <div className={styles.tableInfo}>
                     <div className={styles.info}>
                         <i className='bi bi-circle-fill text-dark' />
