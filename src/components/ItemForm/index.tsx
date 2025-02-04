@@ -106,7 +106,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
     };
 
     return (
-        <form className={styles.form}>
+        <div className={styles.form}>
             <FormGroup
                 elementId={'item-name'}
                 labelText={'O que é:'}
@@ -244,7 +244,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 />
             </FormGroup>
             <button
-                type='submit'
+                type='button'
                 className={`btn btn-dark ${styles.submitButton}`}
                 onClick={(e) => handleSubmit(e, formMode)}>
                 <i
@@ -254,6 +254,6 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 />
                 &nbsp;{formMode === 'add' ? 'Adicionar' : 'Salvar'}
             </button>
-        </form>
+        </div>
     );
 }

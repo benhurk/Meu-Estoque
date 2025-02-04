@@ -42,7 +42,7 @@ export default function InputWithButton({
     };
 
     return (
-        <div>
+        <form onSubmit={(e) => e.preventDefault()}>
             <div className={styles.inputWraper}>
                 <div>
                     <input
@@ -56,18 +56,18 @@ export default function InputWithButton({
                     {clearBtn && (
                         <button
                             type='button'
-                            className={`btn-remove-item bi bi-x ${styles.clearButton}`}
+                            className={`btn-remove-item bi bi-x-lg ${styles.clearButton}`}
                             onClick={clear}
                         />
                     )}
                 </div>
                 <button
-                    type='button'
+                    type='submit'
                     className={`btn btn-dark bi ${buttonIconClass}`}
                     onClick={handleButtonClick}
                 />
             </div>
             <small className='text-red'>{error}</small>
-        </div>
+        </form>
     );
 }
