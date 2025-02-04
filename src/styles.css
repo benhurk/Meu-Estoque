@@ -151,6 +151,11 @@ button i.bi,
     font-size: inherit;
     line-height: 0;
     cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.btn-remove-item:hover {
+    color: lightcoral;
 }
 
 .btn-dropdown-item {
