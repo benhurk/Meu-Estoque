@@ -13,6 +13,7 @@ import months from '../../const/months';
 import filterLogs from '../../utils/filterLogs';
 import useLogsStore from '../../stores/logsStore';
 import PlaceholderContent from '../PlaceholderContent';
+import InputWithButton from '../InputWithButton';
 
 export default function LogsTable() {
     const { logs, removeLog } = useLogsStore();
@@ -68,13 +69,13 @@ export default function LogsTable() {
                     />
                 </FormGroup>
                 <FormGroup elementId='search-for' labelText='Pesquisar item:'>
-                    <input
-                        id='search-for'
-                        type='text'
-                        className='input'
-                        placeholder='Nome do item'
-                        value={searchFor}
-                        onChange={(e) => setSearchFor(e.target.value)}
+                    <InputWithButton
+                        inputId='search-for'
+                        placeholderText='Nome do item'
+                        buttonIconClass='bi-search'
+                        onButtonClick={(inputValue) => setSearchFor(inputValue)}
+                        clearAfter={false}
+                        clearBtn={() => setSearchFor('')}
                     />
                 </FormGroup>
             </div>
