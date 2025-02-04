@@ -29,6 +29,7 @@
     margin-bottom: 0.25rem;
     display: flex;
     gap: 0.5rem;
+    font-size: 1rem;
 }
 
 .itemUnityType {

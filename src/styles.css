@@ -16,6 +16,10 @@
     color: var(--color-dark);
 }
 
+body {
+    font-size: 0.875rem;
+}
+
 a {
     text-decoration: none;
 }
@@ -45,6 +49,7 @@ textarea {
     resize: none;
     width: 100%;
     height: 8rem;
+    font-size: inherit;
 }
 
 .input {
@@ -55,7 +60,6 @@ textarea {
     outline: none;
     transition: border-color 0.2s ease-in-out;
     filter: drop-shadow(0.1rem 0.1rem 0.25rem var(--color-gray));
-    font-size: 0.875rem;
 }
 
 .input[type='text'] {
@@ -88,7 +92,6 @@ button i.bi,
     cursor: pointer;
     display: flex;
     align-items: center;
-    font-size: 0.875rem;
     color: #fff;
     width: fit-content;
     transition: box-shadow 0.2s ease-in-out;
@@ -132,10 +135,6 @@ button i.bi,
 
 .btn-green {
     background-color: var(--color-green);
-}
-
-.btn-transparent {
-    background-color: transparent;
 }
 
 .btn-circle {

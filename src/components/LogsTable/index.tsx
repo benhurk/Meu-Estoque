@@ -54,6 +54,14 @@ export default function LogsTable() {
 
     return (
         <>
+            <button
+                type='button'
+                className={`btn btn-green ${styles.pdfButton}`}
+                disabled={filteredLogs.length > 0 ? false : true}
+                onClick={() => downloadPdf()}>
+                <i className='bi bi-file-earmark-arrow-down-fill' />
+                &nbsp;Baixar .pdf
+            </button>
             <div className={styles.filterArea}>
                 <FormGroup elementId='logs-filter' labelText='Mês:'>
                     <Select
@@ -79,14 +87,6 @@ export default function LogsTable() {
                     />
                 </FormGroup>
             </div>
-            <button
-                type='button'
-                className={`btn btn-green ${styles.pdfButton}`}
-                disabled={filteredLogs.length > 0 ? false : true}
-                onClick={() => downloadPdf()}>
-                <i className='bi bi-file-earmark-arrow-down-fill' />
-                &nbsp;Baixar .pdf
-            </button>
             <div id='logs-table'>
                 <div className={styles.tableInfo}>
                     <div className={styles.info}>
