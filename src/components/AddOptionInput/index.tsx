@@ -1,8 +1,9 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-
-import styles from './AddOptionInput.module.css';
+import { Dispatch, SetStateAction } from 'react';
 
 import OptionsList from '../OptionsList';
+import InputWithButton from '../InputWithButton';
+
+import capitalizeString from '../../utils/capitalizeString';
 
 type Props = {
     options: string[];
@@ -10,39 +11,32 @@ type Props = {
 };
 
 export default function AddOptionInput({ options, setOptions }: Props) {
-    const [newOption, setNewOption] = useState<string>('');
-    const [error, setError] = useState<string>('');
-
-    const submitOption = (value: string) => {
-        if (!options.some((item) => item === value) && value != '') {
-            setOptions((prev) => [...prev, value]);
-            if (error) setError('');
-        } else if (value === '') {
-            setError('Dê um nome para a opção');
-        } else {
-            setError('Essa opção já existe');
-        }
-
-        setNewOption('');
+    const validateOptions = (newOption: string) => {
+        if (
+            options.some(
+                (item) =>
+                    item.toLocaleLowerCase() === newOption.toLocaleLowerCase()
+            )
+        )
+            return 'Essa opção já existe.';
+        else if (newOption === '') return 'Dê um nome para a opção.';
+        else return '';
     };
 
     return (
         <>
-            <div className={styles.inputWraper}>
-                <input
-                    id='item-options'
-                    className='input'
-                    type='text'
-                    placeholder={error ? error : 'Nova opção'}
-                    value={newOption}
-                    onChange={(e) => setNewOption(e.target.value)}
-                />
-                <button
-                    type='button'
-                    className='btn btn-dark bi bi-plus-lg'
-                    onClick={() => submitOption(newOption)}
-                />
-            </div>
+            <InputWithButton
+                onButtonClick={(inputValue: string) =>
+                    setOptions((prev) => [
+                        ...prev,
+                        capitalizeString(inputValue),
+                    ])
+                }
+                getErrors={(inputValue: string) => validateOptions(inputValue)}
+                buttonIconClass='bi-plus-lg'
+                placeholderText='Nova opção'
+                inputId='item-options'
+            />
             {options.length > 0 && (
                 <OptionsList options={options} setOptions={setOptions} />
             )}
