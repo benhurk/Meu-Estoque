@@ -1,0 +1,16 @@
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.buttonsArea {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.searchArea {
+    width: 50%;
+    margin-inline: auto;
+}
