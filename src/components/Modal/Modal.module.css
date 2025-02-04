@@ -47,7 +47,7 @@
 .closeButton {
     position: sticky;
     top: 0;
-    padding-left: 98%;
+    margin-left: 98%;
     text-align: end;
     background-color: transparent;
     border: none;
