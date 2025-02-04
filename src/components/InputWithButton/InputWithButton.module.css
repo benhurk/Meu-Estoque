@@ -2,13 +2,25 @@
     display: flex;
 }
 
-.inputWraper > input {
+.inputWraper > div {
+    position: relative;
+    width: 100%;
+}
+
+.inputWraper input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-.inputWraper > button {
+.inputWraper button:not(.clearButton) {
+    position: relative;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    position: relative;
+}
+
+.clearButton {
+    position: absolute;
+    top: 50%;
+    right: 0.25rem;
+    transform: translateY(-50%);
 }

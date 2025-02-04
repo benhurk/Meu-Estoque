@@ -7,6 +7,8 @@ type Props = {
     getErrors?: (inputValue: string) => string;
     inputId?: string;
     placeholderText?: string;
+    clearAfter?: boolean;
+    clearBtn?: () => void;
 };
 
 export default function InputWithButton({
@@ -15,6 +17,8 @@ export default function InputWithButton({
     getErrors,
     inputId,
     placeholderText,
+    clearAfter = true,
+    clearBtn,
 }: Props) {
     const [value, setValue] = useState<string>('');
     const [error, setError] = useState<string>('');
@@ -25,24 +29,41 @@ export default function InputWithButton({
         } else {
             onButtonClick(value);
             setError('');
-            setValue('');
+
+            if (clearAfter) {
+                setValue('');
+            }
         }
+    };
+
+    const clear = () => {
+        setValue('');
+        if (clearBtn) clearBtn();
     };
 
     return (
         <div>
             <div className={styles.inputWraper}>
-                <input
-                    id={inputId}
-                    className='input'
-                    type='text'
-                    placeholder={placeholderText}
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                />
+                <div>
+                    <input
+                        id={inputId}
+                        className='input'
+                        type='text'
+                        placeholder={placeholderText}
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                    />
+                    {clearBtn && (
+                        <button
+                            type='button'
+                            className={`btn-remove-item bi bi-x ${styles.clearButton}`}
+                            onClick={clear}
+                        />
+                    )}
+                </div>
                 <button
                     type='button'
-                    className={`btn btn-dark bi bi-plus-lg ${buttonIconClass}`}
+                    className={`btn btn-dark bi ${buttonIconClass}`}
                     onClick={handleButtonClick}
                 />
             </div>
