@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import useListStore from '../stores/listStore';
 import useFormStore from '../stores/formStore';
@@ -7,14 +7,21 @@ import itemFormInitialState from '../const/itemFormState';
 
 export default function useItemForm() {
     const [fields, setFields] = useState(itemFormInitialState);
-    const [options, setOptions] = useState<string[]>([]);
     const [errors, setErrors] = useState({
         nameError: '',
         optionsError: '',
     });
+    const { formMode, targetItemId } = useFormStore();
 
     const listItems = useListStore((state) => state.items);
-    const { formMode, targetItem } = useFormStore();
+    const itemNames = useMemo(
+        () => new Set(listItems.map((item) => item.name)),
+        [listItems]
+    );
+    const targetItem = useMemo(
+        () => listItems.filter((item) => item.id === targetItemId)[0],
+        [listItems, targetItemId]
+    );
 
     useEffect(() => {
         if (formMode === 'edit') {
@@ -23,16 +30,14 @@ export default function useItemForm() {
                 qtdType: targetItem.qtdType,
                 numberOf: targetItem.numberOf,
                 quantity: targetItem.quantity,
+                options: targetItem.options,
                 alertQuantity: targetItem.alertQuantity,
                 description: targetItem.description,
             });
-
-            setOptions(targetItem.options);
         }
 
         if (formMode === 'add') {
             setFields(itemFormInitialState);
-            setOptions([]);
         }
     }, [formMode, targetItem]);
 
@@ -44,18 +49,14 @@ export default function useItemForm() {
 
         if (!fields.name) {
             newErrors.nameError = 'O nome não pode ficar em branco';
-        } else if (
-            listItems.some(
-                (item) => item.name === fields.name && item.id != targetItem.id
-            )
-        ) {
+        } else if (itemNames.has(fields.name)) {
             newErrors.nameError = 'Um item com esse nome já existe.';
         }
 
         if (fields.qtdType === 'options') {
-            if (options.length === 0) {
+            if (fields.options.length === 0) {
                 newErrors.optionsError = 'As opções não podem ficar vazias.';
-            } else if (options.length < 2) {
+            } else if (fields.options.length < 2) {
                 newErrors.optionsError = 'O mínimo de opções é 2.';
             }
         }
@@ -64,5 +65,5 @@ export default function useItemForm() {
         return Object.values(newErrors).every((error) => error === '');
     };
 
-    return { fields, setFields, options, setOptions, validate, errors };
+    return { fields, setFields, targetItem, validate, errors };
 }

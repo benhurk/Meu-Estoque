@@ -33,12 +33,11 @@ type Props = {
 
 export default function ItemForm({ setItemFormOpen }: Props) {
     const { addItem, editItem } = useListStore();
-    const { formMode, targetItem } = useFormStore();
+    const { formMode } = useFormStore();
     const { savedOptions, saveOptions } = useSavedOptionsStore();
     const addNewLog = useLogsStore((state) => state.addNewLog);
 
-    const { fields, setFields, options, setOptions, validate, errors } =
-        useItemForm();
+    const { fields, setFields, targetItem, validate, errors } = useItemForm();
 
     const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
         e.preventDefault();
@@ -46,14 +45,13 @@ export default function ItemForm({ setItemFormOpen }: Props) {
         if (validate()) {
             if (
                 fields.qtdType === 'options' &&
-                optionsIsNotSaved(options, savedOptions)
+                optionsIsNotSaved(fields.options, savedOptions)
             ) {
-                saveOptions(options);
+                saveOptions(fields.options);
             }
 
             const newItem: ListItemType = {
                 id: mode === 'add' ? crypto.randomUUID() : targetItem.id,
-                options: options,
                 ...fields,
                 name: capitalizeString(fields.name),
             };
@@ -101,7 +99,6 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
             setItemFormOpen(false);
             setFields(itemFormInitialState);
-            setOptions([]);
         }
     };
 
@@ -152,7 +149,12 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     elementId='item-options'
                     labelText='Opções:'
                     error={errors.optionsError}>
-                    <OptionsForm options={options} setOptions={setOptions} />
+                    <OptionsForm
+                        options={fields.options}
+                        setOptions={(newOptions: string[]) =>
+                            setFields({ ...fields, options: newOptions })
+                        }
+                    />
                 </FormGroup>
             )}
 
@@ -191,14 +193,14 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 ) : (
                     <Select
                         elementId='item-quantity'
-                        options={mapOptions(options, 'number')}
+                        options={mapOptions(fields.options, 'number')}
                         change={(e) =>
                             setFields({
                                 ...fields,
                                 quantity: Number(e.currentTarget.dataset.value),
                             })
                         }
-                        value={options[fields.quantity] || '-'}
+                        value={fields.options[fields.quantity] || '-'}
                         placeholderOption='Nenhuma opção encontrada'
                     />
                 )}
@@ -219,7 +221,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 ) : (
                     <Select
                         elementId='item-alert'
-                        options={mapOptions(options, 'number')}
+                        options={mapOptions(fields.options, 'number')}
                         change={(e) =>
                             setFields({
                                 ...fields,
@@ -228,7 +230,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                                 ),
                             })
                         }
-                        value={options[fields.alertQuantity] || '-'}
+                        value={fields.options[fields.alertQuantity] || '-'}
                         placeholderOption='Nenhuma opção encontrada'
                     />
                 )}

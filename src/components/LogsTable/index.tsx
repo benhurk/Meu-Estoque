@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import html2pdf from 'html2pdf.js';
 
 import styles from './LogsTable.module.css';
@@ -20,7 +20,9 @@ export default function LogsTable() {
     const [monthFilter, setMonthFilter] = useState<Months>();
     const [searchFor, setSearchFor] = useState<string>('');
 
-    const filteredLogs = filterLogs(logs, searchFor, monthFilter);
+    const filteredLogs = useMemo(() => {
+        return filterLogs(logs, searchFor, monthFilter);
+    }, [logs, monthFilter, searchFor]);
 
     const getDiffColor = (diff: string) => {
         if (diff.includes('+')) return 'text-green';

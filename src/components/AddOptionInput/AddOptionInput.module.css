@@ -1,14 +1,8 @@
-.inputWraper {
+.listItem {
     display: flex;
-}
-
-.inputWraper > input {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-.inputWraper > button {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    position: relative;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 0.5rem;
+    border-bottom: 1px solid var(--color-gray);
+    font-size: 0.875rem;
 }

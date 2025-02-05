@@ -1,13 +1,12 @@
-import { Dispatch, SetStateAction } from 'react';
+import styles from './AddOptionInput.module.css';
 
-import OptionsList from '../OptionsList';
 import InputWithButton from '../InputWithButton';
 
 import capitalizeString from '../../utils/capitalizeString';
 
 type Props = {
     options: string[];
-    setOptions: Dispatch<SetStateAction<string[]>>;
+    setOptions: (value: string[]) => void;
 };
 
 export default function AddOptionInput({ options, setOptions }: Props) {
@@ -23,14 +22,15 @@ export default function AddOptionInput({ options, setOptions }: Props) {
         else return '';
     };
 
+    const removeOption = (toRemove: string) => {
+        setOptions(options.filter((option) => option != toRemove));
+    };
+
     return (
         <>
             <InputWithButton
                 onButtonClick={(inputValue: string) =>
-                    setOptions((prev) => [
-                        ...prev,
-                        capitalizeString(inputValue),
-                    ])
+                    setOptions([...options, capitalizeString(inputValue)])
                 }
                 getErrors={(inputValue: string) => validateOptions(inputValue)}
                 buttonIconClass='bi-plus-lg'
@@ -38,7 +38,22 @@ export default function AddOptionInput({ options, setOptions }: Props) {
                 inputId='item-options'
             />
             {options.length > 0 && (
-                <OptionsList options={options} setOptions={setOptions} />
+                <ol>
+                    {options.map((item, index) => (
+                        <li key={index} className={styles.listItem}>
+                            <div>
+                                <span>{`${index + 1}. `}</span>
+                                <span className='text-blue'>{item}</span>
+                            </div>
+                            <button
+                                type='button'
+                                className='btn-remove-item'
+                                onClick={() => removeOption(item)}>
+                                <i className='bi bi-x' />
+                            </button>
+                        </li>
+                    ))}
+                </ol>
             )}
         </>
     );

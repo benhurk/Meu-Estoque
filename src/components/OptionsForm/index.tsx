@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from 'react';
+import { useState } from 'react';
 
 import styles from './OptionsForm.module.css';
 
@@ -11,7 +11,7 @@ import useSavedOptionsStore from '../../stores/savedOptionsStore';
 
 type Props = {
     options: string[];
-    setOptions: React.Dispatch<SetStateAction<string[]>>;
+    setOptions: (value: string[]) => void;
 };
 
 export default function OptionsForm({ options, setOptions }: Props) {

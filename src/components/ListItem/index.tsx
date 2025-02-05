@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import styles from './ListItem.module.css';
 
 import useListStore from '../../stores/listStore';
@@ -20,13 +20,13 @@ type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function ListItem({ item, setItemFormOpen }: Props) {
+const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     const { editItem, removeItem } = useListStore();
     const { setFormMode, setTargetItem } = useFormStore();
     const { logs, addNewLog, removeLog } = useLogsStore();
 
     const setEditForm = () => {
-        setTargetItem(item);
+        setTargetItem(item.id);
         setFormMode('edit');
         setItemFormOpen(true);
     };
@@ -67,7 +67,7 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
                           ),
             });
             initialQuantity.current = newValue;
-        }, 2000);
+        }, 5000);
     };
 
     const warn = item.quantity <= item.alertQuantity;
@@ -147,4 +147,6 @@ export default function ListItem({ item, setItemFormOpen }: Props) {
             </div>
         </li>
     );
-}
+});
+
+export default ListItem;

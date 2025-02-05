@@ -5,6 +5,7 @@ const itemFormInitialState: FormState = {
     qtdType: 'number',
     numberOf: 'Unidades',
     quantity: 0,
+    options: [],
     alertQuantity: 0,
     description: '',
 };

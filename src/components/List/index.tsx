@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './List.module.css';
 
 import useFormStore from '../../stores/formStore';
@@ -17,9 +17,11 @@ export default function List() {
     const listItems = useListStore((state) => state.items);
     const setFormMode = useFormStore((state) => state.setFormMode);
 
-    const searchedItems = listItems.filter((item) =>
-        item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-    );
+    const searchedItems = useMemo(() => {
+        return listItems.filter((item) =>
+            item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+        );
+    }, [listItems, search]);
 
     const [itemFormOpen, setItemFormOpen] = useState<boolean>(false);
 

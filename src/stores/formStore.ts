@@ -1,28 +1,18 @@
 import { create } from 'zustand';
 import { FormMode } from '../types/FormTypes';
-import ListItemType from '../types/ListItemTypes';
 
 type FormState = {
     formMode: FormMode;
-    targetItem: ListItemType;
+    targetItemId: string;
     setFormMode: (mode: FormMode) => void;
-    setTargetItem: (item: ListItemType) => void;
+    setTargetItem: (itemId: string) => void;
 };
 
 const useFormStore = create<FormState>((set) => ({
     formMode: 'add',
-    targetItem: {
-        id: '',
-        name: '',
-        qtdType: 'number',
-        numberOf: 'Unidades',
-        quantity: 0,
-        options: [],
-        alertQuantity: 0,
-        description: '',
-    },
+    targetItemId: '',
     setFormMode: (mode) => set({ formMode: mode }),
-    setTargetItem: (item) => set({ targetItem: item }),
+    setTargetItem: (itemId) => set({ targetItemId: itemId }),
 }));
 
 export default useFormStore;
