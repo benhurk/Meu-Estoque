@@ -45,7 +45,7 @@ export default function SendDropdown() {
                         disabled={warnedItems.length > 0 ? false : true}
                         onClick={() => handleClick('warned')}>
                         <i className='bi bi-exclamation-circle-fill' />
-                        &nbsp;Importantes
+                        &nbsp;Com alerta
                     </button>
                 </li>
                 <li>

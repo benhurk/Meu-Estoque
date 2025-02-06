@@ -79,7 +79,12 @@ export default function SendButton({
             onClick={() => send(sendMode)}
             style={{ display: 'block', width: '100%', textAlign: 'center' }}>
             <i className='bi bi-send-fill' />
-            &nbsp;Enviar lista
+            &nbsp;
+            {sendMode === 'all'
+                ? 'Enviar lista'
+                : sendMode === 'selected'
+                ? 'Enviar itens selecionados'
+                : 'Enviar itens com alerta'}
         </button>
     );
 }
