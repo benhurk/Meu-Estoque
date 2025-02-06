@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './List.module.css';
 
 import useFormStore from '../../stores/formStore';
@@ -22,6 +22,10 @@ export default function List() {
             item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
         );
     }, [listItems, search]);
+
+    useEffect(() => {
+        setSearch('');
+    }, [listItems]);
 
     const [itemFormOpen, setItemFormOpen] = useState<boolean>(false);
 
@@ -74,7 +78,7 @@ export default function List() {
                     text={
                         listItems.length === 0
                             ? 'Nenhum item adicionado ainda.'
-                            : 'Nenhum item encontrado.'
+                            : `Nenhum item encontrado com "${search}".`
                     }
                 />
             )}
