@@ -13,7 +13,7 @@ import Select from '../Select';
 
 import mapOptions from '../../utils/mapOptions';
 import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
-import getOptionsDiff from '../../utils/getOptionsDiff';
+import { getOptionsDiff, getNumberDiff } from '../../utils/getLogDiff';
 
 type Props = {
     item: ListItemType;
@@ -35,15 +35,6 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     const initialQuantity = useRef<number>(item.quantity);
 
     const changeQuantity = (newValue: number) => {
-        const difference =
-            item.qtdType === 'number'
-                ? String(newValue - initialQuantity.current)
-                : getOptionsDiff(
-                      initialQuantity.current,
-                      newValue,
-                      item.options
-                  );
-
         editItem({ ...item, quantity: newValue });
 
         if (logTimeoutId.current) {
@@ -55,11 +46,11 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                 item: item.name,
                 diff:
                     item.qtdType === 'number'
-                        ? `${
-                              Number(difference) > 0
-                                  ? `+${difference}`
-                                  : difference
-                          } ${abbreviateNumberOf(item.numberOf)}`
+                        ? getNumberDiff(
+                              initialQuantity.current,
+                              newValue,
+                              item.numberOf
+                          )
                         : getOptionsDiff(
                               initialQuantity.current,
                               newValue,

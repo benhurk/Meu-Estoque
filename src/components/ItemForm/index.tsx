@@ -12,7 +12,7 @@ import mapOptions from '../../utils/mapOptions';
 import optionsIsNotSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
 import capitalizeString from '../../utils/capitalizeString';
-import getOptionsDiff from '../../utils/getOptionsDiff';
+import { getOptionsDiff, getNumberDiff } from '../../utils/getLogDiff';
 import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
 
 import { FormMode } from '../../types/FormTypes';
@@ -69,25 +69,22 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             } else {
                 editItem(newItem);
 
-                const difference =
-                    newItem.qtdType === 'number'
-                        ? String(newItem.quantity - targetItem.quantity)
-                        : getOptionsDiff(
-                              targetItem.quantity,
-                              newItem.quantity,
-                              newItem.options
-                          );
-
-                if (Number(difference) != 0) {
+                if (
+                    getNumberDiff(
+                        targetItem.quantity,
+                        newItem.quantity,
+                        newItem.numberOf
+                    )
+                ) {
                     addNewLog({
                         item: newItem.name,
                         diff:
                             newItem.qtdType === 'number'
-                                ? `${
-                                      Number(difference) > 0
-                                          ? `+${difference}`
-                                          : difference
-                                  } ${abbreviateNumberOf(newItem.numberOf)}`
+                                ? getNumberDiff(
+                                      targetItem.quantity,
+                                      newItem.quantity,
+                                      newItem.numberOf
+                                  )
                                 : getOptionsDiff(
                                       targetItem.quantity,
                                       newItem.quantity,
