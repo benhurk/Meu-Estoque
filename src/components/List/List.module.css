@@ -14,3 +14,9 @@
     width: 50%;
     margin-inline: auto;
 }
+
+@media (max-width: 577px) {
+    .searchArea {
+        width: 85%;
+    }
+}

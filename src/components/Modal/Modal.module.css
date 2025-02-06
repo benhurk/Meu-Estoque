@@ -61,3 +61,13 @@
 .closeButton:hover {
     color: var(--color-dark);
 }
+
+@media (max-width: 577px) {
+    .closeButton {
+        margin-left: 96%;
+    }
+
+    .modalContent {
+        padding: 0 0.5rem 0.5rem 0.5rem;
+    }
+}
