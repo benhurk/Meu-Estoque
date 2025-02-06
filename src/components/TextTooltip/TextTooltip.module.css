@@ -35,7 +35,7 @@
 
 div:hover > .icon,
 div:focus > .icon {
-    color: var(--bs-secondary);
+    color: var(--color-gray);
 }
 
 div:hover > .tooltip,
