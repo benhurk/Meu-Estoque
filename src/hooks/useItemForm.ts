@@ -49,7 +49,7 @@ export default function useItemForm() {
 
         if (!fields.name) {
             newErrors.nameError = 'O nome não pode ficar em branco';
-        } else if (itemNames.has(fields.name)) {
+        } else if (itemNames.has(fields.name) && formMode != 'edit') {
             newErrors.nameError = 'Um item com esse nome já existe.';
         }
 
