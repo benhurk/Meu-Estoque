@@ -12,7 +12,6 @@ import TextTooltip from '../TextTooltip';
 import Select from '../Select';
 
 import mapOptions from '../../utils/mapOptions';
-import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
 import { getOptionsDiff, getNumberDiff } from '../../utils/getLogDiff';
 
 type Props = {
@@ -86,18 +85,14 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                     </div>
                     <div>
                         {item.qtdType === 'number' ? (
-                            <>
-                                <QuantityInput
-                                    elementId='quantity'
-                                    value={item.quantity}
-                                    change={(e) => {
-                                        changeQuantity(Number(e.target.value));
-                                    }}
-                                />
-                                <small className={styles.itemUnityType}>
-                                    {abbreviateNumberOf(item.numberOf)}
-                                </small>
-                            </>
+                            <QuantityInput
+                                elementId='quantity'
+                                value={item.quantity}
+                                change={(e) => {
+                                    changeQuantity(Number(e.target.value));
+                                }}
+                                unityOfMeasurement={item.numberOf}
+                            />
                         ) : (
                             <div style={{ width: '30%' }}>
                                 <Select

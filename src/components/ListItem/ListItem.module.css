@@ -32,10 +32,6 @@
     font-size: 1rem;
 }
 
-.itemUnityType {
-    margin-left: 0.5rem;
-}
-
 .itemButtons {
     display: flex;
     gap: 0.25rem;
