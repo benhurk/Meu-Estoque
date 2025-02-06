@@ -36,7 +36,8 @@ a {
 }
 
 main {
-    padding-block: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 20rem;
 }
 
 ul,
