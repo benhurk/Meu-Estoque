@@ -19,9 +19,11 @@ const useSavedOptionsStore = create<SavedOptionsState>()(
                 set((state) => ({
                     savedOptions: state.savedOptions.filter(
                         (opt) =>
-                            opt.length === options.length &&
-                            opt.every(
-                                (value, index) => value !== options[index]
+                            !(
+                                opt.length === options.length &&
+                                opt.every(
+                                    (value, index) => value == options[index]
+                                )
                             )
                     ),
                 })),

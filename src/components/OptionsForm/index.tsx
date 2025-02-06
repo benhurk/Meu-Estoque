@@ -27,6 +27,8 @@ export default function OptionsForm({ options, setOptions }: Props) {
     const handleRemoveSavedOptions = (
         e: React.MouseEvent<HTMLButtonElement>
     ) => {
+        e.stopPropagation();
+
         if (optionsIsSaved(options, savedOptions)) {
             setOptions([]);
         }

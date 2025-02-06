@@ -9,7 +9,7 @@ import useLogsStore from '../../stores/logsStore';
 import useItemForm from '../../hooks/useItemForm';
 
 import mapOptions from '../../utils/mapOptions';
-import optionsIsNotSaved from '../../utils/optionsIsSaved';
+import optionsIsSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
 import capitalizeString from '../../utils/capitalizeString';
 import { getOptionsDiff, getNumberDiff } from '../../utils/getLogDiff';
@@ -45,7 +45,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
         if (validate()) {
             if (
                 fields.qtdType === 'options' &&
-                optionsIsNotSaved(fields.options, savedOptions)
+                !optionsIsSaved(fields.options, savedOptions)
             ) {
                 saveOptions(fields.options);
             }
