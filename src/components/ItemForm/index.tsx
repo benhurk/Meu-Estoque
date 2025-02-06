@@ -122,7 +122,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             <FormGroup elementId='item-type' labelText='Contar por:'>
                 <Select
                     options={[
-                        { label: 'Unidades de medida', value: 'number' },
+                        { label: 'Número', value: 'number' },
                         { label: 'Opções', value: 'options' },
                     ]}
                     elementId={'item-type'}
@@ -133,11 +133,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                                 .value as QuantityType,
                         })
                     }
-                    value={
-                        fields.qtdType === 'number'
-                            ? 'Unidades de medida'
-                            : 'Opções'
-                    }
+                    value={fields.qtdType === 'number' ? 'Número' : 'Opções'}
                 />
             </FormGroup>
 
@@ -186,6 +182,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                                 quantity: Number(e.target.value),
                             })
                         }
+                        unityOfMeasurement={fields.numberOf}
                     />
                 ) : (
                     <Select
@@ -214,6 +211,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                                 alertQuantity: Number(e.target.value),
                             })
                         }
+                        unityOfMeasurement={fields.numberOf}
                     />
                 ) : (
                     <Select
@@ -236,6 +234,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 <textarea
                     className={`input ${styles.description}`}
                     id='item-description'
+                    placeholder='Anotações sobre o item. Exemplo: Onde encontra-lo, modo de preparo, tempo de validade, etc. (Opcional)'
                     value={fields.description}
                     onChange={(e) =>
                         setFields({ ...fields, description: e.target.value })
