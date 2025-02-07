@@ -47,6 +47,7 @@ export default function LoadButton() {
                     date: loadedLog.date,
                     item: loadedLog.item,
                     diff: loadedLog.diff,
+                    diffType: loadedLog.diffType,
                 };
 
                 const validate =

@@ -12,7 +12,7 @@ import mapOptions from '../../utils/mapOptions';
 import optionsIsSaved from '../../utils/optionsIsSaved';
 import itemFormInitialState from '../../const/itemFormState';
 import capitalizeString from '../../utils/capitalizeString';
-import { getOptionsDiff, getNumberDiff } from '../../utils/getLogDiff';
+import getNumberDiff from '../../utils/getLogDiff';
 import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
 
 import { FormMode } from '../../types/FormTypes';
@@ -65,17 +65,12 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                             ? String(newItem.quantity) +
                               ` ${abbreviateNumberOf(newItem.numberOf)}`
                             : newItem.options[newItem.quantity],
+                    diffType: null,
                 });
             } else {
                 editItem(newItem);
 
-                if (
-                    getNumberDiff(
-                        targetItem.quantity,
-                        newItem.quantity,
-                        newItem.numberOf
-                    )
-                ) {
+                if (newItem.quantity != targetItem.quantity) {
                     addNewLog({
                         item: newItem.name,
                         diff:
@@ -85,11 +80,11 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                                       newItem.quantity,
                                       newItem.numberOf
                                   )
-                                : getOptionsDiff(
-                                      targetItem.quantity,
-                                      newItem.quantity,
-                                      newItem.options
-                                  ),
+                                : newItem.options[newItem.quantity],
+                        diffType:
+                            newItem.quantity > targetItem.quantity
+                                ? 'increase'
+                                : 'decrease',
                     });
                 }
             }

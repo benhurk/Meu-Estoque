@@ -12,7 +12,7 @@ import TextTooltip from '../TextTooltip';
 import Select from '../Select';
 
 import mapOptions from '../../utils/mapOptions';
-import { getOptionsDiff, getNumberDiff } from '../../utils/getLogDiff';
+import getNumberDiff from '../../utils/getLogDiff';
 
 type Props = {
     item: ListItemType;
@@ -41,22 +41,24 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
         }
 
         logTimeoutId.current = setTimeout(() => {
-            addNewLog({
-                item: item.name,
-                diff:
-                    item.qtdType === 'number'
-                        ? getNumberDiff(
-                              initialQuantity.current,
-                              newValue,
-                              item.numberOf
-                          )
-                        : getOptionsDiff(
-                              initialQuantity.current,
-                              newValue,
-                              item.options
-                          ),
-            });
-            initialQuantity.current = newValue;
+            if (newValue != initialQuantity.current) {
+                addNewLog({
+                    item: item.name,
+                    diff:
+                        item.qtdType === 'number'
+                            ? getNumberDiff(
+                                  initialQuantity.current,
+                                  newValue,
+                                  item.numberOf
+                              )
+                            : item.options[newValue],
+                    diffType:
+                        newValue > initialQuantity.current
+                            ? 'increase'
+                            : 'decrease',
+                });
+                initialQuantity.current = newValue;
+            }
         }, 5000);
     };
 

@@ -1,19 +1,20 @@
 import { useMemo, useState } from 'react';
 import html2pdf from 'html2pdf.js';
-
 import styles from './LogsTable.module.css';
+
+import useLogsStore from '../../stores/logsStore';
 
 import Select from '../Select';
 import FormGroup from '../FormGroup';
+import PlaceholderContent from '../PlaceholderContent';
+import InputWithButton from '../InputWithButton';
 
 import Months from '../../types/Months';
+import Logs from '../../types/Logs';
 
 import mapOptions from '../../utils/mapOptions';
 import months from '../../const/months';
 import filterLogs from '../../utils/filterLogs';
-import useLogsStore from '../../stores/logsStore';
-import PlaceholderContent from '../PlaceholderContent';
-import InputWithButton from '../InputWithButton';
 
 export default function LogsTable() {
     const { logs, removeLog } = useLogsStore();
@@ -24,10 +25,15 @@ export default function LogsTable() {
         return filterLogs(logs, searchFor, monthFilter);
     }, [logs, monthFilter, searchFor]);
 
-    const getDiffColor = (diff: string) => {
-        if (diff.includes('+')) return 'text-green';
-        else if (diff.includes('-')) return 'text-red';
-        else return 'text-dark';
+    const getDiffColor = (diffType: Logs['diffType']) => {
+        switch (diffType) {
+            case 'increase':
+                return 'text-green';
+            case 'decrease':
+                return 'text-red';
+            default:
+                return 'text-dark';
+        }
     };
 
     const date = new Date().toLocaleDateString();
@@ -130,7 +136,10 @@ export default function LogsTable() {
                                             </span>
                                         </td>
                                         <td>{log.item}</td>
-                                        <td className={getDiffColor(log.diff)}>
+                                        <td
+                                            className={getDiffColor(
+                                                log.diffType
+                                            )}>
                                             {log.diff}
                                         </td>
                                         <td className={styles.removeButton}>
