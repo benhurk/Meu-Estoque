@@ -1,8 +1,11 @@
+import { useMemo } from 'react';
 import useListStore from '../../stores/listStore';
 import SupportedPlatforms from '../../types/supportedPlatforms';
+import SendModes from '../../types/SendModes';
+import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
 
 type Props = {
-    sendMode: 'all' | 'warned' | 'selected';
+    sendMode: SendModes;
     sendVia: SupportedPlatforms;
     initialMessage: string;
     setOpenSendMenu: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,10 +18,12 @@ export default function SendButton({
     setOpenSendMenu,
 }: Props) {
     const listItems = useListStore((state) => state.items);
-    const warnedItems = listItems.filter(
-        (item) => item.quantity <= item.alertQuantity
-    );
-    const selectedItems = listItems.filter((item) => item.selected === true);
+    const warnedItems = useMemo(() => {
+        return listItems.filter((item) => item.quantity <= item.alertQuantity);
+    }, [listItems]);
+    const selectedItems = useMemo(() => {
+        return listItems.filter((item) => item.selected === true);
+    }, [listItems]);
 
     const date = new Date().toLocaleDateString();
 
@@ -33,10 +38,21 @@ export default function SendButton({
         }
     };
 
-    const send = (sendMode: 'all' | 'warned' | 'selected') => {
+    const defaultMessage = (sendMode: SendModes) => {
+        switch (sendMode) {
+            case 'all':
+                return `Estoque ${date}:%0a%0a`;
+            case 'warned':
+                return '❗ Itens em falta ❗%0a%0a';
+            case 'selected':
+                return '';
+        }
+    };
+
+    const send = (sendMode: SendModes) => {
         let message = initialMessage
             ? `${initialMessage}%0a%0a`
-            : `Estoque ${date}%0a%0a`;
+            : defaultMessage(sendMode);
         const items =
             sendMode === 'all'
                 ? listItems
@@ -49,15 +65,17 @@ export default function SendButton({
 
             const allItemsLine = `• ${
                 item.quantity <= item.alertQuantity ? '⚠' : '✅'
-            } ${item.name}:   ${
-                item.qtdType === 'number' ? item.quantity : optionsQuantity
-            } ${item.qtdType === 'number' ? item.numberOf : ''}%0a`;
-
-            const warnedItemsLine = `• ${item.name}:    ${
+            } ${item.name}: ${
                 item.qtdType === 'number'
-                    ? item.quantity + item.numberOf
+                    ? item.quantity + ' ' + abbreviateNumberOf(item.numberOf)
                     : optionsQuantity
             }%0a`;
+
+            const warnedItemsLine = `🔸 ${item.name} (${
+                item.qtdType === 'number'
+                    ? item.quantity + ' ' + abbreviateNumberOf(item.numberOf)
+                    : optionsQuantity
+            })%0a`;
 
             message += sendMode === 'warned' ? warnedItemsLine : allItemsLine;
         });
