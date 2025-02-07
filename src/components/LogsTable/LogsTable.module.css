@@ -9,12 +9,11 @@ thead th {
     background-color: var(--color-dark);
     color: white;
     padding-block: 0.5rem;
-    font-size: 1rem;
 }
 
 tbody {
     background-color: #fff;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
 }
 
 tr {
@@ -55,5 +54,5 @@ tbody tr:nth-of-type(even) {
 .removeButton {
     position: absolute;
     top: 0;
-    right: 0.25rem;
+    right: 0.05rem;
 }
