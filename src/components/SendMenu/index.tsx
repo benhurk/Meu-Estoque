@@ -3,9 +3,10 @@ import styles from './SendMenu.module.css';
 
 import SupportedPlatforms from '../../types/supportedPlatforms';
 import SendButton from '../SendButton';
+import SendModes from '../../types/SendModes';
 
 type Props = {
-    sendMode: 'all' | 'warned' | 'selected';
+    sendMode: SendModes;
     setOpenSendMenu: React.Dispatch<React.SetStateAction<boolean>>;
 };
 

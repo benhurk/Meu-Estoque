@@ -4,12 +4,11 @@ import Modal from '../Modal';
 import SendMenu from '../SendMenu';
 import useListStore from '../../stores/listStore';
 import Dropdown from '../Dropdown';
+import SendModes from '../../types/SendModes';
 
 export default function SendDropdown() {
     const [openSendMenu, setOpenSendMenu] = useState<boolean>(false);
-    const [sendMode, setSendMode] = useState<'all' | 'warned' | 'selected'>(
-        'all'
-    );
+    const [sendMode, setSendMode] = useState<SendModes>('all');
 
     const listItems = useListStore((state) => state.items);
     const warnedItems = listItems.filter(
@@ -17,7 +16,7 @@ export default function SendDropdown() {
     );
     const selectedItems = listItems.filter((item) => item.selected === true);
 
-    const handleClick = (send: 'all' | 'warned' | 'selected') => {
+    const handleClick = (send: SendModes) => {
         setSendMode(send);
         setOpenSendMenu(true);
     };
