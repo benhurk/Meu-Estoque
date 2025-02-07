@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import styles from './RemoveMultiple.module.css';
 
@@ -12,7 +12,12 @@ export default function RemoveMultipleButton() {
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-    const selectedItems = listItems.filter((item) => item.selected === true);
+    const selectedItems = useMemo(
+        () => listItems.filter((item) => item.selected === true),
+        [listItems]
+    );
+    const selectedItemsNames = selectedItems.map((item) => item.name);
+
     const dynamicText =
         selectedItems.length > 0 ? selectedItems.length + ' itens' : 'tudo';
 
@@ -41,20 +46,26 @@ export default function RemoveMultipleButton() {
                 onClick={() => setModalOpen(true)}>
                 <i className='bi bi-trash-fill' />
                 &nbsp;
-                {`Apagar ${dynamicText}`}
+                {`Remover ${dynamicText}`}
             </button>
 
             <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
                 <div>
                     <span className={`text-red ${styles.removeWarning}`}>
-                        {`Deseja mesmo apagar ${dynamicText}?`}
+                        {`Deseja mesmo remover ${dynamicText}?`}
                     </span>
+                    {selectedItems.length > 0 && (
+                        <p
+                            className={`text-red ${styles.itemsList}`}>{`Os seguintes itens serão removidos: ${selectedItemsNames.join(
+                            ', '
+                        )}.`}</p>
+                    )}
                     <div className={styles.buttonsArea}>
                         <button
                             type='button'
                             className='btn btn-red me-2'
                             onClick={() => removeItems()}>
-                            Apagar
+                            Remover
                         </button>
                         <button
                             type='button'
