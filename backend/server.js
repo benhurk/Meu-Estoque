@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 
 import userRoutes from './routes/userRoutes.js';
 import listItemRoutes from './routes/listItemRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import { sql } from './config/db.js';
 import { aj } from './lib/arcjet.js';
 
@@ -50,7 +51,8 @@ app.use(async (req, res, next) => {
     }
 });
 
-app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/items', listItemRoutes);
 
 async function initDatabase() {
@@ -79,6 +81,16 @@ async function initDatabase() {
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
         `;
+
+        await sql`
+        CREATE TABLE IF NOT EXISTS refresh_tokens (
+            id SERIAL PRIMARY KEY,
+            user_id INT NOT NULL,
+            token VARCHAR(255) NOT NULL,
+            expires_at TIMESTAMP NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        );
+    `;
     } catch (error) {
         console.log('Error initializing database.', error);
     }
