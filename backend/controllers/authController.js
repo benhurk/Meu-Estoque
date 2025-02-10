@@ -2,82 +2,16 @@ import { sql } from '../config/db.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-export async function loginUser(req, res) {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res
-            .status(400)
-            .json({ success: false, message: 'All fields are required.' });
-    }
-
-    try {
-        const user = await sql`
-            SELECT * FROM users WHERE username = ${username};
-        `;
-
-        if (user.length === 0) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid credentials',
-            });
-        }
-
-        const validPassword = await bcrypt.compare(
-            password,
-            user[0].password_hash
-        );
-
-        if (!validPassword) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid password',
-            });
-        }
-
-        const acessToken = jwt.sign(
-            { id: user[0].id },
-            process.env.ACCESS_TOKEN_SECRET,
-            {
-                expiresIn: '15m',
-            }
-        );
-
-        const refreshToken = jwt.sign(
-            { id: user[0].id },
-            process.env.REFRESH_TOKEN_SECRET,
-            {
-                expiresIn: '7d',
-            }
-        );
-
-        await sql`
-            INSERT INTO refresh_tokens (user_id, token, expires_at) 
-            VALUES (${user[0].id}, ${refreshToken}, ${new Date(
-            Date.now() + 7 * 24 * 60 * 60 * 1000
-        )});
-        `;
-
-        res.json({ acessToken });
-    } catch (error) {
-        console.log('Error while trying to loginUser', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error',
-        });
-    }
-}
-
 export async function registerUser(req, res) {
-    const { username, email, password } = req.body;
-
-    if (!username || !email || !password) {
-        return res
-            .status(400)
-            .json({ success: false, message: 'All fields are required.' });
-    }
-
     try {
+        const { username, email, password } = req.body;
+
+        if (!username || !email || !password) {
+            return res
+                .status(400)
+                .json({ success: false, message: 'All fields are required.' });
+        }
+
         const existingUsername = await sql`
         SELECT * FROM users WHERE username = ${username};`;
 
@@ -101,7 +35,11 @@ export async function registerUser(req, res) {
             VALUES (${username}, ${email}, ${hashed_password}) RETURNING *;
         `;
 
-        res.status(201).json({ success: true, data: newUser[0] });
+        res.status(201).json({
+            success: true,
+            data: newUser[0],
+            message: 'User successfully registered',
+        });
     } catch (error) {
         console.log('Error while trying to registerUser', error);
         res.status(500).json({
@@ -111,38 +49,89 @@ export async function registerUser(req, res) {
     }
 }
 
-export async function refreshToken(req, res) {
+export async function loginUser(req, res) {
     try {
-        const { userId } = req.body;
+        const { username, password } = req.body;
 
-        const tokenRecord = await sql`
-            SELECT * FROM refresh_tokens WHERE user_id = ${userId};
+        if (!username || !password) {
+            return res
+                .status(400)
+                .json({ success: false, message: 'All fields are required.' });
+        }
+
+        const user = await sql`
+            SELECT * FROM users WHERE username = ${username};
         `;
 
-        if (tokenRecord.length === 0) {
-            return res
-                .status(401)
-                .json({ success: false, message: 'No refresh token found' });
+        if (user.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not found',
+            });
         }
 
-        const decodedToken = jwt.verify(
-            tokenRecord[0].token,
-            process.env.REFRESH_TOKEN_SECRET
+        const validPassword = await bcrypt.compare(
+            password,
+            user[0].password_hash
         );
 
-        if (new Date(tokenRecord[0].expires_at) < new Date()) {
-            return res
-                .status(401)
-                .json({ success: false, message: 'Refresh token expired' });
+        if (!validPassword) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid password',
+            });
         }
 
-        const newAccessToken = jwt.sign(
-            { id: decodedToken.id },
+        const accessToken = jwt.sign(
+            { id: user[0].id },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '15m' }
+            {
+                expiresIn: '15m',
+            }
         );
 
-        res.json({ newAccessToken });
+        const refreshToken = jwt.sign(
+            { id: user[0].id },
+            process.env.REFRESH_TOKEN_SECRET,
+            {
+                expiresIn: '7d',
+            }
+        );
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            expire: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        res.status(200).json({
+            success: true,
+            data: accessToken,
+            message: 'User successfully logged in',
+        });
+    } catch (error) {
+        console.log('Error while trying to loginUser', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+}
+
+export async function refreshToken(req, res) {
+    try {
+        const token = await req.cookies.refreshToken;
+        if (!token) return res.sendStatus(401);
+
+        jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
+            if (error) return res.sendStatus(403);
+            const accessToken = jwt.sign(
+                { id: user.id },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: '15m' }
+            );
+
+            res.json({ newAccessToken: accessToken });
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -154,13 +143,11 @@ export async function refreshToken(req, res) {
 
 export async function logoutUser(req, res) {
     try {
-        const { userId } = req.body;
-
-        await sql`
-            DELETE FROM refresh_tokens WHERE user_id = ${userId};
-        `;
-
-        res.json('Logged out');
+        res.clearCookie('refreshToken', { httpOnly: true });
+        res.status(200).json({
+            success: true,
+            message: 'Logged out successfully',
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
