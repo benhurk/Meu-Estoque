@@ -3,17 +3,20 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 
-import userRoutes from './routes/userRoutes.js';
-import listItemRoutes from './routes/listItemRoutes.js';
-import authRoutes from './routes/authRoutes.js';
-import { sql } from './config/db.js';
 import { aj } from './lib/arcjet.js';
+import { initDatabase } from './config/db.js';
+
+import authRoutes from './routes/authRoutes.js';
+import itemsRoutes from './routes/itemsRoutes.js';
+import authenticateToken from './middlewares/authenticateToken.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || '4000';
+const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(cors());
@@ -52,52 +55,17 @@ app.use(async (req, res, next) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/items', listItemRoutes);
+app.use('/api/items', authenticateToken, itemsRoutes);
 
-async function initDatabase() {
-    try {
-        await sql`
-            CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
-                username VARCHAR(50) UNIQUE NOT NULL,
-                email VARCHAR(255) UNIQUE NOT NULL,
-                password_hash VARCHAR(255) NOT NULL
-            );
-        `;
-
-        await sql`
-            CREATE TABLE IF NOT EXISTS items (
-                id SERIAL PRIMARY KEY,
-                user_id INT NOT NULL,
-                name VARCHAR(100) NOT NULL,
-                quantity_type VARCHAR(50) NOT NULL,
-                unit_of_measurement VARCHAR(50),
-                options TEXT,
-                quantity INT NOT NULL,
-                alert_quantity INT NOT NULL,
-                description TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            );
-        `;
-
-        await sql`
-        CREATE TABLE IF NOT EXISTS refresh_tokens (
-            id SERIAL PRIMARY KEY,
-            user_id INT NOT NULL,
-            token VARCHAR(255) NOT NULL,
-            expires_at TIMESTAMP NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-        );
-    `;
-    } catch (error) {
-        console.log('Error initializing database.', error);
-    }
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '/frontend/dist')));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
+    });
 }
 
 initDatabase().then(() => {
     app.listen(PORT, () => {
-        console.log('Hello backend', PORT);
+        console.log('Server running on port', PORT);
     });
 });
