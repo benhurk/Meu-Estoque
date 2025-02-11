@@ -1,0 +1,19 @@
+.wraper {
+    max-width: 50%;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.wraper input {
+    width: 100%;
+}
+
+.requestMessage {
+    margin-inline: auto;
+}
+
+.buttonArea {
+    margin-inline: auto;
+}
