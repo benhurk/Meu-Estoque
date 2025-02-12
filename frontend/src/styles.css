@@ -80,7 +80,8 @@ textarea {
 }
 
 button i.bi,
-.btn i.bi {
+.btn i.bi,
+a i.bi {
     pointer-events: none;
     color: inherit;
 }

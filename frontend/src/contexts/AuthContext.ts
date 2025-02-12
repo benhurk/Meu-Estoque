@@ -2,10 +2,12 @@ import { createContext } from 'react';
 
 type AuthContextType = {
     accessToken: string | null;
-    login: (username: string, password: string) => Promise<void>;
+    login: (
+        username: string,
+        password: string
+    ) => Promise<{ success: boolean; message: string }>;
     register: (
         username: string,
-        email: string,
         password: string
     ) => Promise<{ success: boolean; message: string }>;
     logout: () => void;

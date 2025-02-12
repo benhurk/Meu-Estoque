@@ -15,7 +15,7 @@ import capitalizeString from '../../utils/capitalizeString';
 import getNumberDiff from '../../utils/getLogDiff';
 import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
 
-import { FormMode } from '../../types/FormTypes';
+import { FormMode } from '../../types/ItemFormTypes';
 import ListItemType, {
     NumberOf,
     QuantityType,

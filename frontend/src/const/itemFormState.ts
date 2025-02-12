@@ -1,4 +1,4 @@
-import { FormState } from '../types/FormTypes';
+import { FormState } from '../types/ItemFormTypes';
 
 const itemFormInitialState: FormState = {
     name: '',

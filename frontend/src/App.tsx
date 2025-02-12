@@ -4,18 +4,19 @@ import './styles.css';
 
 import AuthProvider from './contexts/AuthProvider';
 import MainPage from './pages/Main';
-import SignIn from './pages/SignIn';
+import UserAccess from './pages/UserAccess';
 
 function App() {
     return (
-        <AuthProvider>
-            <BrowserRouter>
+        <BrowserRouter>
+            <AuthProvider>
                 <Routes>
-                    <Route path='/signin' element={<SignIn />} />
+                    <Route path='/signin' element={<UserAccess />} />
+                    <Route path='/signup' element={<UserAccess />} />
                     <Route path='/' element={<MainPage />} />
                 </Routes>
-            </BrowserRouter>
-        </AuthProvider>
+            </AuthProvider>
+        </BrowserRouter>
     );
 }
 

@@ -4,40 +4,33 @@ import jwt from 'jsonwebtoken';
 
 export async function registerUser(req, res) {
     try {
-        const { username, email, password } = req.body;
+        const { username, password } = req.body;
 
-        if (!username || !email || !password) {
-            return res
-                .status(400)
-                .json({ success: false, message: 'All fields are required.' });
+        if (!username || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Preencha os campos obrigatórios.',
+            });
         }
 
         const existingUsername = await sql`
         SELECT * FROM users WHERE username = ${username};`;
 
-        const existingEmail = await sql`
-        SELECT * FROM users WHERE email = ${email};`;
-
         if (existingUsername.length > 0)
             return res
                 .status(401)
-                .json({ success: false, message: 'User already exists' });
-
-        if (existingEmail.length > 0)
-            return res
-                .status(401)
-                .json({ success: false, message: 'Email already exists' });
+                .json({ success: false, message: 'Usuário já existe.' });
 
         const hashed_password = await bcrypt.hash(password, 10);
 
-        const newUser = await sql`
-            INSERT INTO users (username, email, password_hash)
-            VALUES (${username}, ${email}, ${hashed_password}) RETURNING *;
+        await sql`
+            INSERT INTO users (username, password_hash)
+            VALUES (${username}, ${hashed_password}) RETURNING *;
         `;
 
         res.status(201).json({
             success: true,
-            message: 'User successfully registered',
+            message: 'Registrado com sucesso.',
         });
     } catch (error) {
         console.log('Error while trying to registerUser', error);
@@ -53,9 +46,10 @@ export async function loginUser(req, res) {
         const { username, password } = req.body;
 
         if (!username || !password) {
-            return res
-                .status(400)
-                .json({ success: false, message: 'All fields are required.' });
+            return res.status(400).json({
+                success: false,
+                message: 'Informe o usuário e a senha.',
+            });
         }
 
         const user = await sql`
@@ -65,7 +59,7 @@ export async function loginUser(req, res) {
         if (user.length === 0) {
             return res.status(401).json({
                 success: false,
-                message: 'User not found',
+                message: 'Nome de usuário incorreto.',
             });
         }
 
@@ -77,7 +71,7 @@ export async function loginUser(req, res) {
         if (!validPassword) {
             return res.status(401).json({
                 success: false,
-                message: 'Invalid password',
+                message: 'Senha incorreta.',
             });
         }
 
@@ -105,7 +99,7 @@ export async function loginUser(req, res) {
         res.status(200).json({
             success: true,
             data: accessToken,
-            message: 'User successfully logged in',
+            message: 'LogIn feito com sucesso.',
         });
     } catch (error) {
         console.log('Error while trying to loginUser', error);

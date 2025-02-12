@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { FormMode } from '../types/FormTypes';
+import { FormMode } from '../types/ItemFormTypes';
 
 type FormState = {
     formMode: FormMode;
