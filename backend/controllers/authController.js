@@ -117,13 +117,14 @@ export async function refreshToken(req, res) {
 
         jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
             if (error) return res.sendStatus(403);
-            const accessToken = jwt.sign(
+
+            const newAccessToken = jwt.sign(
                 { id: user.id },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '15m' }
             );
 
-            res.json({ newAccessToken: accessToken });
+            res.json({ accessToken: newAccessToken });
         });
     } catch (error) {
         console.log(error);
@@ -137,7 +138,7 @@ export async function refreshToken(req, res) {
 export async function logoutUser(req, res) {
     try {
         res.clearCookie('refreshToken', { httpOnly: true });
-        res.status(200).json({
+        res.status(204).json({
             success: true,
             message: 'Logged out successfully',
         });
