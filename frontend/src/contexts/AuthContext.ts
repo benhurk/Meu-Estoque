@@ -1,7 +1,9 @@
 import { createContext } from 'react';
 
 type AuthContextType = {
+    BASE_URL: string;
     accessToken: string | null;
+    setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
     login: (
         username: string,
         password: string
@@ -11,7 +13,6 @@ type AuthContextType = {
         password: string
     ) => Promise<{ success: boolean; message: string }>;
     logout: () => void;
-    refreshToken: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
