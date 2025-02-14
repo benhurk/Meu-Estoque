@@ -1,6 +1,6 @@
-import { FormState } from '../types/ItemFormTypes';
+import { ItemFormState } from '../types/ItemFormTypes';
 
-const itemFormInitialState: FormState = {
+const itemFormInitialState: ItemFormState = {
     name: '',
     qtdType: 'number',
     numberOf: 'Unidades',
