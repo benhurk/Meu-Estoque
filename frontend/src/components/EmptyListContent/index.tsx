@@ -4,7 +4,7 @@ type Props = {
     text: string;
 };
 
-export default function PlaceholderContent({ text }: Props) {
+export default function EmptyListContent({ text }: Props) {
     return (
         <div className={styles.placeholderContent}>
             <i className={`bi bi-clipboard-x ${styles.icon}`} />

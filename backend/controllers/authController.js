@@ -93,7 +93,9 @@ export async function loginUser(req, res) {
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            expire: 7 * 24 * 60 * 60 * 1000,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: 'lax', // Required for cross-site cookies
+            secure: false, // Required if sameSite is 'none'
         });
 
         res.status(200).json({
@@ -113,7 +115,7 @@ export async function loginUser(req, res) {
 export async function refreshToken(req, res) {
     try {
         const token = await req.cookies.refreshToken;
-        if (!token) return res.sendStatus(401);
+        if (!token) return res.sendStatus(403);
 
         jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
             if (error) return res.sendStatus(403);

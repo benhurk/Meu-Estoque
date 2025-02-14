@@ -1,9 +1,10 @@
 import { createContext } from 'react';
 
 type AuthContextType = {
-    BASE_URL: string;
-    accessToken: string | null;
-    setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
+    accessToken: string | null | undefined;
+    setAccessToken: React.Dispatch<
+        React.SetStateAction<string | null | undefined>
+    >;
     login: (
         username: string,
         password: string

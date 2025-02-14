@@ -8,6 +8,7 @@ type ListState = {
 };
 
 type ListActions = {
+    setListData: (data: ListItemType[]) => void;
     addItem: (item: ListItemType) => void;
     removeItem: (id: string) => void;
     editItem: (item: ListItemType) => void;
@@ -18,6 +19,10 @@ const useListStore = create(
     persist<ListState & ListActions>(
         (set) => ({
             items: [],
+            setListData: (data) =>
+                set(() => ({
+                    items: data,
+                })),
             addItem: (item) =>
                 set((state) => ({ items: [...state.items, item] })),
             removeItem: (id) =>

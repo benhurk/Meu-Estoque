@@ -2,19 +2,19 @@ import { useEffect, useMemo, useState } from 'react';
 import styles from './List.module.css';
 
 import useFormStore from '../../stores/formStore';
-import useListStore from '../../stores/listStore';
 
 import ListItem from '../ListItem';
 import Modal from '../Modal';
 import ItemForm from '../ItemForm';
-import PlaceholderContent from '../PlaceholderContent';
+import EmptyListContent from '../EmptyListContent';
 import RemoveMultipleButton from '../RemoveMultipleButton';
 import InputWithButton from '../InputWithButton';
+import useListStore from '../../stores/listStore';
 
 export default function List() {
+    const listItems = useListStore((state) => state.items);
     const [search, setSearch] = useState<string>('');
 
-    const listItems = useListStore((state) => state.items);
     const setFormMode = useFormStore((state) => state.setFormMode);
 
     const searchedItems = useMemo(() => {
@@ -74,7 +74,7 @@ export default function List() {
                     ))}
                 </ul>
             ) : (
-                <PlaceholderContent
+                <EmptyListContent
                     text={
                         listItems.length === 0
                             ? 'Nenhum item adicionado ainda.'

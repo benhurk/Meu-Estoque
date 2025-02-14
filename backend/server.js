@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 
 import { aj } from './lib/arcjet.js';
 import { initDatabase } from './config/db.js';
@@ -15,11 +16,17 @@ import authenticateToken from './middlewares/authenticateToken.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || '4000';
+const PORT = process.env.PORT || '5000';
 const __dirname = path.resolve();
 
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(
+    cors({
+        origin: 'http://localhost:5174',
+        credentials: true,
+    })
+);
 app.use(helmet());
 app.use(morgan('dev'));
 

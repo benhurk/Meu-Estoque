@@ -6,7 +6,7 @@ import useLogsStore from '../../stores/logsStore';
 
 import Select from '../Select';
 import FormGroup from '../FormGroup';
-import PlaceholderContent from '../PlaceholderContent';
+import EmptyListContent from '../EmptyListContent';
 import InputWithButton from '../InputWithButton';
 
 import Months from '../../types/Months';
@@ -156,7 +156,7 @@ export default function LogsTable() {
                             </tbody>
                         </table>
                     ) : (
-                        <PlaceholderContent text='Nenhum registro disponível.' />
+                        <EmptyListContent text='Nenhum registro disponível.' />
                     )}
                 </div>
             </div>
