@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import './styles.css';
 
-import AuthProvider from './contexts/AuthProvider';
+import AuthProvider from './contexts/AuthContext/AuthProvider';
 import MainPage from './pages/Main';
 import UserAccess from './pages/UserAccess';
 

@@ -3,7 +3,7 @@ import { ReactNode, useLayoutEffect, useState } from 'react';
 
 import AuthContext from './AuthContext';
 import { useNavigate } from 'react-router-dom';
-import api from '../api';
+import api from '../../api';
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     _retry?: boolean;
