@@ -2,15 +2,15 @@ import { useState } from 'react';
 
 import Modal from '../Modal';
 import SendMenu from '../SendMenu';
-import useListStore from '../../stores/listStore';
 import Dropdown from '../Dropdown';
 import SendModes from '../../types/SendModes';
+import useListItems from '../../hooks/useListItems';
 
 export default function SendDropdown() {
     const [openSendMenu, setOpenSendMenu] = useState<boolean>(false);
     const [sendMode, setSendMode] = useState<SendModes>('all');
 
-    const listItems = useListStore((state) => state.items);
+    const listItems = useListItems();
     const warnedItems = listItems.filter(
         (item) => item.quantity <= item.alertQuantity
     );

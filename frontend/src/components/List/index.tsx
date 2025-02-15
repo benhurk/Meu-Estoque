@@ -9,10 +9,10 @@ import ItemForm from '../ItemForm';
 import EmptyListContent from '../EmptyListContent';
 import RemoveMultipleButton from '../RemoveMultipleButton';
 import InputWithButton from '../InputWithButton';
-import useListStore from '../../stores/listStore';
+import useListItems from '../../hooks/useListItems';
 
 export default function List() {
-    const listItems = useListStore((state) => state.items);
+    const listItems = useListItems();
     const [search, setSearch] = useState<string>('');
 
     const setFormMode = useFormStore((state) => state.setFormMode);
