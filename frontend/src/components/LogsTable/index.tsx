@@ -4,7 +4,6 @@ import styles from './LogsTable.module.css';
 
 import useLogsStore from '../../stores/logsStore';
 
-import Select from '../Select';
 import FormGroup from '../FormGroup';
 import EmptyListContent from '../EmptyListContent';
 import InputWithButton from '../InputWithButton';
@@ -12,8 +11,6 @@ import InputWithButton from '../InputWithButton';
 import Months from '../../types/Months';
 import Logs from '../../types/Logs';
 
-import mapOptions from '../../utils/mapOptions';
-import months from '../../const/months';
 import filterLogs from '../../utils/filterLogs';
 
 export default function LogsTable() {
@@ -72,17 +69,7 @@ export default function LogsTable() {
             </button>
             <div className={styles.filterArea}>
                 <FormGroup elementId='logs-filter' labelText='Mês:'>
-                    <Select
-                        elementId='logs-filter'
-                        options={mapOptions(months)}
-                        change={(e) =>
-                            setMonthFilter(
-                                e.currentTarget.dataset.value as Months
-                            )
-                        }
-                        value={monthFilter || 'Todos'}
-                        emptyOption='Todos'
-                    />
+                    <select></select>
                 </FormGroup>
                 <FormGroup elementId='search-for' labelText='Pesquisar item:'>
                     <InputWithButton

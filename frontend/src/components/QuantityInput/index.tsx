@@ -3,15 +3,15 @@ import { ChangeEvent } from 'react';
 import styles from './QuantityInput.module.css';
 
 import removeZeroBeforeNumber from '../../utils/removeZero';
-import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
-import { NumberOf } from '../../types/ListItemTypes';
+import abbreviateNumberOf from '../../utils/abbreviateUnitOfMeasurement';
+import { UnitsOfMeasurement } from '../../types/ListItemTypes';
 
 type Props = {
     size?: 'sm' | 'md';
     elementId: string;
     value: number;
     change: (e: ChangeEvent<HTMLInputElement>) => void;
-    unityOfMeasurement: NumberOf;
+    unityOfMeasurement: UnitsOfMeasurement;
 };
 
 export default function QuantityInput({

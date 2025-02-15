@@ -3,11 +3,13 @@ import { useMemo, useState } from 'react';
 import styles from './RemoveMultiple.module.css';
 
 import Modal from '../Modal';
-import useListStore from '../../stores/listStore';
 import useLogsStore from '../../stores/logsStore';
+import useLocalListStore from '../../stores/localListStore';
+import useListItems from '../../hooks/useListItems';
 
 export default function RemoveMultipleButton() {
-    const { items: listItems, removeItem, clearList } = useListStore();
+    const listItems = useListItems();
+    const { removeItem, clearList } = useLocalListStore();
     const { logs, removeLog, clearLogs } = useLogsStore();
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -27,7 +29,7 @@ export default function RemoveMultipleButton() {
                 logs.filter((log) => log.item === item.name).forEach(
                     (filteredLog) => removeLog(filteredLog.id)
                 );
-                removeItem(item.id);
+                removeItem(String(item.id));
             });
         } else {
             clearList();

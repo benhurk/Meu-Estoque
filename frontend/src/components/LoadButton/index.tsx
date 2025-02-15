@@ -1,12 +1,14 @@
 import styles from './LoadButton.module.css';
 
 import ListItemType from '../../types/ListItemTypes';
-import useListStore from '../../stores/listStore';
 import Logs from '../../types/Logs';
 import useLogsStore from '../../stores/logsStore';
+import useLocalListStore from '../../stores/localListStore';
+import useListItems from '../../hooks/useListItems';
 
 export default function LoadButton() {
-    const { items: listItems, addItem } = useListStore();
+    const listItems = useListItems();
+    const { addItem } = useLocalListStore();
     const { logs, addNewLog } = useLogsStore();
 
     const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,9 +23,8 @@ export default function LoadButton() {
                 const newItem: ListItemType = {
                     id: loadedItem.id,
                     name: loadedItem.name,
-                    qtdType: loadedItem.qtdType,
-                    numberOf: loadedItem.numberOf,
-                    options: loadedItem.options,
+                    quantityType: loadedItem.quantityType,
+                    unitOfMeasurement: loadedItem.unitOfMeasurement,
                     quantity: loadedItem.quantity,
                     alertQuantity: loadedItem.alertQuantity,
                     description: loadedItem.description,

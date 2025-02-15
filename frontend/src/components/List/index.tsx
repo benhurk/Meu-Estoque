@@ -61,10 +61,9 @@ export default function List() {
                             item={{
                                 id: item.id,
                                 name: item.name,
-                                qtdType: item.qtdType,
-                                numberOf: item.numberOf,
+                                quantityType: item.quantityType,
+                                unitOfMeasurement: item.unitOfMeasurement,
                                 quantity: item.quantity,
-                                options: item.options,
                                 alertQuantity: item.alertQuantity,
                                 description: item.description,
                                 selected: item.selected,

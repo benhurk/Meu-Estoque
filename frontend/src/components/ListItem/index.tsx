@@ -1,7 +1,6 @@
 import { memo, useRef } from 'react';
 import styles from './ListItem.module.css';
 
-import useListStore from '../../stores/listStore';
 import useFormStore from '../../stores/formStore';
 import useLogsStore from '../../stores/logsStore';
 
@@ -9,10 +8,8 @@ import ListItemType from '../../types/ListItemTypes';
 
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
-import Select from '../Select';
-
-import mapOptions from '../../utils/mapOptions';
 import getNumberDiff from '../../utils/getLogDiff';
+import useLocalListStore from '../../stores/localListStore';
 
 type Props = {
     item: ListItemType;
@@ -20,12 +17,12 @@ type Props = {
 };
 
 const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
-    const { editItem, removeItem } = useListStore();
+    const { editItem, removeItem } = useLocalListStore();
     const { setFormMode, setTargetItem } = useFormStore();
     const { logs, addNewLog, removeLog } = useLogsStore();
 
     const setEditForm = () => {
-        setTargetItem(item.id);
+        setTargetItem(String(item.id));
         setFormMode('edit');
         setItemFormOpen(true);
     };
@@ -45,13 +42,13 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                 addNewLog({
                     item: item.name,
                     diff:
-                        item.qtdType === 'number'
+                        item.quantityType === 'number'
                             ? getNumberDiff(
                                   initialQuantity.current,
                                   newValue,
-                                  item.numberOf
+                                  item.unitOfMeasurement
                               )
-                            : item.options[newValue],
+                            : '',
                     diffType:
                         newValue > initialQuantity.current
                             ? 'increase'
@@ -86,30 +83,17 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                         )}
                     </div>
                     <div>
-                        {item.qtdType === 'number' ? (
+                        {item.quantityType === 'number' ? (
                             <QuantityInput
                                 elementId='quantity'
                                 value={item.quantity}
                                 change={(e) => {
                                     changeQuantity(Number(e.target.value));
                                 }}
-                                unityOfMeasurement={item.numberOf}
+                                unityOfMeasurement={item.unitOfMeasurement}
                             />
                         ) : (
-                            <div style={{ width: '30%' }}>
-                                <Select
-                                    elementId='quantity'
-                                    options={mapOptions(item.options, 'number')}
-                                    change={(e) =>
-                                        changeQuantity(
-                                            Number(
-                                                e.currentTarget.dataset.value
-                                            )
-                                        )
-                                    }
-                                    value={item.options[item.quantity]}
-                                />
-                            </div>
+                            <select></select>
                         )}
                     </div>
                 </div>
@@ -128,7 +112,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                             ).forEach((filteredLog) =>
                                 removeLog(filteredLog.id)
                             );
-                            removeItem(item.id);
+                            removeItem(String(item.id));
                         }}
                     />
                 </div>

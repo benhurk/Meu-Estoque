@@ -1,8 +1,8 @@
-import useListStore from '../../stores/listStore';
+import useListItems from '../../hooks/useListItems';
 import useLogsStore from '../../stores/logsStore';
 
 export default function DownloadButton() {
-    const listItems = useListStore((state) => state.items);
+    const listItems = useListItems();
     const logs = useLogsStore((state) => state.logs);
 
     const date = new Date().toLocaleDateString();

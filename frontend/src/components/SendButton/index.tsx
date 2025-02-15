@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import useListStore from '../../stores/listStore';
 import SupportedPlatforms from '../../types/supportedPlatforms';
 import SendModes from '../../types/SendModes';
-import abbreviateNumberOf from '../../utils/abbreviateNumberOf';
+import abbreviateUnitOfMeasurement from '../../utils/abbreviateUnitOfMeasurement';
+import useListItems from '../../hooks/useListItems';
 
 type Props = {
     sendMode: SendModes;
@@ -17,7 +17,7 @@ export default function SendButton({
     initialMessage,
     setOpenSendMenu,
 }: Props) {
-    const listItems = useListStore((state) => state.items);
+    const listItems = useListItems();
     const warnedItems = useMemo(() => {
         return listItems.filter((item) => item.quantity <= item.alertQuantity);
     }, [listItems]);
@@ -61,19 +61,23 @@ export default function SendButton({
                 : selectedItems;
 
         items.forEach((item) => {
-            const optionsQuantity = item.options[item.quantity];
+            const optionsQuantity = '';
 
             const allItemsLine = `• ${
                 item.quantity <= item.alertQuantity ? '⚠' : '✅'
             } ${item.name}: ${
-                item.qtdType === 'number'
-                    ? item.quantity + ' ' + abbreviateNumberOf(item.numberOf)
+                item.quantityType === 'number'
+                    ? item.quantity +
+                      ' ' +
+                      abbreviateUnitOfMeasurement(item.unitOfMeasurement)
                     : optionsQuantity
             }%0a`;
 
             const warnedItemsLine = `🔸 ${item.name} (${
-                item.qtdType === 'number'
-                    ? item.quantity + ' ' + abbreviateNumberOf(item.numberOf)
+                item.quantityType === 'number'
+                    ? item.quantity +
+                      ' ' +
+                      abbreviateUnitOfMeasurement(item.unitOfMeasurement)
                     : optionsQuantity
             })%0a`;
 

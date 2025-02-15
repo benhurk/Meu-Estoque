@@ -2,10 +2,9 @@ import { ItemFormState } from '../types/ItemFormTypes';
 
 const itemFormInitialState: ItemFormState = {
     name: '',
-    qtdType: 'number',
-    numberOf: 'Unidades',
+    quantityType: 'number',
+    unitOfMeasurement: 'Unidades',
     quantity: 0,
-    options: [],
     alertQuantity: 0,
     description: '',
 };

@@ -1,5 +1,5 @@
 import { NumberOf } from '../types/ListItemTypes';
-import abbreviateNumberOf from './abbreviateNumberOf';
+import abbreviateNumberOf from './abbreviateUnitOfMeasurement';
 
 export default function getNumberDiff(
     previousQuantity: number,
