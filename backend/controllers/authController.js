@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export async function registerUser(req, res) {
     try {
-        const { username, password } = req.body;
+        const { username, password } = await req.body;
 
         if (!username || !password) {
             return res.status(400).json({
@@ -25,7 +25,7 @@ export async function registerUser(req, res) {
 
         await sql`
             INSERT INTO users (username, password_hash)
-            VALUES (${username}, ${hashed_password}) RETURNING *;
+            VALUES (${username}, ${hashed_password});
         `;
 
         res.status(201).json({
@@ -43,7 +43,7 @@ export async function registerUser(req, res) {
 
 export async function loginUser(req, res) {
     try {
-        const { username, password } = req.body;
+        const { username, password } = await req.body;
 
         if (!username || !password) {
             return res.status(400).json({

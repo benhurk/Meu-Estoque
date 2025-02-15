@@ -26,7 +26,6 @@ export async function initDatabase() {
                 name VARCHAR(100) NOT NULL,
                 quantity_type VARCHAR(50) NOT NULL,
                 unit_of_measurement VARCHAR(50),
-                options TEXT,
                 quantity INT NOT NULL,
                 alert_quantity INT NOT NULL,
                 description TEXT,
