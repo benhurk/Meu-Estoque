@@ -3,6 +3,7 @@ import Header from '../../components/Header';
 import UserForm from '../../components/UserForm';
 
 import styles from './UserAccess.module.css';
+import LoginMenu from '../../components/LoginMenu';
 
 export default function UserAccess() {
     const location = useLocation();
@@ -13,14 +14,7 @@ export default function UserAccess() {
             <main className='container'>
                 {location.pathname === '/signin' && (
                     <>
-                        <div className={styles.redirectLink}>
-                            Ainda não possui uma conta?&nbsp;
-                            <Link to='/signup' className='text-blue'>
-                                <i className='bi bi-box-arrow-in-right' />
-                                &nbsp;Registre-se
-                            </Link>
-                        </div>
-                        <UserForm mode='login' />
+                        <LoginMenu />
                     </>
                 )}
 

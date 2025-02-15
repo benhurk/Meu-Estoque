@@ -1,14 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './UserForm.module.css';
 
-import { ClipLoader } from 'react-spinners';
-import UserFormType from '../../types/UserForm';
+import { UserFormType, Errors } from '../../types/UserFormTypes';
 import FormGroup from '../FormGroup';
 import useAuth from '../../hooks/useAuth';
-
-type Props = {
-    mode: 'login' | 'register';
-};
+import Loader from '../Loader';
 
 const initialForm: UserFormType = {
     username: '',
@@ -16,10 +13,8 @@ const initialForm: UserFormType = {
     passwordConfirm: '',
 };
 
-type Errors = {
-    username?: string;
-    password?: string;
-    passwordConfirm?: string;
+type Props = {
+    mode: 'login' | 'register';
 };
 
 export default function UserForm({ mode }: Props) {
@@ -31,7 +26,8 @@ export default function UserForm({ mode }: Props) {
     });
     const [loading, setLoading] = useState<boolean>(false);
 
-    const { login, register } = useAuth();
+    const { login, register, setGuest } = useAuth();
+    const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -77,6 +73,11 @@ export default function UserForm({ mode }: Props) {
             setLoading(false);
             setResponseMessage(res);
         }
+    };
+
+    const continueAsGuest = () => {
+        setGuest(true);
+        navigate('/');
     };
 
     return (
@@ -138,12 +139,23 @@ export default function UserForm({ mode }: Props) {
             )}
             <div className={styles.buttonArea}>
                 {!loading ? (
-                    <button type='submit' className='btn btn-green'>
-                        <i className='bi bi-box-arrow-in-right' />
-                        &nbsp;{mode === 'login' ? 'Entrar' : 'Criar conta'}
-                    </button>
+                    <>
+                        <button type='submit' className='btn btn-green'>
+                            <i className='bi bi-box-arrow-in-right' />
+                            &nbsp;{mode === 'login' ? 'Entrar' : 'Criar conta'}
+                        </button>
+                        {mode === 'login' && (
+                            <button
+                                type='button'
+                                className='btn btn-dark'
+                                onClick={continueAsGuest}>
+                                <i className='bi bi-person-fill-x' />
+                                &nbsp;Continuar sem conta
+                            </button>
+                        )}
+                    </>
                 ) : (
-                    <ClipLoader />
+                    <Loader />
                 )}
             </div>
         </form>

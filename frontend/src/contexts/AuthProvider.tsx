@@ -11,6 +11,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
     const [accessToken, setAccessToken] = useState<string | null>();
+    const [guest, setGuest] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -90,12 +91,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 { withCredentials: true }
             );
 
+            if (guest) setGuest(false);
             setAccessToken(response.data.accessToken);
-
-            if (response.status === 200) {
-                navigate('/');
-                return response.data;
-            }
+            navigate('/');
+            return response.data;
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 return error.response.data;
@@ -119,10 +118,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         <AuthContext.Provider
             value={{
                 accessToken,
-                setAccessToken,
                 register,
                 login,
                 logout,
+                guest,
+                setGuest,
             }}>
             {children}
         </AuthContext.Provider>
