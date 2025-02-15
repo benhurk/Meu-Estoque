@@ -2,14 +2,15 @@ import { memo, useRef } from 'react';
 import styles from './ListItem.module.css';
 
 import useFormStore from '../../stores/formStore';
-import useLogsStore from '../../stores/logsStore';
 
 import ListItemType from '../../types/ListItemTypes';
 
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
-import getNumberDiff from '../../utils/getLogDiff';
 import useLocalListStore from '../../stores/localListStore';
+import useAuth from '../../hooks/useAuth';
+import api from '../../api';
+import useListStore from '../../stores/listStore';
 
 type Props = {
     item: ListItemType;
@@ -17,12 +18,13 @@ type Props = {
 };
 
 const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
-    const { editItem, removeItem } = useLocalListStore();
+    const { accessToken, guest } = useAuth();
+    const { editUserItem, removeUserItem } = useListStore();
+    const { editLocalItem, removeLocalItem } = useLocalListStore();
     const { setFormMode, setTargetItem } = useFormStore();
-    const { logs, addNewLog, removeLog } = useLogsStore();
 
     const setEditForm = () => {
-        setTargetItem(String(item.id));
+        setTargetItem(item.id);
         setFormMode('edit');
         setItemFormOpen(true);
     };
@@ -31,7 +33,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     const initialQuantity = useRef<number>(item.quantity);
 
     const changeQuantity = (newValue: number) => {
-        editItem({ ...item, quantity: newValue });
+        editLocalItem({ ...item, quantity: newValue });
 
         if (logTimeoutId.current) {
             clearTimeout(logTimeoutId.current);
@@ -39,24 +41,21 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
 
         logTimeoutId.current = setTimeout(() => {
             if (newValue != initialQuantity.current) {
-                addNewLog({
-                    item: item.name,
-                    diff:
-                        item.quantityType === 'number'
-                            ? getNumberDiff(
-                                  initialQuantity.current,
-                                  newValue,
-                                  item.unitOfMeasurement
-                              )
-                            : '',
-                    diffType:
-                        newValue > initialQuantity.current
-                            ? 'increase'
-                            : 'decrease',
-                });
+                //log
                 initialQuantity.current = newValue;
             }
         }, 5000);
+    };
+
+    const removeItem = async () => {
+        if (accessToken) {
+            const res = await api.delete(`/items/${item.id}`);
+            if (res.status === 200) {
+                removeUserItem(item.id);
+            }
+        } else if (guest) {
+            removeLocalItem(item.id);
+        }
     };
 
     const warn = item.quantity <= item.alertQuantity;
@@ -67,7 +66,9 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                 type='checkbox'
                 className={styles.check}
                 checked={item.selected === true}
-                onChange={() => editItem({ ...item, selected: !item.selected })}
+                onChange={() =>
+                    editLocalItem({ ...item, selected: !item.selected })
+                }
             />
             <div className={styles.inner}>
                 <div className={styles.itemInfo}>
@@ -106,14 +107,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                     <button
                         type='button'
                         className='btn btn-red btn-circle bi bi-trash-fill'
-                        onClick={() => {
-                            logs.filter(
-                                (log) => log.item === item.name
-                            ).forEach((filteredLog) =>
-                                removeLog(filteredLog.id)
-                            );
-                            removeItem(String(item.id));
-                        }}
+                        onClick={removeItem}
                     />
                 </div>
             </div>

@@ -8,31 +8,33 @@ type ListState = {
 };
 
 type ListActions = {
-    addItem: (item: ListItemType) => void;
-    removeItem: (id: string) => void;
-    editItem: (item: ListItemType) => void;
-    clearList: () => void;
+    addLocalItem: (item: ListItemType) => void;
+    removeLocalItem: (id: string) => void;
+    editLocalItem: (editedItem: ListItemType) => void;
+    clearLocalList: () => void;
 };
 
 const useLocalListStore = create(
     persist<ListState & ListActions>(
         (set) => ({
             localItems: [],
-            addItem: (item) =>
+            addLocalItem: (item) =>
                 set((state) => ({ localItems: [...state.localItems, item] })),
-            removeItem: (id) =>
+            removeLocalItem: (id) =>
                 set((state) => ({
                     localItems: state.localItems.filter(
                         (item) => item.id !== id
                     ),
                 })),
-            editItem: (item) =>
+            editLocalItem: (editedItem) =>
                 set((state) => ({
                     localItems: state.localItems.map((existingItem) =>
-                        existingItem.id === item.id ? item : existingItem
+                        existingItem.id === editedItem.id
+                            ? editedItem
+                            : existingItem
                     ),
                 })),
-            clearList: () =>
+            clearLocalList: () =>
                 set(() => ({
                     localItems: [],
                 })),

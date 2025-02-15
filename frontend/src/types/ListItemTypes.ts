@@ -7,7 +7,7 @@ export type UnitsOfMeasurement =
     | 'Litros';
 
 type ListItemType = {
-    id: number | string;
+    id: string;
     name: string;
     quantityType: QuantityType;
     unitOfMeasurement: UnitsOfMeasurement;

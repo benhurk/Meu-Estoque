@@ -6,10 +6,10 @@ import useAuth from './useAuth';
 export default function useListItems() {
     const { guest, accessToken } = useAuth();
     const localItems = useLocalListStore((state) => state.localItems);
-    const fetchedItems = useListStore((state) => state.fetchedItems);
+    const userItems = useListStore((state) => state.userItems);
 
     const items: ListItemType[] = accessToken
-        ? fetchedItems
+        ? userItems
         : guest
         ? localItems
         : [];

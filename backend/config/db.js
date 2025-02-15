@@ -29,7 +29,6 @@ export async function initDatabase() {
                 quantity INT NOT NULL,
                 alert_quantity INT NOT NULL,
                 description TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
         `;

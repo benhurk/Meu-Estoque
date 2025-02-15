@@ -1,76 +1,68 @@
 import { FormEvent } from 'react';
 
+import api from '../../api';
 import styles from './ItemForm.module.css';
 
-import useFormStore from '../../stores/formStore';
-import useLogsStore from '../../stores/logsStore';
+import useAuth from '../../hooks/useAuth';
 import useItemForm from '../../hooks/useItemForm';
+import useFormStore from '../../stores/formStore';
+import useListStore from '../../stores/listStore';
 
 import itemFormInitialState from '../../const/itemFormState';
 import capitalizeString from '../../utils/capitalizeString';
-import getNumberDiff from '../../utils/getLogDiff';
-import abbreviateUnitOfMeasurement from '../../utils/abbreviateUnitOfMeasurement';
+import useLocalListStore from '../../stores/localListStore';
+import keysToCamelCase from '../../utils/snakeToCamel';
 
 import { ItemFormMode as FormMode } from '../../types/ItemFormTypes';
 import ListItemType from '../../types/ListItemTypes';
 
 import QuantityInput from '../QuantityInput';
 import FormGroup from '../FormGroup';
-import useLocalListStore from '../../stores/localListStore';
 
 type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ItemForm({ setItemFormOpen }: Props) {
-    const { addItem, editItem } = useLocalListStore();
+    const { accessToken, guest } = useAuth();
+    const { addUserItem, editUserItem } = useListStore();
+    const { addLocalItem, editLocalItem } = useLocalListStore();
     const { formMode } = useFormStore();
-    const addNewLog = useLogsStore((state) => state.addNewLog);
 
     const { fields, setFields, targetItem, validate, errors } = useItemForm();
 
-    const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
+    const handleSubmit = async (
+        e: FormEvent<HTMLButtonElement>,
+        mode: FormMode
+    ) => {
         e.preventDefault();
 
         if (validate()) {
-            const newItem: ListItemType = {
-                id: mode === 'add' ? crypto.randomUUID() : targetItem.id,
+            const newItem: Omit<ListItemType, 'id'> = {
                 ...fields,
                 name: capitalizeString(fields.name),
             };
 
             if (mode === 'add') {
-                addItem(newItem);
-                addNewLog({
-                    item: newItem.name,
-                    diff:
-                        newItem.quantityType === 'number'
-                            ? String(newItem.quantity) +
-                              ` ${abbreviateUnitOfMeasurement(
-                                  newItem.unitOfMeasurement
-                              )}`
-                            : '',
-                    diffType: null,
-                });
-            } else {
-                editItem(newItem);
-
-                if (newItem.quantity != targetItem.quantity) {
-                    addNewLog({
-                        item: newItem.name,
-                        diff:
-                            newItem.quantityType === 'number'
-                                ? getNumberDiff(
-                                      targetItem.quantity,
-                                      newItem.quantity,
-                                      newItem.unitOfMeasurement
-                                  )
-                                : '',
-                        diffType:
-                            newItem.quantity > targetItem.quantity
-                                ? 'increase'
-                                : 'decrease',
-                    });
+                if (accessToken) {
+                    const res = await api.post('/items', newItem);
+                    if (res.status === 201) {
+                        addUserItem(keysToCamelCase(res.data.newItem));
+                    }
+                } else if (guest) {
+                    addLocalItem({ ...newItem, id: crypto.randomUUID() });
+                }
+            } else if (mode === 'edit') {
+                if (accessToken) {
+                    const res = await api.put(
+                        `/items/${targetItem.id}`,
+                        newItem
+                    );
+                    if (res.status === 200) {
+                        editUserItem(keysToCamelCase(res.data.editedItem));
+                    }
+                } else if (guest) {
+                    editLocalItem({ ...newItem, id: targetItem.id });
                 }
             }
 

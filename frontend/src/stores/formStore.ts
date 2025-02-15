@@ -3,9 +3,9 @@ import { ItemFormMode as FormMode } from '../types/ItemFormTypes';
 
 type FormState = {
     formMode: FormMode;
-    targetItemId: string;
+    targetItemId: number | string;
     setFormMode: (mode: FormMode) => void;
-    setTargetItem: (itemId: string) => void;
+    setTargetItem: (itemId: number | string) => void;
 };
 
 const useFormStore = create<FormState>((set) => ({

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import Header from '../../components/Header';
 import List from '../../components/List';
@@ -7,33 +7,32 @@ import useListStore from '../../stores/listStore';
 import api from '../../api';
 import LoginMenu from '../../components/LoginMenu';
 import Loader from '../../components/Loader';
+import keysToCamelCase from '../../utils/snakeToCamel';
 
 export default function MainPage() {
     const { accessToken, guest } = useAuth();
-    const [unauthenticated, setUnauthenticated] = useState<boolean>(false);
     const setListData = useListStore((state) => state.setListData);
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const res = await api.get('/items');
-                setListData(res.data.userItems);
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (error: any) {
-                if (error.status === 401) setUnauthenticated(true);
+                setListData(keysToCamelCase(res.data.userItems));
+            } catch {
+                return;
             }
         };
 
         if (!guest) fetchUserData();
-    }, [guest, setListData]);
+    }, [accessToken, guest, setListData]);
 
     return (
         <>
             <Header />
             <main className='container'>
+                {accessToken === undefined && !guest && <Loader />}
+                {accessToken === null && !guest && <LoginMenu />}
                 {(guest || accessToken) && <List />}
-                {!accessToken && !unauthenticated && !guest && <Loader />}
-                {unauthenticated && !guest && <LoginMenu />}
             </main>
         </>
     );
