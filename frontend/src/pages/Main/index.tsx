@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import Header from '../../components/Header';
 import List from '../../components/List';
@@ -13,13 +13,20 @@ export default function MainPage() {
     const { accessToken, guest } = useAuth();
     const setListData = useListStore((state) => state.setListData);
 
+    const [loading, setLoading] = useState<boolean>(false);
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
+                setLoading(true);
+
                 const res = await api.get('/items');
                 setListData(keysToCamelCase(res.data.userItems));
-            } catch {
-                return;
+
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+                console.log('Error fetching user items', error);
             }
         };
 
@@ -32,7 +39,7 @@ export default function MainPage() {
             <main className='container'>
                 {accessToken === undefined && !guest && <Loader />}
                 {accessToken === null && !guest && <LoginMenu />}
-                {(guest || accessToken) && <List />}
+                {(guest || accessToken) && (loading ? <Loader /> : <List />)}
             </main>
         </>
     );
