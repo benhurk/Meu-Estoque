@@ -29,30 +29,28 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
         setItemFormOpen(true);
     };
 
-    const logTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const initialQuantity = useRef<number>(item.quantity);
+    const editTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const changeQuantity = (newValue: number) => {
-        editLocalItem({ ...item, quantity: newValue });
+        if (accessToken) {
+            editUserItem(item.id, { ...item, quantity: newValue });
 
-        if (logTimeoutId.current) {
-            clearTimeout(logTimeoutId.current);
+            if (editTimeout.current) clearTimeout(editTimeout.current);
+
+            editTimeout.current = setTimeout(() => {
+                api.put(`/items/${item.id}`, {
+                    ...item,
+                    quantity: newValue,
+                });
+            }, 1000);
+        } else if (guest) {
+            editLocalItem({ ...item, quantity: newValue });
         }
-
-        logTimeoutId.current = setTimeout(() => {
-            if (newValue != initialQuantity.current) {
-                //log
-                initialQuantity.current = newValue;
-            }
-        }, 5000);
     };
 
-    const removeItem = async () => {
+    const removeItem = () => {
         if (accessToken) {
-            const res = await api.delete(`/items/${item.id}`);
-            if (res.status === 200) {
-                removeUserItem(item.id);
-            }
+            removeUserItem(item.id);
         } else if (guest) {
             removeLocalItem(item.id);
         }

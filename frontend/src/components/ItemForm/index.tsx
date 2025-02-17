@@ -1,6 +1,5 @@
 import { FormEvent } from 'react';
 
-import api from '../../api';
 import styles from './ItemForm.module.css';
 
 import useAuth from '../../hooks/useAuth';
@@ -11,7 +10,6 @@ import useListStore from '../../stores/listStore';
 import itemFormInitialState from '../../const/itemFormState';
 import capitalizeString from '../../utils/capitalizeString';
 import useLocalListStore from '../../stores/localListStore';
-import keysToCamelCase from '../../utils/snakeToCamel';
 
 import { ItemFormMode as FormMode } from '../../types/ItemFormTypes';
 import ListItemType from '../../types/ListItemTypes';
@@ -31,10 +29,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
     const { fields, setFields, targetItem, validate, errors } = useItemForm();
 
-    const handleSubmit = async (
-        e: FormEvent<HTMLButtonElement>,
-        mode: FormMode
-    ) => {
+    const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
         e.preventDefault();
 
         if (validate()) {
@@ -45,22 +40,13 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
             if (mode === 'add') {
                 if (accessToken) {
-                    const res = await api.post('/items', newItem);
-                    if (res.status === 201) {
-                        addUserItem(keysToCamelCase(res.data.newItem));
-                    }
+                    addUserItem(newItem);
                 } else if (guest) {
                     addLocalItem({ ...newItem, id: crypto.randomUUID() });
                 }
             } else if (mode === 'edit') {
                 if (accessToken) {
-                    const res = await api.put(
-                        `/items/${targetItem.id}`,
-                        newItem
-                    );
-                    if (res.status === 200) {
-                        editUserItem(keysToCamelCase(res.data.editedItem));
-                    }
+                    editUserItem(targetItem.id, newItem);
                 } else if (guest) {
                     editLocalItem({ ...newItem, id: targetItem.id });
                 }
