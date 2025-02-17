@@ -95,3 +95,46 @@ export async function deleteItem(req, res) {
         });
     }
 }
+
+export async function deleteSelectedItems(req, res) {
+    try {
+        const userId = await req.user.id;
+        const { ids } = await req.body;
+
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res
+                .status(400)
+                .json({ success: false, message: 'Invalid or empty id array' });
+        }
+
+        await sql`
+            DELETE FROM items WHERE id = ANY(${ids}) AND user_id = ${userId};
+        `;
+
+        res.sendStatus(200);
+    } catch (error) {
+        console.log('Error while trying to deleteSelectedItems', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+}
+
+export async function deleteAllItems(req, res) {
+    try {
+        const userId = await req.user.id;
+
+        await sql`
+            DELETE FROM items WHERE user_id = ${userId};
+        `;
+
+        res.sendStatus(200);
+    } catch (error) {
+        console.log('Error while trying to deleteAllItems', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+}

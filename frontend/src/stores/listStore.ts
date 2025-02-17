@@ -13,6 +13,7 @@ type ListActions = {
     addUserItem: (newItem: Omit<ListItemType, 'id'>) => void;
     editUserItem: (id: string, editedItem: Omit<ListItemType, 'id'>) => void;
     removeUserItem: (id: string) => void;
+    removeSelectedUserItems: (ids: string[]) => void;
     clearUserList: () => void;
 };
 
@@ -50,10 +51,23 @@ const useListStore = create<ListState & ListActions>((set) => ({
             }));
         }
     },
-    clearUserList: () => {
-        set(() => ({
-            userItems: [],
-        }));
+    removeSelectedUserItems: async (ids) => {
+        const res = await api.delete('/items/x', { data: { ids } });
+        if (res.status === 200) {
+            set((state) => ({
+                userItems: state.userItems.filter(
+                    (item) => !ids.includes(item.id)
+                ),
+            }));
+        }
+    },
+    clearUserList: async () => {
+        const res = await api.delete('/items/');
+        if (res.status === 200) {
+            set(() => ({
+                userItems: [],
+            }));
+        }
     },
 }));
 

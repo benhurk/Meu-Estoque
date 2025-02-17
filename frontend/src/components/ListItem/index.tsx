@@ -56,6 +56,14 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
         }
     };
 
+    const selectItem = () => {
+        if (accessToken) {
+            editUserItem(item.id, { ...item, selected: !item.selected });
+        } else if (guest) {
+            editLocalItem({ ...item, selected: !item.selected });
+        }
+    };
+
     const warn = item.quantity <= item.alertQuantity;
 
     return (
@@ -64,9 +72,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                 type='checkbox'
                 className={styles.check}
                 checked={item.selected === true}
-                onChange={() =>
-                    editLocalItem({ ...item, selected: !item.selected })
-                }
+                onChange={selectItem}
             />
             <div className={styles.inner}>
                 <div className={styles.itemInfo}>
