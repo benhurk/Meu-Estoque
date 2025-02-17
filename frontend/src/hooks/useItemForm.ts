@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import useListItems from './useListItems';
 import useFormStore from '../stores/formStore';
 
-import itemFormInitialState from '../const/itemFormState';
+import itemFormInitialState from '../consts/itemFormState';
 
 export default function useItemForm() {
     const [fields, setFields] = useState(itemFormInitialState);

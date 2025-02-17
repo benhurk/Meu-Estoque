@@ -1,4 +1,4 @@
-import months from '../const/months';
+import months from '../consts/months';
 import Logs from '../types/Logs';
 import Months from '../types/Months';
 
