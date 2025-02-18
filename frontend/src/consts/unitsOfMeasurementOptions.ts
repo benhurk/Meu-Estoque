@@ -1,9 +1,6 @@
-import { UnitsOfMeasurement } from '../types/ListItemTypes';
+import SelectOptions from '../types/SelectOptions';
 
-const unitsOfMeasurementOptions: {
-    label: UnitsOfMeasurement;
-    value: UnitsOfMeasurement;
-}[] = [
+const unitsOfMeasurementOptions: SelectOptions = [
     { label: 'Unidades', value: 'Unidades' },
     { label: 'Gramas', value: 'Gramas' },
     { label: 'Quilos', value: 'Quilos' },

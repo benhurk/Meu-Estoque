@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 import styles from './Select.module.css';
+import SelectOptions from '../../types/SelectOptions';
 
 type Props = {
     elementId: string;
-    options: { label: string; value: string | number }[];
+    options: SelectOptions;
     change: (e: React.MouseEvent<HTMLElement>) => void;
     value: string;
     emptyOption?: string;
