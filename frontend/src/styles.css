@@ -143,6 +143,15 @@ a i.bi {
     background-color: var(--color-green);
 }
 
+.btn-link {
+    font-size: 1rem;
+    background-color: transparent;
+    text-decoration: underline;
+    border: none;
+    letter-spacing: 0.05rem;
+    cursor: pointer;
+}
+
 .btn-circle {
     border-radius: 100%;
     text-align: center;
@@ -182,6 +191,10 @@ a i.bi {
 .btn-dropdown-item:disabled {
     opacity: 0.5;
     cursor: default;
+}
+
+.text-white {
+    color: #fff;
 }
 
 .text-dark {

@@ -103,15 +103,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const logout = async () => {
-        const response = await axios.post(
-            `${BASE_URL}/logout`,
-            {},
-            { withCredentials: true }
-        );
+        await axios.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
 
         setAccessToken(null);
-
-        console.log(response);
     };
 
     return (

@@ -140,10 +140,7 @@ export async function refreshToken(req, res) {
 export async function logoutUser(req, res) {
     try {
         res.clearCookie('refreshToken', { httpOnly: true });
-        res.status(204).json({
-            success: true,
-            message: 'Logged out successfully',
-        });
+        res.sendStatus(204);
     } catch (error) {
         console.log(error);
         res.status(500).json({
