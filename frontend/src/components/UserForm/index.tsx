@@ -141,7 +141,13 @@ export default function UserForm({ mode }: Props) {
                 {!loading ? (
                     <>
                         <button type='submit' className='btn btn-green'>
-                            <i className='bi bi-box-arrow-in-right' />
+                            <i
+                                className={`bi ${
+                                    mode === 'login'
+                                        ? 'bi-box-arrow-in-right'
+                                        : 'bi-person-plus-fill'
+                                }`}
+                            />
                             &nbsp;{mode === 'login' ? 'Entrar' : 'Criar conta'}
                         </button>
                         {mode === 'login' && (

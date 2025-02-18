@@ -24,9 +24,8 @@ export default function MainPage() {
                 setListData(keysToCamelCase(res.data.userItems));
 
                 setLoading(false);
-            } catch (error) {
+            } catch {
                 setLoading(false);
-                console.log('Error fetching user items', error);
             }
         };
 

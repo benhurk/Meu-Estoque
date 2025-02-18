@@ -7,9 +7,9 @@ export default function LoginMenu() {
     return (
         <div>
             <div className={styles.redirectLink}>
-                Ainda não possui uma conta?&nbsp;
+                Ainda não possui uma conta?&nbsp;&nbsp;
                 <Link to='/signup' className='text-blue'>
-                    <i className='bi bi-box-arrow-in-right' />
+                    <i className='bi bi-person-plus-fill' />
                     &nbsp;Registre-se
                 </Link>
             </div>
