@@ -7,7 +7,6 @@ import abbreviateNumberOf from '../../utils/abbreviateUnitOfMeasurement';
 import { UnitsOfMeasurement } from '../../types/ListItemTypes';
 
 type Props = {
-    size?: 'sm' | 'md';
     elementId: string;
     value: number;
     change: (e: ChangeEvent<HTMLInputElement>) => void;

@@ -1,16 +1,18 @@
 import { memo, useRef } from 'react';
+import api from '../../api';
 import styles from './ListItem.module.css';
 
 import useFormStore from '../../stores/formStore';
+import useLocalListStore from '../../stores/localListStore';
+import useAuth from '../../hooks/useAuth';
+import useListStore from '../../stores/listStore';
 
 import ListItemType from '../../types/ListItemTypes';
+import { defaultQuantityOptions } from '../../consts/quantityOptions';
 
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
-import useLocalListStore from '../../stores/localListStore';
-import useAuth from '../../hooks/useAuth';
-import api from '../../api';
-import useListStore from '../../stores/listStore';
+import Select from '../Select';
 
 type Props = {
     item: ListItemType;
@@ -42,7 +44,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                     ...item,
                     quantity: newValue,
                 });
-            }, 1000);
+            }, 1500);
         } else if (guest) {
             editLocalItem({ ...item, quantity: newValue });
         }
@@ -87,7 +89,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                             <TextTooltip text={item.description || ''} />
                         )}
                     </div>
-                    <div>
+                    <div className={styles.itemQuantity}>
                         {item.quantityType === 'number' ? (
                             <QuantityInput
                                 elementId='quantity'
@@ -98,7 +100,18 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                                 unityOfMeasurement={item.unitOfMeasurement}
                             />
                         ) : (
-                            <select></select>
+                            <Select
+                                elementId='quantity'
+                                value={
+                                    defaultQuantityOptions[item.quantity].label
+                                }
+                                options={defaultQuantityOptions}
+                                change={(e) =>
+                                    changeQuantity(
+                                        Number(e.currentTarget.dataset.value!)
+                                    )
+                                }
+                            />
                         )}
                     </div>
                 </div>

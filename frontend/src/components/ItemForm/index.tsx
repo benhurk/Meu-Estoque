@@ -21,6 +21,7 @@ import ListItemType, {
 import QuantityInput from '../QuantityInput';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
+import { defaultQuantityOptions } from '../../consts/quantityOptions';
 
 type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -121,7 +122,6 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             <FormGroup elementId='item-quantity' labelText='Quantidade:'>
                 {fields.quantityType === 'number' ? (
                     <QuantityInput
-                        size='md'
                         elementId='item-quantity'
                         value={fields.quantity}
                         change={(e) =>
@@ -133,13 +133,22 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                         unityOfMeasurement={fields.unitOfMeasurement}
                     />
                 ) : (
-                    <select></select>
+                    <Select
+                        elementId='item-quantity'
+                        value={defaultQuantityOptions[fields.quantity].label}
+                        options={defaultQuantityOptions}
+                        change={(e) =>
+                            setFields({
+                                ...fields,
+                                quantity: Number(e.currentTarget.dataset.value),
+                            })
+                        }
+                    />
                 )}
             </FormGroup>
             <FormGroup elementId='item-alert' labelText='Alertar em:'>
                 {fields.quantityType === 'number' ? (
                     <QuantityInput
-                        size='md'
                         elementId='item-alert'
                         value={fields.alertQuantity}
                         change={(e) =>
@@ -151,7 +160,21 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                         unityOfMeasurement={fields.unitOfMeasurement}
                     />
                 ) : (
-                    <select></select>
+                    <Select
+                        elementId='item-alert'
+                        value={
+                            defaultQuantityOptions[fields.alertQuantity].label
+                        }
+                        options={defaultQuantityOptions}
+                        change={(e) =>
+                            setFields({
+                                ...fields,
+                                alertQuantity: Number(
+                                    e.currentTarget.dataset.value
+                                ),
+                            })
+                        }
+                    />
                 )}
             </FormGroup>
             <FormGroup elementId='item-description' labelText='Descrição:'>

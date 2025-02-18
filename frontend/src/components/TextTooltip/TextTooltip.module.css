@@ -36,7 +36,7 @@
 
 div:hover > .icon,
 div:focus > .icon {
-    color: var(--color-gray);
+    color: #666;
 }
 
 div:hover > .tooltip,

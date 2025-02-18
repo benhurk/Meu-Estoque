@@ -32,6 +32,11 @@
     font-size: 1rem;
 }
 
+.itemQuantity {
+    width: fit-content;
+    max-width: 50%;
+}
+
 .itemButtons {
     display: flex;
     gap: 0.25rem;
