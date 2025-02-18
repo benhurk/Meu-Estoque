@@ -1,14 +1,14 @@
-import { NumberOf } from '../types/ListItemTypes';
-import abbreviateNumberOf from './abbreviateUnitOfMeasurement';
+import { UnitsOfMeasurement } from '../types/ListItemTypes';
+import abbreviateUnitOfMeasurement from './abbreviateUnitOfMeasurement';
 
 export default function getNumberDiff(
     previousQuantity: number,
     newQuantity: number,
-    unityOfMeasurement: NumberOf
+    unityOfMeasurement: UnitsOfMeasurement
 ) {
     const diff = newQuantity - previousQuantity;
 
-    return `${diff > 0 ? `+${diff}` : diff} ${abbreviateNumberOf(
+    return `${diff > 0 ? `+${diff}` : diff} ${abbreviateUnitOfMeasurement(
         unityOfMeasurement
     )}`;
 }

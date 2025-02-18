@@ -3,21 +3,21 @@ import { ChangeEvent } from 'react';
 import styles from './QuantityInput.module.css';
 
 import removeZeroBeforeNumber from '../../utils/removeZero';
-import abbreviateNumberOf from '../../utils/abbreviateUnitOfMeasurement';
 import { UnitsOfMeasurement } from '../../types/ListItemTypes';
+import abbreviateUnitOfMeasurement from '../../utils/abbreviateUnitOfMeasurement';
 
 type Props = {
     elementId: string;
     value: number;
     change: (e: ChangeEvent<HTMLInputElement>) => void;
-    unityOfMeasurement: UnitsOfMeasurement;
+    unitOfMeasurement: UnitsOfMeasurement;
 };
 
 export default function QuantityInput({
     elementId,
     value,
     change,
-    unityOfMeasurement,
+    unitOfMeasurement,
 }: Props) {
     return (
         <>
@@ -30,7 +30,7 @@ export default function QuantityInput({
                 onChange={change}
             />
             <small className={styles.itemUnityType}>
-                {abbreviateNumberOf(unityOfMeasurement)}
+                {abbreviateUnitOfMeasurement(unitOfMeasurement)}
             </small>
         </>
     );

@@ -8,7 +8,7 @@ import useListItems from '../../hooks/useListItems';
 
 export default function LoadButton() {
     const listItems = useListItems();
-    const { addItem } = useLocalListStore();
+    const { addLocalItem } = useLocalListStore();
     const { logs, addNewLog } = useLogsStore();
 
     const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +39,7 @@ export default function LoadButton() {
                             item.name === newItem.name || item.id === newItem.id
                     );
 
-                if (isValid) addItem(newItem);
+                if (isValid) addLocalItem(newItem);
             });
 
             result.logs.forEach((loadedLog: Logs) => {

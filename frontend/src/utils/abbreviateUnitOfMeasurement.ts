@@ -1,6 +1,6 @@
-import { NumberOf } from '../types/ListItemTypes';
+import { UnitsOfMeasurement } from '../types/ListItemTypes';
 
-export default function abbreviateNumberOf(value: NumberOf) {
+export default function abbreviateUnitOfMeasurement(value: UnitsOfMeasurement) {
     switch (value) {
         case 'Unidades':
             return 'Un.';

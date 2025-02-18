@@ -97,7 +97,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                                 change={(e) => {
                                     changeQuantity(Number(e.target.value));
                                 }}
-                                unityOfMeasurement={item.unitOfMeasurement}
+                                unitOfMeasurement={item.unitOfMeasurement}
                             />
                         ) : (
                             <Select

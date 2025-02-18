@@ -130,7 +130,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                                 quantity: Number(e.target.value),
                             })
                         }
-                        unityOfMeasurement={fields.unitOfMeasurement}
+                        unitOfMeasurement={fields.unitOfMeasurement}
                     />
                 ) : (
                     <Select
@@ -157,7 +157,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                                 alertQuantity: Number(e.target.value),
                             })
                         }
-                        unityOfMeasurement={fields.unitOfMeasurement}
+                        unitOfMeasurement={fields.unitOfMeasurement}
                     />
                 ) : (
                     <Select
