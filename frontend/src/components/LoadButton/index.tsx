@@ -5,42 +5,60 @@ import Logs from '../../types/Logs';
 import useLogsStore from '../../stores/logsStore';
 import useLocalListStore from '../../stores/localListStore';
 import useListItems from '../../hooks/useListItems';
+import useAuth from '../../hooks/useAuth';
+import useListStore from '../../stores/listStore';
 
 export default function LoadButton() {
+    const { accessToken, guest } = useAuth();
     const listItems = useListItems();
-    const { addLocalItem } = useLocalListStore();
+    const addUserItem = useListStore((state) => state.addUserItem);
+    const addLocalItem = useLocalListStore((state) => state.addLocalItem);
     const { logs, addNewLog } = useLogsStore();
 
     const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reader = new FileReader();
 
-        reader.onload = () => {
+        reader.onload = async () => {
             const result: { list: ListItemType[]; logs: Logs[] } = JSON.parse(
                 reader.result as string
             );
 
-            result.list.forEach((loadedItem: ListItemType) => {
-                const newItem: ListItemType = {
-                    id: loadedItem.id,
-                    name: loadedItem.name,
-                    quantityType: loadedItem.quantityType,
-                    unitOfMeasurement: loadedItem.unitOfMeasurement,
-                    quantity: loadedItem.quantity,
-                    alertQuantity: loadedItem.alertQuantity,
-                    description: loadedItem.description,
-                };
+            const batchSize = 20;
+            for (let i = 0; i < result.list.length; i += batchSize) {
+                const batch = result.list.slice(i, i + batchSize);
+                const validItems = batch.filter((loadedItem) => {
+                    const newItem: ListItemType = {
+                        id: loadedItem.id,
+                        name: loadedItem.name,
+                        quantityType: loadedItem.quantityType,
+                        unitOfMeasurement: loadedItem.unitOfMeasurement,
+                        quantity: loadedItem.quantity,
+                        alertQuantity: loadedItem.alertQuantity,
+                        description: loadedItem.description,
+                    };
 
-                const isValid =
-                    !Object.values(newItem).some(
-                        (val) => typeof val === 'undefined'
-                    ) &&
-                    !listItems.some(
-                        (item) =>
-                            item.name === newItem.name || item.id === newItem.id
+                    return (
+                        !Object.values(newItem).some(
+                            (val) => typeof val === 'undefined'
+                        ) &&
+                        !listItems.some(
+                            (item) =>
+                                item.name === newItem.name ||
+                                item.id === newItem.id
+                        )
+                    );
+                });
+
+                if (accessToken) {
+                    await Promise.all(
+                        validItems.map((item) => addUserItem(item))
                     );
 
-                if (isValid) addLocalItem(newItem);
-            });
+                    await new Promise((resolve) => setTimeout(resolve, 2000));
+                } else if (guest) {
+                    validItems.forEach((item) => addLocalItem(item));
+                }
+            }
 
             result.logs.forEach((loadedLog: Logs) => {
                 const newLog: Logs = {
