@@ -3,6 +3,7 @@ import SupportedPlatforms from '../../types/supportedPlatforms';
 import SendModes from '../../types/SendModes';
 import abbreviateUnitOfMeasurement from '../../utils/abbreviateUnitOfMeasurement';
 import useListItems from '../../hooks/useListItems';
+import { defaultQuantityOptions } from '../../consts/quantityOptions';
 
 type Props = {
     sendMode: SendModes;
@@ -61,7 +62,9 @@ export default function SendButton({
                 : selectedItems;
 
         items.forEach((item) => {
-            const optionsQuantity = '';
+            const optionsQuantity =
+                item.quantityType === 'options' &&
+                defaultQuantityOptions[item.quantity].label;
 
             const allItemsLine = `• ${
                 item.quantity <= item.alertQuantity ? '⚠' : '✅'
