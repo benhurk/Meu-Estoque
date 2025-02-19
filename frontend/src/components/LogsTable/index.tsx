@@ -24,7 +24,7 @@ export default function LogsTable() {
         return filterLogs(logs, searchFor, monthFilter);
     }, [logs, monthFilter, searchFor]);
 
-    const getDiffColor = (diffType: Logs['diffType']) => {
+    const getDiffColor = (diffType: Logs['type']) => {
         switch (diffType) {
             case 'increase':
                 return 'text-green';
@@ -126,22 +126,19 @@ export default function LogsTable() {
                             </thead>
                             <tbody>
                                 {filteredLogs.map((log, index) => (
-                                    <tr key={log.date + log.item + index}>
+                                    <tr key={log.time + log.itemName + index}>
                                         <td>
                                             <span>
-                                                {log.date.split(' - ')[0]}
+                                                {log.time.split(' - ')[0]}
                                             </span>
                                             &nbsp;-&nbsp;
                                             <span className={styles.dateTime}>
-                                                {log.date.split(' - ')[1]}
+                                                {log.time.split(' - ')[1]}
                                             </span>
                                         </td>
-                                        <td>{log.item}</td>
-                                        <td
-                                            className={getDiffColor(
-                                                log.diffType
-                                            )}>
-                                            {log.diff}
+                                        <td>{log.itemName}</td>
+                                        <td className={getDiffColor(log.type)}>
+                                            {log.change}
                                         </td>
                                         <td className={styles.removeButton}>
                                             <button

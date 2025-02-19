@@ -1,9 +1,9 @@
 type Logs = {
     id: string;
-    date: string;
-    item: string;
-    diff: string;
-    diffType: 'increase' | 'decrease' | null;
+    itemName: string;
+    change: string;
+    time: string;
+    type: 'increase' | 'decrease' | 'neutral';
 };
 
 export default Logs;

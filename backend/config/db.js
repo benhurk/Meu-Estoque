@@ -32,6 +32,20 @@ export async function initDatabase() {
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
         `;
+
+        await sql`
+            CREATE TABLE IF NOT EXISTS logs (
+                id SERIAL PRIMARY KEY,
+                item_id INT NOT NULL,
+                user_id INT NOT NULL,
+                item_name VARCHAR(100) NOT NULL,
+                change VARCHAR(100) NOT NULL,
+                time VARCHAR(50) NOT NULL,
+                type VARCHAR(30) NOT NULL,
+                FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+        `;
     } catch (error) {
         console.log('Error initializing database.', error);
     }

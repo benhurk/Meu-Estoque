@@ -13,6 +13,7 @@ import { defaultQuantityOptions } from '../../consts/quantityOptions';
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
 import Select from '../Select';
+import getLogChange from '../../utils/getLogChange';
 
 type Props = {
     item: ListItemType;
@@ -32,19 +33,38 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     };
 
     const editTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const preChangeQuantity = useRef<number>(item.quantity);
 
     const changeQuantity = (newValue: number) => {
+        const changeDiff = getLogChange(
+            item.quantityType,
+            preChangeQuantity.current,
+            newValue,
+            item.unitOfMeasurement
+        );
+
         if (accessToken) {
-            editUserItem(item.id, { ...item, quantity: newValue });
+            editUserItem({ ...item, quantity: newValue });
 
             if (editTimeout.current) clearTimeout(editTimeout.current);
 
-            editTimeout.current = setTimeout(() => {
-                api.put(`/items/${item.id}`, {
-                    ...item,
-                    quantity: newValue,
+            editTimeout.current = setTimeout(async () => {
+                const now = new Date().toLocaleDateString([], {
+                    day: '2-digit',
+                    month: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
                 });
-            }, 1500);
+
+                await api.put(`/items/quantity/${item.id}`, {
+                    newValue,
+                    time: now,
+                    change: changeDiff.valueChange,
+                    type: changeDiff.type,
+                });
+
+                preChangeQuantity.current = newValue;
+            }, 3000);
         } else if (guest) {
             editLocalItem({ ...item, quantity: newValue });
         }
@@ -60,7 +80,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
 
     const selectItem = () => {
         if (accessToken) {
-            editUserItem(item.id, { ...item, selected: !item.selected });
+            editUserItem({ ...item, selected: !item.selected });
         } else if (guest) {
             editLocalItem({ ...item, selected: !item.selected });
         }

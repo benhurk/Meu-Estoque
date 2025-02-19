@@ -2,6 +2,7 @@ import express from 'express';
 import {
     getAllUserItems,
     addNewItem,
+    changeItemQuantity,
     editItem,
     deleteItem,
     deleteSelectedItems,
@@ -12,6 +13,7 @@ const router = express.Router();
 
 router.get('/', getAllUserItems);
 router.post('/', addNewItem);
+router.put('/quantity/:id', changeItemQuantity);
 router.put('/:id', editItem);
 router.delete('/', deleteAllItems);
 router.delete('/x', deleteSelectedItems);

@@ -36,9 +36,44 @@ export async function addNewItem(req, res) {
             RETURNING id, name, quantity_type, unit_of_measurement, quantity, alert_quantity, description;
         `;
 
-        res.status(201).json({ success: true, newItem: newItem[0] });
+        res.status(201).json({
+            success: true,
+            newItem: newItem[0],
+        });
     } catch (error) {
         console.log('Error while trying to addNewItem', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+}
+
+export async function changeItemQuantity(req, res) {
+    try {
+        const userId = await req.user.id;
+        const targetId = await req.params.id;
+
+        const { newValue, time, change, type } = await req.body;
+
+        const updatedItem = await sql`
+            UPDATE items SET quantity = ${newValue}
+            WHERE id = ${targetId} AND user_id = ${userId}
+            RETURNING *;
+        `;
+
+        const log = await sql`
+            INSERT INTO logs (user_id, item_id, item_name, change, time, type)
+            VALUES (${userId}, ${updatedItem[0].id}, ${updatedItem[0].name}, ${change}, ${time}, ${type})
+            RETURNING id, item_name, change, time, type;
+        `;
+
+        res.status(200).json({
+            success: true,
+            log: log[0],
+        });
+    } catch (error) {
+        console.log('Error while trying to changeItemQuantity', error);
         res.status(500).json({
             success: false,
             message: 'Internal server error',
@@ -67,7 +102,10 @@ export async function editItem(req, res) {
             RETURNING *;
         `;
 
-        res.status(200).json({ success: true, editedItem: editedItem[0] });
+        res.status(200).json({
+            success: true,
+            editedItem: editedItem[0],
+        });
     } catch (error) {
         console.log('Error while trying to editItem', error);
         res.status(500).json({

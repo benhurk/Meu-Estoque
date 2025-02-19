@@ -2,16 +2,17 @@ import { create } from 'zustand';
 
 import ListItemType from '../types/ListItemTypes';
 import api from '../api';
-import keysToCamelCase from '../utils/snakeToCamel';
+import Logs from '../types/Logs';
 
 type ListState = {
     userItems: ListItemType[];
+    userLogs: Logs[];
 };
 
 type ListActions = {
     setListData: (data: ListItemType[]) => void;
-    addUserItem: (newItem: Omit<ListItemType, 'id'>) => void;
-    editUserItem: (id: string, editedItem: Omit<ListItemType, 'id'>) => void;
+    addUserItem: (newItem: ListItemType) => void;
+    editUserItem: (editedItem: ListItemType) => void;
     removeUserItem: (id: string) => void;
     removeSelectedUserItems: (ids: string[]) => void;
     clearUserList: () => void;
@@ -19,27 +20,22 @@ type ListActions = {
 
 const useListStore = create<ListState & ListActions>((set) => ({
     userItems: [],
+    userLogs: [],
 
     setListData: (data) => {
         set(() => ({
             userItems: data,
         }));
     },
-    addUserItem: async (newItem) => {
-        const res = await api.post('/items', newItem);
-        if (res.status === 201) {
-            set((state) => ({
-                userItems: [
-                    ...state.userItems,
-                    keysToCamelCase(res.data.newItem),
-                ],
-            }));
-        }
+    addUserItem: (newItem) => {
+        set((state) => ({
+            userItems: [...state.userItems, newItem],
+        }));
     },
-    editUserItem: (id, editedItem) => {
+    editUserItem: (editedItem) => {
         set((state) => ({
             userItems: state.userItems.map((item) =>
-                item.id === id ? { ...editedItem, id } : item
+                item.id === editedItem.id ? editedItem : item
             ),
         }));
     },

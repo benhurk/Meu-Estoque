@@ -1,5 +1,6 @@
 import { FormEvent } from 'react';
 
+import api from '../../api';
 import styles from './ItemForm.module.css';
 
 import useAuth from '../../hooks/useAuth';
@@ -10,7 +11,9 @@ import useLocalListStore from '../../stores/localListStore';
 
 import itemFormInitialState from '../../consts/itemFormState';
 import unitsOfMeasurementOptions from '../../consts/unitsOfMeasurementOptions';
+import { defaultQuantityOptions } from '../../consts/quantityOptions';
 import capitalizeString from '../../utils/capitalizeString';
+import keysToCamelCase from '../../utils/snakeToCamel';
 
 import { ItemFormMode as FormMode } from '../../types/ItemFormTypes';
 import ListItemType, {
@@ -21,7 +24,6 @@ import ListItemType, {
 import QuantityInput from '../QuantityInput';
 import FormGroup from '../FormGroup';
 import Select from '../Select';
-import { defaultQuantityOptions } from '../../consts/quantityOptions';
 
 type Props = {
     setItemFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,7 +37,10 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
     const { fields, setFields, targetItem, validate, errors } = useItemForm();
 
-    const handleSubmit = (e: FormEvent<HTMLButtonElement>, mode: FormMode) => {
+    const handleSubmit = async (
+        e: FormEvent<HTMLButtonElement>,
+        mode: FormMode
+    ) => {
         e.preventDefault();
 
         if (validate()) {
@@ -46,13 +51,28 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
             if (mode === 'add') {
                 if (accessToken) {
-                    addUserItem(newItem);
+                    try {
+                        const res = await api.post('/items', { ...newItem });
+                        addUserItem(keysToCamelCase(res.data.newItem));
+                    } catch {
+                        console.log(
+                            'Falha ao adicionar um novo item, tente novamente.'
+                        );
+                    }
                 } else if (guest) {
                     addLocalItem({ ...newItem, id: crypto.randomUUID() });
                 }
             } else if (mode === 'edit') {
                 if (accessToken) {
-                    editUserItem(targetItem.id, newItem);
+                    try {
+                        const res = await api.put(
+                            `/items/${targetItem.id}`,
+                            newItem
+                        );
+                        editUserItem(keysToCamelCase(res.data.editedItem));
+                    } catch {
+                        console.log('Falha ao editar o item, tente novamente.');
+                    }
                 } else if (guest) {
                     editLocalItem({ ...newItem, id: targetItem.id });
                 }
@@ -83,6 +103,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     }
                 />
             </FormGroup>
+
             <FormGroup elementId='item-type' labelText='Contar por:'>
                 <Select
                     elementId='item-type'
@@ -102,6 +123,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     }
                 />
             </FormGroup>
+
             {fields.quantityType === 'number' && (
                 <FormGroup elementId='item-numberOf' labelText='Número de:'>
                     <Select
@@ -119,33 +141,40 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 </FormGroup>
             )}
 
-            <FormGroup elementId='item-quantity' labelText='Quantidade:'>
-                {fields.quantityType === 'number' ? (
-                    <QuantityInput
-                        elementId='item-quantity'
-                        value={fields.quantity}
-                        change={(e) =>
-                            setFields({
-                                ...fields,
-                                quantity: Number(e.target.value),
-                            })
-                        }
-                        unitOfMeasurement={fields.unitOfMeasurement}
-                    />
-                ) : (
-                    <Select
-                        elementId='item-quantity'
-                        value={defaultQuantityOptions[fields.quantity].label}
-                        options={defaultQuantityOptions}
-                        change={(e) =>
-                            setFields({
-                                ...fields,
-                                quantity: Number(e.currentTarget.dataset.value),
-                            })
-                        }
-                    />
-                )}
-            </FormGroup>
+            {formMode === 'add' && (
+                <FormGroup elementId='item-quantity' labelText='Quantidade:'>
+                    {fields.quantityType === 'number' ? (
+                        <QuantityInput
+                            elementId='item-quantity'
+                            value={fields.quantity}
+                            change={(e) =>
+                                setFields({
+                                    ...fields,
+                                    quantity: Number(e.target.value),
+                                })
+                            }
+                            unitOfMeasurement={fields.unitOfMeasurement}
+                        />
+                    ) : (
+                        <Select
+                            elementId='item-quantity'
+                            value={
+                                defaultQuantityOptions[fields.quantity].label
+                            }
+                            options={defaultQuantityOptions}
+                            change={(e) =>
+                                setFields({
+                                    ...fields,
+                                    quantity: Number(
+                                        e.currentTarget.dataset.value
+                                    ),
+                                })
+                            }
+                        />
+                    )}
+                </FormGroup>
+            )}
+
             <FormGroup elementId='item-alert' labelText='Alertar em:'>
                 {fields.quantityType === 'number' ? (
                     <QuantityInput
@@ -177,6 +206,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     />
                 )}
             </FormGroup>
+
             <FormGroup elementId='item-description' labelText='Descrição:'>
                 <textarea
                     className={`input ${styles.description}`}
@@ -188,6 +218,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     }
                 />
             </FormGroup>
+
             <button
                 type='button'
                 className={`btn btn-dark ${styles.submitButton}`}
