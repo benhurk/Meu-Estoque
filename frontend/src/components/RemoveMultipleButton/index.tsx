@@ -2,20 +2,20 @@ import { useMemo, useState } from 'react';
 
 import styles from './RemoveMultiple.module.css';
 
-import useListItems from '../../hooks/useListItems';
+import useUserData from '../../hooks/useUserData';
 import useAuth from '../../hooks/useAuth';
 
 import Modal from '../Modal';
-import useLogsStore from '../../stores/logsStore';
-import useLocalListStore from '../../stores/localListStore';
-import useListStore from '../../stores/listStore';
+import useLocalLogsStore from '../../stores/localLogsStore';
+import useLocalListStore from '../../stores/localItemsStore';
+import useListStore from '../../stores/userDataStore';
 
 export default function RemoveMultipleButton() {
-    const listItems = useListItems();
+    const { items: listItems, logs } = useUserData();
     const { accessToken, guest } = useAuth();
     const { removeSelectedUserItems, clearUserList } = useListStore();
     const { removeLocalItem, clearLocalList } = useLocalListStore();
-    const { logs, removeLog, clearLogs } = useLogsStore();
+    const { removeLog, clearLogs } = useLocalLogsStore();
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -34,7 +34,7 @@ export default function RemoveMultipleButton() {
                 removeSelectedUserItems(selectedItems.map((item) => item.id));
             } else if (guest) {
                 selectedItems.forEach((item) => {
-                    logs.filter((log) => log.item === item.name).forEach(
+                    logs.filter((log) => log.itemName === item.name).forEach(
                         (filteredLog) => removeLog(filteredLog.id)
                     );
                     removeLocalItem(item.id);

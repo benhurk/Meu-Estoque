@@ -3,9 +3,9 @@ import api from '../../api';
 import styles from './ListItem.module.css';
 
 import useFormStore from '../../stores/formStore';
-import useLocalListStore from '../../stores/localListStore';
+import useLocalListStore from '../../stores/localItemsStore';
 import useAuth from '../../hooks/useAuth';
-import useListStore from '../../stores/listStore';
+import useListStore from '../../stores/userDataStore';
 
 import ListItemType from '../../types/ListItemTypes';
 import { defaultQuantityOptions } from '../../consts/quantityOptions';

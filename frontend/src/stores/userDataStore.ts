@@ -10,7 +10,7 @@ type ListState = {
 };
 
 type ListActions = {
-    setListData: (data: ListItemType[]) => void;
+    setUserItems: (data: ListItemType[]) => void;
     addUserItem: (newItem: ListItemType) => void;
     editUserItem: (editedItem: ListItemType) => void;
     removeUserItem: (id: string) => void;
@@ -18,11 +18,11 @@ type ListActions = {
     clearUserList: () => void;
 };
 
-const useListStore = create<ListState & ListActions>((set) => ({
+const useUserDataStore = create<ListState & ListActions>((set) => ({
     userItems: [],
     userLogs: [],
 
-    setListData: (data) => {
+    setUserItems: (data) => {
         set(() => ({
             userItems: data,
         }));
@@ -67,4 +67,4 @@ const useListStore = create<ListState & ListActions>((set) => ({
     },
 }));
 
-export default useListStore;
+export default useUserDataStore;

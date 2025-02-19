@@ -2,18 +2,18 @@ import styles from './LoadButton.module.css';
 
 import ListItemType from '../../types/ListItemTypes';
 import Logs from '../../types/Logs';
-import useLogsStore from '../../stores/logsStore';
-import useLocalListStore from '../../stores/localListStore';
-import useListItems from '../../hooks/useListItems';
+import useLocalLogsStore from '../../stores/localLogsStore';
+import useLocalListStore from '../../stores/localItemsStore';
 import useAuth from '../../hooks/useAuth';
-import useListStore from '../../stores/listStore';
+import useListStore from '../../stores/userDataStore';
+import useUserData from '../../hooks/useUserData';
 
 export default function LoadButton() {
     const { accessToken, guest } = useAuth();
-    const listItems = useListItems();
+    const { items: listItems, logs } = useUserData();
     const addUserItem = useListStore((state) => state.addUserItem);
     const addLocalItem = useLocalListStore((state) => state.addLocalItem);
-    const { logs, addNewLog } = useLogsStore();
+    const { addNewLog } = useLocalLogsStore();
 
     const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reader = new FileReader();
@@ -63,10 +63,10 @@ export default function LoadButton() {
             result.logs.forEach((loadedLog: Logs) => {
                 const newLog: Logs = {
                     id: loadedLog.id,
-                    date: loadedLog.date,
-                    item: loadedLog.item,
-                    diff: loadedLog.diff,
-                    diffType: loadedLog.diffType,
+                    time: loadedLog.time,
+                    itemName: loadedLog.itemName,
+                    change: loadedLog.change,
+                    type: loadedLog.type,
                 };
 
                 const validate =

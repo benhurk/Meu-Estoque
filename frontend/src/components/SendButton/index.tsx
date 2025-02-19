@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
+
+import useUserData from '../../hooks/useUserData';
+
 import SupportedPlatforms from '../../types/supportedPlatforms';
 import SendModes from '../../types/SendModes';
+
 import abbreviateUnitOfMeasurement from '../../utils/abbreviateUnitOfMeasurement';
-import useListItems from '../../hooks/useListItems';
 import { defaultQuantityOptions } from '../../consts/quantityOptions';
 
 type Props = {
@@ -18,7 +21,7 @@ export default function SendButton({
     initialMessage,
     setOpenSendMenu,
 }: Props) {
-    const listItems = useListItems();
+    const { items: listItems } = useUserData();
     const warnedItems = useMemo(() => {
         return listItems.filter((item) => item.quantity <= item.alertQuantity);
     }, [listItems]);

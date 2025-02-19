@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import html2pdf from 'html2pdf.js';
 import styles from './LogsTable.module.css';
 
-import useLogsStore from '../../stores/logsStore';
+import useLogsStore from '../../stores/localLogsStore';
 
 import FormGroup from '../FormGroup';
 import EmptyListContent from '../EmptyListContent';
@@ -14,11 +14,14 @@ import Logs from '../../types/Logs';
 
 import filterLogs from '../../utils/filterLogs';
 import months from '../../consts/months';
+import useUserData from '../../hooks/useUserData';
 
 export default function LogsTable() {
-    const { logs, removeLog } = useLogsStore();
     const [monthFilter, setMonthFilter] = useState<Months>();
     const [searchFor, setSearchFor] = useState<string>('');
+
+    const { logs } = useUserData();
+    const { removeLog } = useLogsStore();
 
     const filteredLogs = useMemo(() => {
         return filterLogs(logs, searchFor, monthFilter);
@@ -98,11 +101,6 @@ export default function LogsTable() {
             </div>
             <div id='logs-table'>
                 <div className={styles.tableInfo}>
-                    <div className={styles.info}>
-                        <i className='bi bi-circle-fill text-dark' />
-                        &nbsp;
-                        <span>Quantidade inicial</span>
-                    </div>
                     <div className={styles.info}>
                         <i className='bi bi-circle-fill text-green' />
                         &nbsp;

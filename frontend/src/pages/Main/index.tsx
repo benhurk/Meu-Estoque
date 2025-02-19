@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import List from '../../components/List';
 import useAuth from '../../hooks/useAuth';
-import useListStore from '../../stores/listStore';
+import useListStore from '../../stores/userDataStore';
 import api from '../../api';
 import LoginMenu from '../../components/LoginMenu';
 import Loader from '../../components/Loader';
@@ -11,7 +11,7 @@ import keysToCamelCase from '../../utils/snakeToCamel';
 
 export default function MainPage() {
     const { accessToken, guest } = useAuth();
-    const setListData = useListStore((state) => state.setListData);
+    const { setUserItems } = useListStore();
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -21,7 +21,7 @@ export default function MainPage() {
                 setLoading(true);
 
                 const res = await api.get('/items');
-                setListData(keysToCamelCase(res.data.userItems));
+                setUserItems(keysToCamelCase(res.data.userItems));
 
                 setLoading(false);
             } catch {
@@ -30,7 +30,7 @@ export default function MainPage() {
         };
 
         if (!guest) fetchUserData();
-    }, [accessToken, guest, setListData]);
+    }, [accessToken, guest, setUserItems]);
 
     return (
         <>

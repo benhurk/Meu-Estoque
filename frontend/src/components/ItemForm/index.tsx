@@ -6,8 +6,8 @@ import styles from './ItemForm.module.css';
 import useAuth from '../../hooks/useAuth';
 import useItemForm from '../../hooks/useItemForm';
 import useFormStore from '../../stores/formStore';
-import useListStore from '../../stores/listStore';
-import useLocalListStore from '../../stores/localListStore';
+import useListStore from '../../stores/userDataStore';
+import useLocalListStore from '../../stores/localItemsStore';
 
 import itemFormInitialState from '../../consts/itemFormState';
 import unitsOfMeasurementOptions from '../../consts/unitsOfMeasurementOptions';

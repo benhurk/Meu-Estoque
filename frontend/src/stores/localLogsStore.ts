@@ -3,16 +3,16 @@ import { persist } from 'zustand/middleware';
 import Logs from '../types/Logs';
 
 type LogsState = {
-    logs: Logs[];
+    localLogs: Logs[];
     addNewLog: (log: Omit<Logs, 'id' | 'date'>) => void;
     removeLog: (id: string) => void;
     clearLogs: () => void;
 };
 
-const useLogsStore = create<LogsState>()(
+const useLocalLogsStore = create<LogsState>()(
     persist(
         (set) => ({
-            logs: [],
+            localLogs: [],
             addNewLog: (log) => {
                 const now = new Date();
                 const date = now.toLocaleDateString('pt-BR', {
@@ -25,8 +25,8 @@ const useLogsStore = create<LogsState>()(
                 });
 
                 set((state) => ({
-                    logs: [
-                        ...state.logs,
+                    localLogs: [
+                        ...state.localLogs,
                         {
                             id: crypto.randomUUID(),
                             date: `${date} - ${time}`,
@@ -38,13 +38,13 @@ const useLogsStore = create<LogsState>()(
 
             removeLog: (id) => {
                 set((state) => ({
-                    logs: state.logs.filter((log) => log.id != id),
+                    localLogs: state.localLogs.filter((log) => log.id != id),
                 }));
             },
 
             clearLogs: () => {
                 set(() => ({
-                    logs: [],
+                    localLogs: [],
                 }));
             },
         }),
@@ -54,4 +54,4 @@ const useLogsStore = create<LogsState>()(
     )
 );
 
-export default useLogsStore;
+export default useLocalLogsStore;

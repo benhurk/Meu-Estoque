@@ -1,9 +1,7 @@
-import useListItems from '../../hooks/useListItems';
-import useLogsStore from '../../stores/logsStore';
+import useUserData from '../../hooks/useUserData';
 
 export default function DownloadButton() {
-    const listItems = useListItems();
-    const logs = useLogsStore((state) => state.logs);
+    const { items: listItems, logs } = useUserData();
 
     const date = new Date().toLocaleDateString();
     const data = JSON.stringify({

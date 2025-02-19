@@ -4,13 +4,13 @@ import Modal from '../Modal';
 import SendMenu from '../SendMenu';
 import Dropdown from '../Dropdown';
 import SendModes from '../../types/SendModes';
-import useListItems from '../../hooks/useListItems';
+import useUserData from '../../hooks/useUserData';
 
 export default function SendDropdown() {
     const [openSendMenu, setOpenSendMenu] = useState<boolean>(false);
     const [sendMode, setSendMode] = useState<SendModes>('all');
 
-    const listItems = useListItems();
+    const { items: listItems } = useUserData();
     const warnedItems = listItems.filter(
         (item) => item.quantity <= item.alertQuantity
     );
