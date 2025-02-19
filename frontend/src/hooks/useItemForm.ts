@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import useListItems from './useUserData';
+import useUserData from './useUserData';
 import useFormStore from '../stores/formStore';
 
 import itemFormInitialState from '../consts/itemFormState';
 
 export default function useItemForm() {
+    const { items: listItems } = useUserData();
     const [fields, setFields] = useState(itemFormInitialState);
     const [errors, setErrors] = useState({
         nameError: '',
@@ -13,7 +14,6 @@ export default function useItemForm() {
     });
     const { formMode, targetItemId } = useFormStore();
 
-    const listItems = useListItems();
     const itemNames = useMemo(
         () => new Set(listItems.map((item) => item.name)),
         [listItems]

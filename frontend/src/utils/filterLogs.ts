@@ -14,10 +14,10 @@ export default function filterLogs(
     const searchedLogs = logs.filter((log) => {
         if (month)
             return (
-                log.item.toLowerCase().includes(search.toLowerCase()) &&
-                log.date.split(' - ')[0].split('/')[1] === monthNumber
+                log.itemName.toLowerCase().includes(search.toLowerCase()) &&
+                log.time.split(' - ')[0].split('/')[1] === monthNumber
             );
-        else return log.item.toLowerCase().includes(search.toLowerCase());
+        else return log.itemName.toLowerCase().includes(search.toLowerCase());
     });
 
     return searchedLogs;

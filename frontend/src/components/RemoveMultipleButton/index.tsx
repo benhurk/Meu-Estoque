@@ -15,7 +15,7 @@ export default function RemoveMultipleButton() {
     const { accessToken, guest } = useAuth();
     const { removeSelectedUserItems, clearUserList } = useListStore();
     const { removeLocalItem, clearLocalList } = useLocalListStore();
-    const { removeLog, clearLogs } = useLocalLogsStore();
+    const { removeLocalLog, clearLocalLogs } = useLocalLogsStore();
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -35,7 +35,7 @@ export default function RemoveMultipleButton() {
             } else if (guest) {
                 selectedItems.forEach((item) => {
                     logs.filter((log) => log.itemName === item.name).forEach(
-                        (filteredLog) => removeLog(filteredLog.id)
+                        (filteredLog) => removeLocalLog(filteredLog.id)
                     );
                     removeLocalItem(item.id);
                 });
@@ -45,8 +45,8 @@ export default function RemoveMultipleButton() {
                 clearUserList();
             } else if (guest) {
                 clearLocalList();
+                clearLocalLogs();
             }
-            clearLogs();
         }
 
         setModalOpen(false);

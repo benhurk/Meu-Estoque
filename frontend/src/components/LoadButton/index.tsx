@@ -5,15 +5,15 @@ import Logs from '../../types/Logs';
 import useLocalLogsStore from '../../stores/localLogsStore';
 import useLocalListStore from '../../stores/localItemsStore';
 import useAuth from '../../hooks/useAuth';
-import useListStore from '../../stores/userDataStore';
+import useUserDataStore from '../../stores/userDataStore';
 import useUserData from '../../hooks/useUserData';
 
 export default function LoadButton() {
     const { accessToken, guest } = useAuth();
     const { items: listItems, logs } = useUserData();
-    const addUserItem = useListStore((state) => state.addUserItem);
+    const addUserItem = useUserDataStore((state) => state.addUserItem);
     const addLocalItem = useLocalListStore((state) => state.addLocalItem);
-    const { addNewLog } = useLocalLogsStore();
+    const { addNewLocalLog } = useLocalLogsStore();
 
     const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reader = new FileReader();
@@ -74,7 +74,7 @@ export default function LoadButton() {
                         (val) => typeof val === 'undefined'
                     ) && !logs.some((log) => log.id === newLog.id);
 
-                if (validate) addNewLog(newLog);
+                if (validate) addNewLocalLog(newLog);
             });
         };
 

@@ -4,16 +4,16 @@ import Logs from '../types/Logs';
 
 type LogsState = {
     localLogs: Logs[];
-    addNewLog: (log: Omit<Logs, 'id' | 'date'>) => void;
-    removeLog: (id: string) => void;
-    clearLogs: () => void;
+    addNewLocalLog: (log: Omit<Logs, 'id' | 'date'>) => void;
+    removeLocalLog: (id: string) => void;
+    clearLocalLogs: () => void;
 };
 
 const useLocalLogsStore = create<LogsState>()(
     persist(
         (set) => ({
             localLogs: [],
-            addNewLog: (log) => {
+            addNewLocalLog: (log) => {
                 const now = new Date();
                 const date = now.toLocaleDateString('pt-BR', {
                     day: '2-digit',
@@ -36,13 +36,13 @@ const useLocalLogsStore = create<LogsState>()(
                 }));
             },
 
-            removeLog: (id) => {
+            removeLocalLog: (id) => {
                 set((state) => ({
                     localLogs: state.localLogs.filter((log) => log.id != id),
                 }));
             },
 
-            clearLogs: () => {
+            clearLocalLogs: () => {
                 set(() => ({
                     localLogs: [],
                 }));

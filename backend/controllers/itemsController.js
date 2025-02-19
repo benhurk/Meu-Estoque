@@ -62,6 +62,8 @@ export async function changeItemQuantity(req, res) {
             RETURNING *;
         `;
 
+        console.log(updatedItem);
+
         const log = await sql`
             INSERT INTO logs (user_id, item_id, item_name, change, time, type)
             VALUES (${userId}, ${updatedItem[0].id}, ${updatedItem[0].name}, ${change}, ${time}, ${type})
@@ -120,11 +122,11 @@ export async function deleteItem(req, res) {
         const userId = await req.user.id;
         const targetId = await req.params.id;
 
-        await sql`
-            DELETE FROM items WHERE id = ${targetId} AND user_id = ${userId};
+        const removedItem = await sql`
+            DELETE FROM items WHERE id = ${targetId} AND user_id = ${userId} RETURNING name;
         `;
 
-        res.sendStatus(200);
+        res.status(200).json({ removedItem: removedItem[0] });
     } catch (error) {
         console.log('Error while trying to deleteItem', error);
         res.status(500).json({
@@ -145,11 +147,11 @@ export async function deleteSelectedItems(req, res) {
                 .json({ success: false, message: 'Invalid or empty id array' });
         }
 
-        await sql`
-            DELETE FROM items WHERE id = ANY(${ids}) AND user_id = ${userId};
+        const removedItems = await sql`
+            DELETE FROM items WHERE id = ANY(${ids}) AND user_id = ${userId} RETURNING name;
         `;
 
-        res.sendStatus(200);
+        res.status(200).json({ removedItems });
     } catch (error) {
         console.log('Error while trying to deleteSelectedItems', error);
         res.status(500).json({

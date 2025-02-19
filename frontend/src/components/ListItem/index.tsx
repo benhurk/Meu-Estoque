@@ -5,15 +5,17 @@ import styles from './ListItem.module.css';
 import useFormStore from '../../stores/formStore';
 import useLocalListStore from '../../stores/localItemsStore';
 import useAuth from '../../hooks/useAuth';
-import useListStore from '../../stores/userDataStore';
+import useUserDataStore from '../../stores/userDataStore';
 
 import ListItemType from '../../types/ListItemTypes';
+
 import { defaultQuantityOptions } from '../../consts/quantityOptions';
+import getLogChange from '../../utils/getLogChange';
+import keysToCamelCase from '../../utils/snakeToCamel';
 
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
 import Select from '../Select';
-import getLogChange from '../../utils/getLogChange';
 
 type Props = {
     item: ListItemType;
@@ -22,7 +24,7 @@ type Props = {
 
 const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     const { accessToken, guest } = useAuth();
-    const { editUserItem, removeUserItem } = useListStore();
+    const { editUserItem, addUserLog, removeUserItem } = useUserDataStore();
     const { editLocalItem, removeLocalItem } = useLocalListStore();
     const { setFormMode, setTargetItem } = useFormStore();
 
@@ -47,6 +49,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
             editUserItem({ ...item, quantity: newValue });
 
             if (editTimeout.current) clearTimeout(editTimeout.current);
+            if (newValue - preChangeQuantity.current === 0) return;
 
             editTimeout.current = setTimeout(async () => {
                 const now = new Date().toLocaleDateString([], {
@@ -56,12 +59,21 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                     minute: '2-digit',
                 });
 
-                await api.put(`/items/quantity/${item.id}`, {
-                    newValue,
-                    time: now,
-                    change: changeDiff.valueChange,
-                    type: changeDiff.type,
-                });
+                try {
+                    const res = await api.put(`/items/quantity/${item.id}`, {
+                        newValue,
+                        time: now,
+                        change: changeDiff.valueChange,
+                        type: changeDiff.type,
+                    });
+
+                    addUserLog(keysToCamelCase(res.data.log));
+                } catch {
+                    console.log(
+                        'Falha alterar a quantidade do item',
+                        item.name
+                    );
+                }
 
                 preChangeQuantity.current = newValue;
             }, 3000);

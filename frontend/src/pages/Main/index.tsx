@@ -11,7 +11,7 @@ import keysToCamelCase from '../../utils/snakeToCamel';
 
 export default function MainPage() {
     const { accessToken, guest } = useAuth();
-    const { setUserItems } = useListStore();
+    const { setUserItems, setUserLogs } = useListStore();
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -20,8 +20,9 @@ export default function MainPage() {
             try {
                 setLoading(true);
 
-                const res = await api.get('/items');
+                const res = await api.get('/user');
                 setUserItems(keysToCamelCase(res.data.userItems));
+                setUserLogs(keysToCamelCase(res.data.userLogs));
 
                 setLoading(false);
             } catch {
@@ -30,7 +31,7 @@ export default function MainPage() {
         };
 
         if (!guest) fetchUserData();
-    }, [accessToken, guest, setUserItems]);
+    }, [accessToken, guest, setUserItems, setUserLogs]);
 
     return (
         <>

@@ -11,6 +11,8 @@ import { initDatabase } from './config/db.js';
 
 import authRoutes from './routes/authRoutes.js';
 import itemsRoutes from './routes/itemsRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+
 import authenticateToken from './middlewares/authenticateToken.js';
 
 dotenv.config();
@@ -62,6 +64,7 @@ app.use(async (req, res, next) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/user', authenticateToken, userRoutes);
 app.use('/api/items', authenticateToken, itemsRoutes);
 
 if (process.env.NODE_ENV === 'production') {

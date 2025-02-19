@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import html2pdf from 'html2pdf.js';
 import styles from './LogsTable.module.css';
 
-import useLogsStore from '../../stores/localLogsStore';
+import useLocalLogsStore from '../../stores/localLogsStore';
 
 import FormGroup from '../FormGroup';
 import EmptyListContent from '../EmptyListContent';
@@ -21,7 +21,7 @@ export default function LogsTable() {
     const [searchFor, setSearchFor] = useState<string>('');
 
     const { logs } = useUserData();
-    const { removeLog } = useLogsStore();
+    const { removeLocalLog } = useLocalLogsStore();
 
     const filteredLogs = useMemo(() => {
         return filterLogs(logs, searchFor, monthFilter);
@@ -127,11 +127,11 @@ export default function LogsTable() {
                                     <tr key={log.time + log.itemName + index}>
                                         <td>
                                             <span>
-                                                {log.time.split(' - ')[0]}
+                                                {log.time.split(', ')[0]}
                                             </span>
                                             &nbsp;-&nbsp;
                                             <span className={styles.dateTime}>
-                                                {log.time.split(' - ')[1]}
+                                                {log.time.split(', ')[1]}
                                             </span>
                                         </td>
                                         <td>{log.itemName}</td>
@@ -143,7 +143,7 @@ export default function LogsTable() {
                                                 type='button'
                                                 className='btn-remove-item bi bi-x'
                                                 onClick={() =>
-                                                    removeLog(log.id)
+                                                    removeLocalLog(log.id)
                                                 }
                                             />
                                         </td>

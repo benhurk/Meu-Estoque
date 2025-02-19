@@ -13,7 +13,6 @@ import itemFormInitialState from '../../consts/itemFormState';
 import unitsOfMeasurementOptions from '../../consts/unitsOfMeasurementOptions';
 import { defaultQuantityOptions } from '../../consts/quantityOptions';
 import capitalizeString from '../../utils/capitalizeString';
-import keysToCamelCase from '../../utils/snakeToCamel';
 
 import { ItemFormMode as FormMode } from '../../types/ItemFormTypes';
 import ListItemType, {
@@ -51,14 +50,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
             if (mode === 'add') {
                 if (accessToken) {
-                    try {
-                        const res = await api.post('/items', { ...newItem });
-                        addUserItem(keysToCamelCase(res.data.newItem));
-                    } catch {
-                        console.log(
-                            'Falha ao adicionar um novo item, tente novamente.'
-                        );
-                    }
+                    addUserItem(newItem);
                 } else if (guest) {
                     addLocalItem({ ...newItem, id: crypto.randomUUID() });
                 }
@@ -69,7 +61,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                             `/items/${targetItem.id}`,
                             newItem
                         );
-                        editUserItem(keysToCamelCase(res.data.editedItem));
+                        editUserItem(res.data.editedItem);
                     } catch {
                         console.log('Falha ao editar o item, tente novamente.');
                     }
