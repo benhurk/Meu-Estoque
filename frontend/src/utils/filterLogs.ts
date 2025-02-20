@@ -12,12 +12,12 @@ export default function filterLogs(
         .padStart(2, '0');
 
     const searchedLogs = logs.filter((log) => {
-        if (month)
+        if (month) {
             return (
                 log.itemName.toLowerCase().includes(search.toLowerCase()) &&
-                log.time.split(' - ')[0].split('/')[1] === monthNumber
+                log.time.split(', ')[0].split('/')[1] === monthNumber
             );
-        else return log.itemName.toLowerCase().includes(search.toLowerCase());
+        } else return log.itemName.toLowerCase().includes(search.toLowerCase());
     });
 
     return searchedLogs;
