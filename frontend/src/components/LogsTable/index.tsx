@@ -3,6 +3,9 @@ import html2pdf from 'html2pdf.js';
 import styles from './LogsTable.module.css';
 
 import useLocalLogsStore from '../../stores/localLogsStore';
+import useUserData from '../../hooks/useUserData';
+import useAuth from '../../hooks/useAuth';
+import useUserDataStore from '../../stores/userDataStore';
 
 import FormGroup from '../FormGroup';
 import EmptyListContent from '../EmptyListContent';
@@ -14,14 +17,15 @@ import Logs from '../../types/Logs';
 
 import filterLogs from '../../utils/filterLogs';
 import months from '../../consts/months';
-import useUserData from '../../hooks/useUserData';
 
 export default function LogsTable() {
+    const { accessToken, guest } = useAuth();
     const [monthFilter, setMonthFilter] = useState<Months>();
     const [searchFor, setSearchFor] = useState<string>('');
 
     const { logs } = useUserData();
-    const { removeLocalLog } = useLocalLogsStore();
+    const removeUserLog = useUserDataStore((state) => state.removeUserLog);
+    const removeLocalLog = useLocalLogsStore((state) => state.removeLocalLog);
 
     const filteredLogs = useMemo(() => {
         return filterLogs(logs, searchFor, monthFilter);
@@ -38,10 +42,9 @@ export default function LogsTable() {
         }
     };
 
-    const date = new Date().toLocaleDateString();
-
     const downloadPdf = () => {
         const removeItemButtons = document.querySelectorAll('.btn-remove-item');
+        const date = new Date().toLocaleDateString();
 
         removeItemButtons.forEach((btn) =>
             btn.setAttribute('style', 'opacity: 0;')
@@ -60,6 +63,14 @@ export default function LogsTable() {
                 btn.setAttribute('style', 'opacity: 1;')
             );
         }, 100);
+    };
+
+    const removeLog = (id: string) => {
+        if (accessToken) {
+            removeUserLog(id);
+        } else if (guest) {
+            removeLocalLog(id);
+        }
     };
 
     return (
@@ -143,7 +154,7 @@ export default function LogsTable() {
                                                 type='button'
                                                 className='btn-remove-item bi bi-x'
                                                 onClick={() =>
-                                                    removeLocalLog(log.id)
+                                                    removeLog(log.id)
                                                 }
                                             />
                                         </td>

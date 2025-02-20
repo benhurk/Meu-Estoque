@@ -73,10 +73,12 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
             }));
         }
     },
-    removeUserLog: (id) => {
+    removeUserLog: async (id) => {
         set((state) => ({
             userLogs: state.userLogs.filter((log) => log.id != id),
         }));
+
+        await api.delete(`/logs/${id}`);
     },
     removeSelectedUserItems: async (ids) => {
         const res = await api.delete('/items/x', { data: { ids } });
