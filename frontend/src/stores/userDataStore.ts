@@ -14,7 +14,6 @@ type ListActions = {
     setUserItems: (data: ListItemType[]) => void;
     setUserLogs: (data: Logs[]) => void;
     addUserItem: (newItem: Omit<ListItemType, 'id'>) => void;
-    addUserLog: (newLog: Logs) => void;
     editUserItem: (editedItem: ListItemType) => void;
     removeUserItem: (id: string) => void;
     removeUserLog: (id: string) => void;
@@ -49,11 +48,6 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
             console.log('Falha ao adicionar um novo item, tente novamente.');
         }
     },
-    addUserLog: (newLog) => {
-        set((state) => ({
-            userLogs: [...state.userLogs, newLog],
-        }));
-    },
     editUserItem: (editedItem) => {
         const edited = keysToCamelCase(editedItem);
         set((state) => ({
@@ -87,11 +81,6 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
                 userItems: state.userItems.filter(
                     (item) => !ids.includes(item.id)
                 ),
-                userLogs: state.userLogs.filter((log) =>
-                    res.data.removedItems
-                        .map((item: { name: string }) => item.name)
-                        .includes(log.itemName)
-                ),
             }));
         }
     },
@@ -100,7 +89,6 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
         if (res.status === 200) {
             set(() => ({
                 userItems: [],
-                userLogs: [],
             }));
         }
     },

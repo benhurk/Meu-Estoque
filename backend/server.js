@@ -11,7 +11,6 @@ import { initDatabase } from './config/db.js';
 
 import authRoutes from './routes/authRoutes.js';
 import itemsRoutes from './routes/itemsRoutes.js';
-import userRoutes from './routes/userRoutes.js';
 import logsRoutes from './routes/logsRoutes.js';
 
 import authenticateToken from './middlewares/authenticateToken.js';
@@ -65,7 +64,6 @@ app.use(async (req, res, next) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/user', authenticateToken, userRoutes);
 app.use('/api/items', authenticateToken, itemsRoutes);
 app.use('/api/logs', authenticateToken, logsRoutes);
 

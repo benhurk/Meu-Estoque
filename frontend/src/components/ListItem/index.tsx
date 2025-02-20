@@ -11,7 +11,6 @@ import ListItemType from '../../types/ListItemTypes';
 
 import { defaultQuantityOptions } from '../../consts/quantityOptions';
 import getLogChange from '../../utils/getLogChange';
-import keysToCamelCase from '../../utils/snakeToCamel';
 
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
@@ -24,7 +23,7 @@ type Props = {
 
 const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     const { accessToken, guest } = useAuth();
-    const { editUserItem, addUserLog, removeUserItem } = useUserDataStore();
+    const { editUserItem, removeUserItem } = useUserDataStore();
     const { editLocalItem, removeLocalItem } = useLocalListStore();
     const { setFormMode, setTargetItem } = useFormStore();
 
@@ -60,14 +59,12 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                 });
 
                 try {
-                    const res = await api.put(`/items/quantity/${item.id}`, {
+                    await api.put(`/items/quantity/${item.id}`, {
                         newValue,
                         time: now,
                         change: changeDiff.valueChange,
                         type: changeDiff.type,
                     });
-
-                    addUserLog(keysToCamelCase(res.data.log));
                 } catch {
                     console.log(
                         'Falha alterar a quantidade do item',

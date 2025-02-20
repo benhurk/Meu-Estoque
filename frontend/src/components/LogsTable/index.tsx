@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import html2pdf from 'html2pdf.js';
 import styles from './LogsTable.module.css';
+import api from '../../api';
 
 import useLocalLogsStore from '../../stores/localLogsStore';
 import useUserData from '../../hooks/useUserData';
@@ -17,15 +18,34 @@ import Logs from '../../types/Logs';
 
 import filterLogs from '../../utils/filterLogs';
 import months from '../../consts/months';
+import keysToCamelCase from '../../utils/snakeToCamel';
+import Loader from '../Loader';
 
 export default function LogsTable() {
     const { accessToken, guest } = useAuth();
     const [monthFilter, setMonthFilter] = useState<Months>();
     const [searchFor, setSearchFor] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
     const { logs } = useUserData();
-    const removeUserLog = useUserDataStore((state) => state.removeUserLog);
+    const { setUserLogs, removeUserLog } = useUserDataStore();
     const removeLocalLog = useLocalLogsStore((state) => state.removeLocalLog);
+
+    useEffect(() => {
+        const fetchUserLogs = async () => {
+            try {
+                setLoading(true);
+                const res = await api.get('/logs');
+                setUserLogs(keysToCamelCase(res.data.userLogs));
+            } catch {
+                console.log('Algo deu errado tente novamente.');
+            }
+
+            setLoading(false);
+        };
+
+        if (!guest) fetchUserLogs();
+    }, [accessToken, guest, setUserLogs]);
 
     const filteredLogs = useMemo(() => {
         return filterLogs(logs, searchFor, monthFilter);
@@ -124,7 +144,9 @@ export default function LogsTable() {
                     </div>
                 </div>
                 <div style={{ minHeight: '20rem' }}>
-                    {filteredLogs.length > 0 ? (
+                    {loading ? (
+                        <Loader />
+                    ) : filteredLogs.length > 0 ? (
                         <table className={styles.table}>
                             <thead>
                                 <tr>

@@ -11,27 +11,25 @@ import keysToCamelCase from '../../utils/snakeToCamel';
 
 export default function MainPage() {
     const { accessToken, guest } = useAuth();
-    const { setUserItems, setUserLogs } = useListStore();
+    const setUserItems = useListStore((state) => state.setUserItems);
 
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchUserItems = async () => {
             try {
                 setLoading(true);
 
-                const res = await api.get('/user');
+                const res = await api.get('/items');
                 setUserItems(keysToCamelCase(res.data.userItems));
-                setUserLogs(keysToCamelCase(res.data.userLogs));
-
-                setLoading(false);
             } catch {
-                setLoading(false);
+                console.log('Algo deu errado tente novamente.');
             }
+            setLoading(false);
         };
 
-        if (!guest) fetchUserData();
-    }, [accessToken, guest, setUserItems, setUserLogs]);
+        if (!guest) fetchUserItems();
+    }, [accessToken, guest, setUserItems]);
 
     return (
         <>
