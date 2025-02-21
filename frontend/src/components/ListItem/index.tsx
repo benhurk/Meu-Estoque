@@ -27,12 +27,6 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     const { editLocalItem, removeLocalItem } = useLocalListStore();
     const { setFormMode, setTargetItem } = useFormStore();
 
-    const setEditForm = () => {
-        setTargetItem(item.id);
-        setFormMode('edit');
-        setItemFormOpen(true);
-    };
-
     const editTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     const preChangeQuantity = useRef<number>(item.quantity);
 
@@ -65,18 +59,29 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                         change: changeDiff.valueChange,
                         type: changeDiff.type,
                     });
+
+                    preChangeQuantity.current = newValue;
                 } catch {
                     console.log(
                         'Falha alterar a quantidade do item',
                         item.name
                     );
-                }
 
-                preChangeQuantity.current = newValue;
+                    editUserItem({
+                        ...item,
+                        quantity: preChangeQuantity.current,
+                    });
+                }
             }, 3000);
         } else if (guest) {
             editLocalItem({ ...item, quantity: newValue });
         }
+    };
+
+    const setEditForm = () => {
+        setTargetItem(item.id);
+        setFormMode('edit');
+        setItemFormOpen(true);
     };
 
     const removeItem = () => {

@@ -13,7 +13,7 @@ type ListState = {
 type ListActions = {
     setUserItems: (data: ListItemType[]) => void;
     setUserLogs: (data: Logs[]) => void;
-    addUserItem: (newItem: Omit<ListItemType, 'id'>) => void;
+    addUserItem: (newItem: ListItemType) => void;
     editUserItem: (editedItem: ListItemType) => void;
     removeUserItem: (id: string) => void;
     removeUserLog: (id: string) => void;
@@ -35,18 +35,10 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
             userLogs: data,
         }));
     },
-    addUserItem: async (newItem) => {
-        try {
-            const res = await api.post('/items', newItem);
-            set((state) => ({
-                userItems: [
-                    ...state.userItems,
-                    keysToCamelCase(res.data.newItem),
-                ],
-            }));
-        } catch {
-            console.log('Falha ao adicionar um novo item, tente novamente.');
-        }
+    addUserItem: (newItem) => {
+        set((state) => ({
+            userItems: [...state.userItems, keysToCamelCase(newItem)],
+        }));
     },
     editUserItem: (editedItem) => {
         const edited = keysToCamelCase(editedItem);
@@ -57,13 +49,17 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
         }));
     },
     removeUserItem: async (id) => {
-        const res = await api.delete(`/items/${id}`);
-        if (res.status === 200) {
+        set((state) => ({
+            userItems: state.userItems.filter((item) => item.id !== id),
+        }));
+
+        try {
+            await api.delete(`/items/${id}`);
+        } catch (error) {
+            console.error('Failed to remove item from the server:', error);
+
             set((state) => ({
-                userItems: state.userItems.filter((item) => item.id !== id),
-                userLogs: state.userLogs.filter(
-                    (log) => log.itemName != res.data.removedItem.name
-                ),
+                userItems: [...state.userItems],
             }));
         }
     },
@@ -72,25 +68,25 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
             userLogs: state.userLogs.filter((log) => log.id != id),
         }));
 
-        await api.delete(`/logs/${id}`);
-    },
-    removeSelectedUserItems: async (ids) => {
-        const res = await api.delete('/items/x', { data: { ids } });
-        if (res.status === 200) {
+        try {
+            await api.delete(`/logs/${id}`);
+        } catch (error) {
+            console.error('Failed to remove log from the server:', error);
+
             set((state) => ({
-                userItems: state.userItems.filter(
-                    (item) => !ids.includes(item.id)
-                ),
+                userLogs: [...state.userLogs],
             }));
         }
     },
-    clearUserList: async () => {
-        const res = await api.delete('/items/');
-        if (res.status === 200) {
-            set(() => ({
-                userItems: [],
-            }));
-        }
+    removeSelectedUserItems: (ids) => {
+        set((state) => ({
+            userItems: state.userItems.filter((item) => !ids.includes(item.id)),
+        }));
+    },
+    clearUserList: () => {
+        set(() => ({
+            userItems: [],
+        }));
     },
 }));
 

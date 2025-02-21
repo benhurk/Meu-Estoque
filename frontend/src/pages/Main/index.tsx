@@ -17,15 +17,15 @@ export default function MainPage() {
 
     useEffect(() => {
         const fetchUserItems = async () => {
+            setLoading(true);
             try {
-                setLoading(true);
-
                 const res = await api.get('/items');
                 setUserItems(keysToCamelCase(res.data.userItems));
             } catch {
-                console.log('Algo deu errado tente novamente.');
+                console.error('Algo deu errado tente novamente.');
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
 
         if (!guest) fetchUserItems();

@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 
 import api from '../../api';
 import styles from './ItemForm.module.css';
@@ -6,10 +6,9 @@ import styles from './ItemForm.module.css';
 import useAuth from '../../hooks/useAuth';
 import useItemForm from '../../hooks/useItemForm';
 import useFormStore from '../../stores/formStore';
-import useListStore from '../../stores/userDataStore';
+import useUserDataStore from '../../stores/userDataStore';
 import useLocalListStore from '../../stores/localItemsStore';
 
-import itemFormInitialState from '../../consts/itemFormState';
 import unitsOfMeasurementOptions from '../../consts/unitsOfMeasurementOptions';
 import { defaultQuantityOptions } from '../../consts/quantityOptions';
 import capitalizeString from '../../utils/capitalizeString';
@@ -30,11 +29,12 @@ type Props = {
 
 export default function ItemForm({ setItemFormOpen }: Props) {
     const { accessToken, guest } = useAuth();
-    const { addUserItem, editUserItem } = useListStore();
+    const { addUserItem, editUserItem } = useUserDataStore();
     const { addLocalItem, editLocalItem } = useLocalListStore();
     const { formMode } = useFormStore();
-
     const { fields, setFields, targetItem, validate, errors } = useItemForm();
+
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleSubmit = async (
         e: FormEvent<HTMLButtonElement>,
@@ -48,30 +48,36 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 name: capitalizeString(fields.name),
             };
 
-            if (mode === 'add') {
-                if (accessToken) {
-                    addUserItem(newItem);
-                } else if (guest) {
-                    addLocalItem({ ...newItem, id: crypto.randomUUID() });
-                }
-            } else if (mode === 'edit') {
-                if (accessToken) {
-                    try {
+            if (accessToken) {
+                setLoading(true);
+                try {
+                    if (mode === 'add') {
+                        const res = await api.post('/items', newItem);
+                        addUserItem(res.data.newItem);
+                    } else if (mode === 'edit') {
                         const res = await api.put(
                             `/items/${targetItem.id}`,
                             newItem
                         );
                         editUserItem(res.data.editedItem);
-                    } catch {
-                        console.log('Falha ao editar o item, tente novamente.');
                     }
-                } else if (guest) {
-                    editLocalItem({ ...newItem, id: targetItem.id });
+
+                    setItemFormOpen(false);
+                } catch {
+                    console.error('Algo deu errado, tente novamente.');
+                } finally {
+                    setLoading(false);
                 }
             }
 
-            setItemFormOpen(false);
-            setFields(itemFormInitialState);
+            if (guest) {
+                if (mode === 'add') {
+                    addLocalItem({ ...newItem, id: crypto.randomUUID() });
+                } else if (mode === 'edit') {
+                    editLocalItem({ ...newItem, id: targetItem.id });
+                }
+                setItemFormOpen(false);
+            }
         }
     };
 
@@ -214,7 +220,8 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             <button
                 type='button'
                 className={`btn btn-dark ${styles.submitButton}`}
-                onClick={(e) => handleSubmit(e, formMode)}>
+                onClick={(e) => handleSubmit(e, formMode)}
+                disabled={loading}>
                 <i
                     className={
                         formMode === 'add' ? 'bi bi-plus-lg' : 'bi bi-check-lg'
