@@ -1,3 +1,4 @@
+import api from '../../api';
 import styles from './LoadButton.module.css';
 
 import ListItemType from '../../types/ListItemTypes';
@@ -51,7 +52,16 @@ export default function LoadButton() {
 
                 if (accessToken) {
                     await Promise.all(
-                        validItems.map((item) => addUserItem(item))
+                        validItems.map(async (item) => {
+                            try {
+                                await api.post('/items', item);
+                                addUserItem(item);
+                            } catch {
+                                console.error(
+                                    'Algo deu errado, tente novamente.'
+                                );
+                            }
+                        })
                     );
 
                     await new Promise((resolve) => setTimeout(resolve, 2000));
