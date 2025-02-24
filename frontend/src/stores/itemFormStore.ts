@@ -8,11 +8,11 @@ type FormState = {
     setTargetItem: (itemId: number | string) => void;
 };
 
-const useFormStore = create<FormState>((set) => ({
+const useItemFormStore = create<FormState>((set) => ({
     formMode: 'add',
     targetItemId: '',
     setFormMode: (mode) => set({ formMode: mode }),
     setTargetItem: (itemId) => set({ targetItemId: itemId }),
 }));
 
-export default useFormStore;
+export default useItemFormStore;

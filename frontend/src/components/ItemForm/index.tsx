@@ -5,7 +5,7 @@ import styles from './ItemForm.module.css';
 
 import useAuth from '../../hooks/useAuth';
 import useItemForm from '../../hooks/useItemForm';
-import useFormStore from '../../stores/formStore';
+import useFormStore from '../../stores/itemFormStore';
 import useUserDataStore from '../../stores/userDataStore';
 import useLocalListStore from '../../stores/localItemsStore';
 

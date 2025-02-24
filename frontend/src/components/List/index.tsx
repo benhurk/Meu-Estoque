@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import styles from './List.module.css';
 
-import useFormStore from '../../stores/formStore';
+import useItemFormStore from '../../stores/itemFormStore';
 
 import ListItem from '../ListItem';
 import Modal from '../Modal';
@@ -15,7 +15,7 @@ export default function List() {
     const { items: listItems } = useUserData();
     const [search, setSearch] = useState<string>('');
 
-    const setFormMode = useFormStore((state) => state.setFormMode);
+    const setFormMode = useItemFormStore((state) => state.setFormMode);
 
     const searchedItems = useMemo(() => {
         return listItems.filter((item) =>

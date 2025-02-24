@@ -2,7 +2,7 @@ import { memo, useRef } from 'react';
 import api from '../../api';
 import styles from './ListItem.module.css';
 
-import useFormStore from '../../stores/formStore';
+import useItemFormStore from '../../stores/itemFormStore';
 import useLocalListStore from '../../stores/localItemsStore';
 import useAuth from '../../hooks/useAuth';
 import useUserDataStore from '../../stores/userDataStore';
@@ -25,7 +25,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     const { accessToken, guest } = useAuth();
     const { editUserItem, removeUserItem } = useUserDataStore();
     const { editLocalItem, removeLocalItem } = useLocalListStore();
-    const { setFormMode, setTargetItem } = useFormStore();
+    const { setFormMode, setTargetItem } = useItemFormStore();
 
     const editTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     const preChangeQuantity = useRef<number>(item.quantity);
