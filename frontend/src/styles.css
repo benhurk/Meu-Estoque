@@ -18,6 +18,7 @@
 
 body {
     font-size: 0.875rem;
+    background-color: var(--color-light);
 }
 
 #root {
@@ -117,7 +118,7 @@ a i.bi {
 }
 
 .btn-light {
-    background-color: var(--color-light);
+    background-color: #fff;
     color: #000;
     transition: background-color 0.2s ease-in-out;
 }

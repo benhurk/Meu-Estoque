@@ -140,7 +140,7 @@ export default function UserForm({ mode }: Props) {
             <div className={styles.buttonArea}>
                 {!loading ? (
                     <>
-                        <button type='submit' className='btn btn-green'>
+                        <button type='submit' className='btn btn-blue'>
                             <i
                                 className={`bi ${
                                     mode === 'login'

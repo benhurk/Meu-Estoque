@@ -20,6 +20,10 @@ export default function UserAccess() {
 
                 {location.pathname === '/signup' && (
                     <>
+                        <h2 className={styles.title}>
+                            <i className='bi bi-person-plus-fill' />
+                            &nbsp;Criar conta
+                        </h2>
                         <div className={styles.redirectLink}>
                             Já possui uma conta?&nbsp;
                             <Link to='/signin' className='text-blue'>
