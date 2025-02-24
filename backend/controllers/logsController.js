@@ -1,12 +1,17 @@
-import { sql } from '../config/db.js';
+import { supabase } from '../config/db.js';
 
 export async function getUserLogs(req, res) {
     try {
         const userId = req.user.id;
 
-        const userLogs = await sql`
-            SELECT * FROM logs WHERE user_id = ${userId};
-        `;
+        const { data: userLogs, error } = await supabase
+            .from('logs')
+            .select('*')
+            .eq('user_id', userId);
+
+        if (error) {
+            throw error;
+        }
 
         res.status(200).json({ userLogs });
     } catch (error) {
@@ -23,9 +28,15 @@ export async function deleteLog(req, res) {
         const userId = req.user.id;
         const targetId = req.params.id;
 
-        await sql`
-            DELETE FROM logs WHERE id = ${targetId} AND user_id = ${userId};
-        `;
+        const { error } = await supabase
+            .from('logs')
+            .delete()
+            .eq('id', targetId)
+            .eq('user_id', userId);
+
+        if (error) {
+            throw error;
+        }
 
         res.sendStatus(200);
     } catch (error) {

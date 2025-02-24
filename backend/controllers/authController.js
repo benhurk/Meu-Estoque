@@ -1,4 +1,4 @@
-import { sql } from '../config/db.js';
+import { supabase } from '../config/db.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -13,20 +13,26 @@ export async function registerUser(req, res) {
             });
         }
 
-        const existingUsername = await sql`
-        SELECT * FROM users WHERE username = ${username};`;
+        const { data: existingUser, existingUserError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('username', username);
 
-        if (existingUsername.length > 0)
-            return res
-                .status(401)
-                .json({ success: false, message: 'Usuário já existe.' });
+        if (existingUserError) throw existingUserError;
+
+        if (existingUser.length > 0)
+            return res.status(401).json({
+                success: false,
+                message: 'Nome de usuário já registrado.',
+            });
 
         const hashed_password = await bcrypt.hash(password, 10);
 
-        await sql`
-            INSERT INTO users (username, password_hash)
-            VALUES (${username}, ${hashed_password});
-        `;
+        const { data: newUser, insertError } = await supabase
+            .from('users')
+            .insert([{ username, password_hash: hashed_password }]);
+
+        if (insertError) throw insertError;
 
         res.status(201).json({
             success: true,
@@ -52,9 +58,12 @@ export async function loginUser(req, res) {
             });
         }
 
-        const user = await sql`
-            SELECT * FROM users WHERE username = ${username};
-        `;
+        const { data: user, userError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('username', username);
+
+        if (userError) throw userError;
 
         if (user.length === 0) {
             return res.status(401).json({

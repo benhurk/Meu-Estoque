@@ -1,12 +1,16 @@
-import { sql } from '../config/db.js';
+import { supabase } from '../config/db.js';
 
 export async function getAllUserItems(req, res) {
     try {
         const userId = await req.user.id;
 
-        const userItems = await sql`
-            SELECT * FROM items WHERE user_id = ${userId} ORDER BY id ASC;
-        `;
+        const { data: userItems, error } = await supabase
+            .from('items')
+            .select('*')
+            .eq('user_id', userId)
+            .order('id', { ascending: true });
+
+        if (error) throw error;
 
         res.json({ userItems });
     } catch (error) {
@@ -30,11 +34,22 @@ export async function addNewItem(req, res) {
             description,
         } = await req.body;
 
-        const newItem = await sql`
-            INSERT INTO items (user_id, name, quantity_type, unit_of_measurement, quantity, alert_quantity, description) 
-            VALUES (${userId}, ${name}, ${quantityType}, ${unitOfMeasurement}, ${quantity}, ${alertQuantity}, ${description}) 
-            RETURNING id, name, quantity_type, unit_of_measurement, quantity, alert_quantity, description;
-        `;
+        const { data: newItem, error } = await supabase
+            .from('items')
+            .insert([
+                {
+                    user_id: userId,
+                    name,
+                    quantity_type: quantityType,
+                    unit_of_measurement: unitOfMeasurement,
+                    quantity,
+                    alert_quantity: alertQuantity,
+                    description,
+                },
+            ])
+            .select();
+
+        if (error) throw error;
 
         res.status(201).json({
             success: true,
@@ -54,21 +69,33 @@ export async function changeItemQuantity(req, res) {
         const userId = await req.user.id;
         const targetId = await req.params.id;
 
-        const { newValue, time, change, type } = await req.body;
+        const { newValue, time, month, change, type } = await req.body;
 
-        const updatedItem = await sql`
-            UPDATE items SET quantity = ${newValue}
-            WHERE id = ${targetId} AND user_id = ${userId}
-            RETURNING *;
-        `;
+        const { data: updatedItem, updateError } = await supabase
+            .from('items')
+            .update({ quantity: newValue })
+            .eq('id', targetId)
+            .eq('user_id', userId)
+            .select();
 
-        console.log(updatedItem);
+        if (updateError) throw updateError;
 
-        const log = await sql`
-            INSERT INTO logs (user_id, item_id, item_name, change, time, type)
-            VALUES (${userId}, ${updatedItem[0].id}, ${updatedItem[0].name}, ${change}, ${time}, ${type})
-            RETURNING id, item_name, change, time, type;
-        `;
+        const { data: log, logError } = await supabase
+            .from('logs')
+            .insert([
+                {
+                    user_id: userId,
+                    item_id: updatedItem[0].id,
+                    item_name: updatedItem[0].name,
+                    change,
+                    month,
+                    time,
+                    type,
+                },
+            ])
+            .select();
+
+        if (logError) throw logError;
 
         res.status(200).json({
             success: true,
@@ -97,12 +124,21 @@ export async function editItem(req, res) {
             description,
         } = await req.body;
 
-        const editedItem = await sql`
-            UPDATE items SET name = ${name}, quantity_type = ${quantityType}, unit_of_measurement = ${unitOfMeasurement},
-                            quantity = ${quantity}, alert_quantity = ${alertQuantity}, description = ${description} 
-            WHERE id = ${targetId} AND user_id = ${userId}
-            RETURNING *;
-        `;
+        const { data: editedItem, error } = await supabase
+            .from('items')
+            .update({
+                name,
+                quantity_type: quantityType,
+                unit_of_measurement: unitOfMeasurement,
+                quantity,
+                alert_quantity: alertQuantity,
+                description,
+            })
+            .eq('id', targetId)
+            .eq('user_id', userId)
+            .select();
+
+        if (error) throw error;
 
         res.status(200).json({
             success: true,
@@ -122,9 +158,14 @@ export async function deleteItem(req, res) {
         const userId = await req.user.id;
         const targetId = await req.params.id;
 
-        const removedItem = await sql`
-            DELETE FROM items WHERE id = ${targetId} AND user_id = ${userId} RETURNING name;
-        `;
+        const { data: removedItem, error } = await supabase
+            .from('items')
+            .delete()
+            .eq('id', targetId)
+            .eq('user_id', userId)
+            .select('name');
+
+        if (error) throw error;
 
         res.status(200).json({ removedItem: removedItem[0] });
     } catch (error) {
@@ -147,9 +188,14 @@ export async function deleteSelectedItems(req, res) {
                 .json({ success: false, message: 'Invalid or empty id array' });
         }
 
-        const removedItems = await sql`
-            DELETE FROM items WHERE id = ANY(${ids}) AND user_id = ${userId} RETURNING name;
-        `;
+        const { data: removedItems, error } = await supabase
+            .from('items')
+            .delete()
+            .in('id', ids)
+            .eq('user_id', userId)
+            .select('name');
+
+        if (error) throw error;
 
         res.status(200).json({ removedItems });
     } catch (error) {
@@ -165,9 +211,12 @@ export async function deleteAllItems(req, res) {
     try {
         const userId = await req.user.id;
 
-        await sql`
-            DELETE FROM items WHERE user_id = ${userId};
-        `;
+        const { error } = await supabase
+            .from('items')
+            .delete()
+            .eq('user_id', userId);
+
+        if (error) throw error;
 
         res.sendStatus(200);
     } catch (error) {
