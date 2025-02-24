@@ -5,7 +5,7 @@ import styles from './ItemForm.module.css';
 
 import useAuth from '../../hooks/useAuth';
 import useItemForm from '../../hooks/useItemForm';
-import useFormStore from '../../stores/itemFormStore';
+import useItemFormStore from '../../stores/itemFormStore';
 import useUserDataStore from '../../stores/userDataStore';
 import useLocalListStore from '../../stores/localItemsStore';
 
@@ -31,7 +31,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
     const { accessToken, guest } = useAuth();
     const { addUserItem, editUserItem } = useUserDataStore();
     const { addLocalItem, editLocalItem } = useLocalListStore();
-    const { formMode } = useFormStore();
+    const { formMode } = useItemFormStore();
     const { fields, setFields, targetItem, validate, errors } = useItemForm();
 
     const [loading, setLoading] = useState<boolean>(false);
