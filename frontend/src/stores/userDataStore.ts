@@ -1,9 +1,12 @@
 import { create } from 'zustand';
 
-import ListItemType from '../types/ListItemTypes';
 import api from '../api';
+
+import ListItemType from '../types/ListItemTypes';
 import Logs from '../types/Logs';
 import keysToCamelCase from '../utils/snakeToCamel';
+import handleApiErrors from '../utils/handleApiErrors';
+import { triggerErrorToast } from '../utils/triggerToast';
 
 type ListState = {
     userItems: ListItemType[];
@@ -56,7 +59,7 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
         try {
             await api.delete(`/items/${id}`);
         } catch (error) {
-            console.error('Failed to remove item from the server:', error);
+            handleApiErrors(error, triggerErrorToast);
 
             set((state) => ({
                 userItems: [...state.userItems],
@@ -71,7 +74,7 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
         try {
             await api.delete(`/logs/${id}`);
         } catch (error) {
-            console.error('Failed to remove log from the server:', error);
+            handleApiErrors(error, triggerErrorToast);
 
             set((state) => ({
                 userLogs: [...state.userLogs],

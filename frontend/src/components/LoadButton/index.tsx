@@ -1,13 +1,16 @@
 import api from '../../api';
 import styles from './LoadButton.module.css';
 
-import ListItemType from '../../types/ListItemTypes';
-import Logs from '../../types/Logs';
 import useLocalLogsStore from '../../stores/localLogsStore';
 import useLocalListStore from '../../stores/localItemsStore';
 import useAuth from '../../hooks/useAuth';
 import useUserDataStore from '../../stores/userDataStore';
 import useUserData from '../../hooks/useUserData';
+
+import ListItemType from '../../types/ListItemTypes';
+import Logs from '../../types/Logs';
+import handleApiErrors from '../../utils/handleApiErrors';
+import { triggerErrorToast } from '../../utils/triggerToast';
 
 export default function LoadButton() {
     const { accessToken, guest } = useAuth();
@@ -56,10 +59,8 @@ export default function LoadButton() {
                             try {
                                 await api.post('/items', item);
                                 addUserItem(item);
-                            } catch {
-                                console.error(
-                                    'Algo deu errado, tente novamente.'
-                                );
+                            } catch (error) {
+                                handleApiErrors(error, triggerErrorToast);
                             }
                         })
                     );

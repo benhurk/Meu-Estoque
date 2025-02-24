@@ -20,12 +20,14 @@ import filterLogs from '../../utils/filterLogs';
 import months from '../../consts/months';
 import keysToCamelCase from '../../utils/snakeToCamel';
 import Loader from '../Loader';
+import handleApiErrors from '../../utils/handleApiErrors';
 
 export default function LogsTable() {
     const { accessToken, guest } = useAuth();
     const [monthFilter, setMonthFilter] = useState<Months>();
     const [searchFor, setSearchFor] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const [fetchError, setFetchError] = useState<string>('');
 
     const { logs } = useUserData();
     const { setUserLogs, removeUserLog } = useUserDataStore();
@@ -37,8 +39,8 @@ export default function LogsTable() {
                 setLoading(true);
                 const res = await api.get('/logs');
                 setUserLogs(keysToCamelCase(res.data.userLogs));
-            } catch {
-                console.log('Algo deu errado tente novamente.');
+            } catch (error) {
+                handleApiErrors(error, setFetchError);
             }
 
             setLoading(false);
@@ -146,7 +148,7 @@ export default function LogsTable() {
                 <div style={{ minHeight: '20rem' }}>
                     {loading ? (
                         <Loader />
-                    ) : filteredLogs.length > 0 ? (
+                    ) : filteredLogs.length > 0 && !fetchError ? (
                         <table className={styles.table}>
                             <thead>
                                 <tr>
@@ -185,7 +187,13 @@ export default function LogsTable() {
                             </tbody>
                         </table>
                     ) : (
-                        <EmptyListContent text='Nenhum registro disponível.' />
+                        <EmptyListContent
+                            text={
+                                fetchError
+                                    ? fetchError
+                                    : 'Nenhum registro disponível.'
+                            }
+                        />
                     )}
                 </div>
             </div>

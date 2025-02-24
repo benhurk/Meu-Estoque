@@ -9,6 +9,9 @@ import useLocalLogsStore from '../../stores/localLogsStore';
 import useLocalListStore from '../../stores/localItemsStore';
 import useListStore from '../../stores/userDataStore';
 
+import handleApiErrors from '../../utils/handleApiErrors';
+import { triggerErrorToast } from '../../utils/triggerToast';
+
 import Modal from '../Modal';
 
 export default function RemoveMultipleButton() {
@@ -40,8 +43,8 @@ export default function RemoveMultipleButton() {
                 await api.delete('/items/');
                 clearUserList();
                 setModalOpen(false);
-            } catch {
-                console.error('Algo deu errado, tente novamente.');
+            } catch (error) {
+                handleApiErrors(error, triggerErrorToast);
             } finally {
                 setLoading(false);
             }
@@ -60,8 +63,8 @@ export default function RemoveMultipleButton() {
                 await api.delete('/items/x', { data: { ids } });
                 removeSelectedUserItems(ids);
                 setModalOpen(false);
-            } catch {
-                console.error('Algo deu errado, tente novamente.');
+            } catch (error) {
+                handleApiErrors(error, triggerErrorToast);
             } finally {
                 setLoading(false);
             }

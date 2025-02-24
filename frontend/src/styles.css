@@ -13,7 +13,6 @@
     margin: 0;
     box-sizing: border-box;
     font-family: 'Poppins', serif;
-    color: var(--color-dark);
 }
 
 body {
@@ -212,4 +211,8 @@ a i.bi {
 
 .text-green {
     color: var(--color-green);
+}
+
+.errorToast svg {
+    color: #fff;
 }

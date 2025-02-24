@@ -12,6 +12,7 @@ import Loader from '../../components/Loader';
 
 import keysToCamelCase from '../../utils/snakeToCamel';
 import handleApiErrors from '../../utils/handleApiErrors';
+import { ToastContainer } from 'react-toastify';
 
 export default function MainPage() {
     const { accessToken, guest } = useAuth();
@@ -40,11 +41,17 @@ export default function MainPage() {
         <>
             <Header />
             <main className='container'>
-                {accessToken === undefined && !guest && !error && <Loader />}
-                {accessToken === null && !guest && !error && <LoginMenu />}
-                {(guest || accessToken) && (loading ? <Loader /> : <List />)}
+                {!error && (
+                    <>
+                        {accessToken === undefined && !guest && <Loader />}
+                        {accessToken === null && !guest && <LoginMenu />}
+                        {(guest || accessToken) &&
+                            (loading ? <Loader /> : <List />)}
+                    </>
+                )}
                 {error && <EmptyListContent text={error} />}
             </main>
+            <ToastContainer />
         </>
     );
 }

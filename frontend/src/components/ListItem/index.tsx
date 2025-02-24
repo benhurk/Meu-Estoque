@@ -11,6 +11,8 @@ import ListItemType from '../../types/ListItemTypes';
 
 import { defaultQuantityOptions } from '../../consts/quantityOptions';
 import getLogChange from '../../utils/getLogChange';
+import handleApiErrors from '../../utils/handleApiErrors';
+import { triggerErrorToast } from '../../utils/triggerToast';
 
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
@@ -61,11 +63,8 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                     });
 
                     preChangeQuantity.current = newValue;
-                } catch {
-                    console.log(
-                        'Falha alterar a quantidade do item',
-                        item.name
-                    );
+                } catch (error) {
+                    handleApiErrors(error, triggerErrorToast);
 
                     editUserItem({
                         ...item,

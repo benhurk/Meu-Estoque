@@ -12,6 +12,8 @@ import useLocalListStore from '../../stores/localItemsStore';
 import unitsOfMeasurementOptions from '../../consts/unitsOfMeasurementOptions';
 import { defaultQuantityOptions } from '../../consts/quantityOptions';
 import capitalizeString from '../../utils/capitalizeString';
+import handleApiErrors from '../../utils/handleApiErrors';
+import { triggerErrorToast } from '../../utils/triggerToast';
 
 import { ItemFormMode as FormMode } from '../../types/ItemFormTypes';
 import ListItemType, {
@@ -63,8 +65,8 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                     }
 
                     setItemFormOpen(false);
-                } catch {
-                    console.error('Algo deu errado, tente novamente.');
+                } catch (error) {
+                    handleApiErrors(error, triggerErrorToast);
                 } finally {
                     setLoading(false);
                 }
