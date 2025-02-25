@@ -17,6 +17,7 @@ import { triggerErrorToast } from '../../utils/triggerToast';
 import QuantityInput from '../QuantityInput';
 import TextTooltip from '../TextTooltip';
 import Select from '../Select';
+import months from '../../consts/months';
 
 type Props = {
     item: ListItemType;
@@ -25,7 +26,7 @@ type Props = {
 
 const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     const { accessToken, guest } = useAuth();
-    const { editUserItem, removeUserItem } = useUserDataStore();
+    const { editUserItem, removeUserItems } = useUserDataStore();
     const { editLocalItem, removeLocalItem } = useLocalListStore();
     const { setFormMode, setTargetItem } = useItemFormStore();
 
@@ -47,7 +48,8 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
             if (newValue - preChangeQuantity.current === 0) return;
 
             editTimeout.current = setTimeout(async () => {
-                const now = new Date().toLocaleDateString([], {
+                const date = new Date();
+                const now = date.toLocaleDateString([], {
                     day: '2-digit',
                     month: '2-digit',
                     hour: '2-digit',
@@ -58,6 +60,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                     await api.put(`/items/quantity/${item.id}`, {
                         newValue,
                         time: now,
+                        month: months[date.getMonth()],
                         change: changeDiff.valueChange,
                         type: changeDiff.type,
                     });
@@ -85,7 +88,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
 
     const removeItem = () => {
         if (accessToken) {
-            removeUserItem(item.id);
+            removeUserItems([item.id]);
         } else if (guest) {
             removeLocalItem(item.id);
         }

@@ -17,7 +17,7 @@ import Modal from '../Modal';
 export default function RemoveMultipleButton() {
     const { items: listItems, logs } = useUserData();
     const { accessToken, guest } = useAuth();
-    const { removeSelectedUserItems, clearUserList } = useListStore();
+    const { removeUserItems, clearUserList } = useListStore();
     const { removeLocalItem, clearLocalList } = useLocalListStore();
     const { removeLocalLog, clearLocalLogs } = useLocalLogsStore();
 
@@ -40,7 +40,7 @@ export default function RemoveMultipleButton() {
         if (accessToken) {
             setLoading(true);
             try {
-                await api.delete('/items/');
+                await api.delete('/items/all');
                 clearUserList();
                 setModalOpen(false);
             } catch (error) {
@@ -58,16 +58,8 @@ export default function RemoveMultipleButton() {
     const removeSelectedItems = async () => {
         if (accessToken) {
             const ids = selectedItems.map((item) => item.id);
-            setLoading(true);
-            try {
-                await api.delete('/items/x', { data: { ids } });
-                removeSelectedUserItems(ids);
-                setModalOpen(false);
-            } catch (error) {
-                handleApiErrors(error, triggerErrorToast);
-            } finally {
-                setLoading(false);
-            }
+            removeUserItems(ids);
+            setModalOpen(false);
         } else if (guest) {
             selectedItems.forEach((item) => {
                 logs.filter((log) => log.itemName === item.name).forEach(

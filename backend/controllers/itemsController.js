@@ -1,4 +1,5 @@
 import { supabase } from '../config/db.js';
+import keysToSnakeCase from '../utils/camelToSnake.js';
 
 export async function getAllUserItems(req, res) {
     try {
@@ -60,6 +61,46 @@ export async function addNewItem(req, res) {
         res.status(500).json({
             success: false,
             message: 'Internal server error',
+        });
+    }
+}
+
+export async function uploadItems(req, res) {
+    const userId = await req.user.id;
+    const { items, logs } = await req.body;
+
+    if (!items || !Array.isArray(items) || !logs || !Array.isArray(logs)) {
+        return res
+            .status(400)
+            .json({ success: false, message: 'Invalid body data' });
+    }
+
+    try {
+        const snakeCaseItems = items.map((item) => {
+            return { user_id: userId, ...keysToSnakeCase(item) };
+        });
+        const snakeCaseLogs = logs.map((log) => keysToSnakeCase(log));
+
+        const { data: uploadedItems, itemsError } = await supabase
+            .from('items')
+            .insert(snakeCaseItems)
+            .select();
+
+        if (itemsError) throw itemsError;
+
+        const { data: uploadedLogs, logsError } = await supabase
+            .from('logs')
+            .insert([{ user_id: userId, ...snakeCaseLogs }])
+            .select();
+
+        if (logsError) throw logsError;
+
+        res.status(201).json({ uploadedItems, uploadedLogs });
+    } catch (error) {
+        console.log('Error while trying to uploadItems', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error.',
         });
     }
 }
@@ -153,31 +194,7 @@ export async function editItem(req, res) {
     }
 }
 
-export async function deleteItem(req, res) {
-    try {
-        const userId = await req.user.id;
-        const targetId = await req.params.id;
-
-        const { data: removedItem, error } = await supabase
-            .from('items')
-            .delete()
-            .eq('id', targetId)
-            .eq('user_id', userId)
-            .select('name');
-
-        if (error) throw error;
-
-        res.status(200).json({ removedItem: removedItem[0] });
-    } catch (error) {
-        console.log('Error while trying to deleteItem', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error',
-        });
-    }
-}
-
-export async function deleteSelectedItems(req, res) {
+export async function deleteItems(req, res) {
     try {
         const userId = await req.user.id;
         const { ids } = await req.body;
@@ -199,7 +216,7 @@ export async function deleteSelectedItems(req, res) {
 
         res.status(200).json({ removedItems });
     } catch (error) {
-        console.log('Error while trying to deleteSelectedItems', error);
+        console.log('Error while trying to deleteItems', error);
         res.status(500).json({
             success: false,
             message: 'Internal server error',

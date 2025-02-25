@@ -2,10 +2,10 @@ import express from 'express';
 import {
     getAllUserItems,
     addNewItem,
+    uploadItems,
     changeItemQuantity,
     editItem,
-    deleteItem,
-    deleteSelectedItems,
+    deleteItems,
     deleteAllItems,
 } from '../controllers/itemsController.js';
 
@@ -13,10 +13,10 @@ const router = express.Router();
 
 router.get('/', getAllUserItems);
 router.post('/', addNewItem);
+router.post('/upload', uploadItems);
 router.put('/quantity/:id', changeItemQuantity);
 router.put('/:id', editItem);
-router.delete('/', deleteAllItems);
-router.delete('/x', deleteSelectedItems);
-router.delete('/:id', deleteItem);
+router.delete('/', deleteItems);
+router.delete('/all', deleteAllItems);
 
 export default router;

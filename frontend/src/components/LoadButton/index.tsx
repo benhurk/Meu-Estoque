@@ -11,11 +11,12 @@ import ListItemType from '../../types/ListItemTypes';
 import Logs from '../../types/Logs';
 import handleApiErrors from '../../utils/handleApiErrors';
 import { triggerErrorToast } from '../../utils/triggerToast';
+import keysToCamelCase from '../../utils/snakeToCamel';
 
 export default function LoadButton() {
     const { accessToken, guest } = useAuth();
     const { items: listItems, logs } = useUserData();
-    const addUserItem = useUserDataStore((state) => state.addUserItem);
+    const { userItems, setUserItems } = useUserDataStore();
     const addLocalItem = useLocalListStore((state) => state.addLocalItem);
     const { addNewLocalLog } = useLocalLogsStore();
 
@@ -27,66 +28,64 @@ export default function LoadButton() {
                 reader.result as string
             );
 
-            const batchSize = 20;
-            for (let i = 0; i < result.list.length; i += batchSize) {
-                const batch = result.list.slice(i, i + batchSize);
-                const validItems = batch.filter((loadedItem) => {
-                    const newItem: ListItemType = {
-                        id: loadedItem.id,
-                        name: loadedItem.name,
-                        quantityType: loadedItem.quantityType,
-                        unitOfMeasurement: loadedItem.unitOfMeasurement,
-                        quantity: loadedItem.quantity,
-                        alertQuantity: loadedItem.alertQuantity,
-                        description: loadedItem.description,
-                    };
+            const validItems = result.list.filter((loadedItem) => {
+                const newItem: ListItemType = {
+                    id: loadedItem.id,
+                    name: loadedItem.name,
+                    quantityType: loadedItem.quantityType,
+                    unitOfMeasurement: loadedItem.unitOfMeasurement,
+                    quantity: loadedItem.quantity,
+                    alertQuantity: loadedItem.alertQuantity,
+                    description: loadedItem.description,
+                };
 
-                    return (
-                        !Object.values(newItem).some(
-                            (val) => typeof val === 'undefined'
-                        ) &&
-                        !listItems.some(
-                            (item) =>
-                                item.name === newItem.name ||
-                                item.id === newItem.id
-                        )
-                    );
-                });
+                return (
+                    !Object.values(newItem).some(
+                        (val) => typeof val === 'undefined'
+                    ) &&
+                    !listItems.some(
+                        (item) =>
+                            item.name === newItem.name || item.id === newItem.id
+                    )
+                );
+            });
 
-                if (accessToken) {
-                    await Promise.all(
-                        validItems.map(async (item) => {
-                            try {
-                                await api.post('/items', item);
-                                addUserItem(item);
-                            } catch (error) {
-                                handleApiErrors(error, triggerErrorToast);
-                            }
-                        })
-                    );
-
-                    await new Promise((resolve) => setTimeout(resolve, 2000));
-                } else if (guest) {
-                    validItems.forEach((item) => addLocalItem(item));
-                }
-            }
-
-            result.logs.forEach((loadedLog: Logs) => {
+            const validLogs = result.logs.filter((loadedLog: Logs) => {
                 const newLog: Logs = {
                     id: loadedLog.id,
                     time: loadedLog.time,
                     itemName: loadedLog.itemName,
+                    itemId: loadedLog.itemId,
                     change: loadedLog.change,
+                    month: loadedLog.month,
                     type: loadedLog.type,
                 };
 
-                const validate =
+                return (
                     !Object.values(newLog).some(
                         (val) => typeof val === 'undefined'
-                    ) && !logs.some((log) => log.id === newLog.id);
-
-                if (validate) addNewLocalLog(newLog);
+                    ) && !logs.some((log) => log.id === newLog.id)
+                );
             });
+
+            if (accessToken) {
+                try {
+                    const res = await api.post('/items/upload', {
+                        items: validItems,
+                        logs: validLogs,
+                    });
+
+                    setUserItems([
+                        ...userItems,
+                        ...keysToCamelCase(res.data.uploadedItems),
+                    ]);
+                } catch (error) {
+                    handleApiErrors(error, triggerErrorToast);
+                }
+            } else if (guest) {
+                validItems.forEach((item) => addLocalItem(item));
+                validLogs.forEach((log) => addNewLocalLog(log));
+            }
         };
 
         if (e.target.files) {

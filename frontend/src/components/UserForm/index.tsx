@@ -5,7 +5,7 @@ import styles from './UserForm.module.css';
 import { UserFormType, Errors } from '../../types/UserFormTypes';
 import FormGroup from '../FormGroup';
 import useAuth from '../../hooks/useAuth';
-import Loader from '../Loader';
+import { ClipLoader } from 'react-spinners';
 
 const initialForm: UserFormType = {
     username: '',
@@ -161,7 +161,7 @@ export default function UserForm({ mode }: Props) {
                         )}
                     </>
                 ) : (
-                    <Loader />
+                    <ClipLoader />
                 )}
             </div>
         </form>

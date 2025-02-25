@@ -18,9 +18,8 @@ type ListActions = {
     setUserLogs: (data: Logs[]) => void;
     addUserItem: (newItem: ListItemType) => void;
     editUserItem: (editedItem: ListItemType) => void;
-    removeUserItem: (id: string) => void;
+    removeUserItems: (ids: string[]) => void;
     removeUserLog: (id: string) => void;
-    removeSelectedUserItems: (ids: string[]) => void;
     clearUserList: () => void;
 };
 
@@ -51,13 +50,13 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
             ),
         }));
     },
-    removeUserItem: async (id) => {
+    removeUserItems: async (ids) => {
         set((state) => ({
-            userItems: state.userItems.filter((item) => item.id !== id),
+            userItems: state.userItems.filter((item) => !ids.includes(item.id)),
         }));
 
         try {
-            await api.delete(`/items/${id}`);
+            await api.delete('/items', { data: { ids } });
         } catch (error) {
             handleApiErrors(error, triggerErrorToast);
 
@@ -80,11 +79,6 @@ const useUserDataStore = create<ListState & ListActions>((set) => ({
                 userLogs: [...state.userLogs],
             }));
         }
-    },
-    removeSelectedUserItems: (ids) => {
-        set((state) => ({
-            userItems: state.userItems.filter((item) => !ids.includes(item.id)),
-        }));
     },
     clearUserList: () => {
         set(() => ({
