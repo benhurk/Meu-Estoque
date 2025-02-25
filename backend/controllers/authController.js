@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export async function registerUser(req, res) {
     try {
-        const { username, password } = await req.body;
+        const { username, password } = req.body;
 
         if (!username || !password) {
             return res.status(400).json({
@@ -49,7 +49,7 @@ export async function registerUser(req, res) {
 
 export async function loginUser(req, res) {
     try {
-        const { username, password } = await req.body;
+        const { username, password } = req.body;
 
         if (!username || !password) {
             return res.status(400).json({
@@ -123,7 +123,7 @@ export async function loginUser(req, res) {
 
 export async function refreshToken(req, res) {
     try {
-        const token = await req.cookies.refreshToken;
+        const token = req.cookies.refreshToken;
         if (!token) return res.sendStatus(403);
 
         jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error, user) => {

@@ -3,7 +3,7 @@ import keysToSnakeCase from '../utils/camelToSnake.js';
 
 export async function getAllUserItems(req, res) {
     try {
-        const userId = await req.user.id;
+        const userId = req.user.id;
 
         const { data: userItems, error } = await supabase
             .from('items')
@@ -25,7 +25,7 @@ export async function getAllUserItems(req, res) {
 
 export async function addNewItem(req, res) {
     try {
-        const userId = await req.user.id;
+        const userId = req.user.id;
         const {
             name,
             quantityType,
@@ -33,7 +33,7 @@ export async function addNewItem(req, res) {
             quantity,
             alertQuantity,
             description,
-        } = await req.body;
+        } = req.body;
 
         const { data: newItem, error } = await supabase
             .from('items')
@@ -66,8 +66,8 @@ export async function addNewItem(req, res) {
 }
 
 export async function uploadItems(req, res) {
-    const userId = await req.user.id;
-    const { items, logs } = await req.body;
+    const userId = req.user.id;
+    const { items, logs } = req.body;
 
     if (!items || !Array.isArray(items) || !logs || !Array.isArray(logs)) {
         return res
@@ -107,10 +107,10 @@ export async function uploadItems(req, res) {
 
 export async function changeItemQuantity(req, res) {
     try {
-        const userId = await req.user.id;
-        const targetId = await req.params.id;
+        const userId = req.user.id;
+        const targetId = req.params.id;
 
-        const { newValue, time, month, change, type } = await req.body;
+        const { newValue, time, month, change, type } = req.body;
 
         const { data: updatedItem, updateError } = await supabase
             .from('items')
@@ -153,8 +153,8 @@ export async function changeItemQuantity(req, res) {
 
 export async function editItem(req, res) {
     try {
-        const userId = await req.user.id;
-        const targetId = await req.params.id;
+        const userId = req.user.id;
+        const targetId = req.params.id;
 
         const {
             name,
@@ -163,7 +163,7 @@ export async function editItem(req, res) {
             quantity,
             alertQuantity,
             description,
-        } = await req.body;
+        } = req.body;
 
         const { data: editedItem, error } = await supabase
             .from('items')
@@ -196,8 +196,8 @@ export async function editItem(req, res) {
 
 export async function deleteItems(req, res) {
     try {
-        const userId = await req.user.id;
-        const { ids } = await req.body;
+        const userId = req.user.id;
+        const { ids } = req.body;
 
         if (!ids || !Array.isArray(ids) || ids.length === 0) {
             return res
@@ -226,7 +226,7 @@ export async function deleteItems(req, res) {
 
 export async function deleteAllItems(req, res) {
     try {
-        const userId = await req.user.id;
+        const userId = req.user.id;
 
         const { error } = await supabase
             .from('items')
