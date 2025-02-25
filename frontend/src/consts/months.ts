@@ -1,4 +1,6 @@
-const months = [
+import Months from '../types/Months';
+
+const months: Months[] = [
     'Janeiro',
     'Fevereiro',
     'Março',

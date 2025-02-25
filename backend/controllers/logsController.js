@@ -3,10 +3,21 @@ import { supabase } from '../config/db.js';
 export async function getUserLogs(req, res) {
     try {
         const userId = req.user.id;
+        const { month } = req.query;
+
+        console.log(month);
+
+        if (!month || typeof month != 'string') {
+            res.status(400).json({
+                success: false,
+                message: 'Invalid or missing month value',
+            });
+        }
 
         const { data: userLogs, error } = await supabase
             .from('logs')
             .select('*')
+            .eq('month', month)
             .eq('user_id', userId);
 
         if (error) {

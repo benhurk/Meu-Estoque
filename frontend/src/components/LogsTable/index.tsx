@@ -24,7 +24,9 @@ import handleApiErrors from '../../utils/handleApiErrors';
 
 export default function LogsTable() {
     const { accessToken, guest } = useAuth();
-    const [monthFilter, setMonthFilter] = useState<Months>();
+    const [monthFilter, setMonthFilter] = useState<Months>(
+        months[new Date().getMonth()]
+    );
     const [searchFor, setSearchFor] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [fetchError, setFetchError] = useState<string>('');
@@ -37,7 +39,9 @@ export default function LogsTable() {
         const fetchUserLogs = async () => {
             try {
                 setLoading(true);
-                const res = await api.get('/logs');
+                const res = await api.get('/logs', {
+                    params: { month: monthFilter },
+                });
                 setUserLogs(keysToCamelCase(res.data.userLogs));
             } catch (error) {
                 handleApiErrors(error, setFetchError);
@@ -47,7 +51,7 @@ export default function LogsTable() {
         };
 
         if (!guest) fetchUserLogs();
-    }, [accessToken, guest, setUserLogs]);
+    }, [accessToken, guest, monthFilter, setUserLogs]);
 
     const filteredLogs = useMemo(() => {
         return filterLogs(logs, searchFor, monthFilter);
@@ -112,13 +116,12 @@ export default function LogsTable() {
                         options={months.map((month) => {
                             return { label: month, value: month };
                         })}
-                        value={monthFilter || 'Todos'}
+                        value={monthFilter}
                         change={(e) =>
                             setMonthFilter(
                                 e.currentTarget.dataset.value! as Months
                             )
                         }
-                        emptyOption='Todos'
                     />
                 </FormGroup>
                 <FormGroup elementId='search-for' labelText='Pesquisar item:'>
