@@ -61,7 +61,7 @@ export default function LogsTable() {
         };
 
         if (!guest) fetchUserLogs();
-    }, [accessToken, guest, monthFilter, setUserLogs]);
+    }, [accessToken, guest, monthFilter, navigate, setUserLogs]);
 
     const filteredLogs = useMemo(() => {
         return filterLogs(logs, searchFor, monthFilter);
