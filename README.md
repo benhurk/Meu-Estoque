@@ -1,6 +1,8 @@
-Todo:  
+### Todo
 
-[] Update logs to include a month property.  
-[] Only fetch the current month logs.  
-[] Also load logs in the LoadButton.  
-[] Review the entire local user functionality.  
+-   [x] Add a year value for the logs.
+-   Move the logs menu to it's own page.
+-   Review the entire local user functionality.
+-   Get a new logo and icon for the site.
+-   Add ads.
+-   Make an actual README.

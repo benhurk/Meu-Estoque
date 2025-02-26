@@ -7,6 +7,7 @@ type Logs = {
     change: string;
     time: string;
     month: Months;
+    year: number;
     type: 'increase' | 'decrease';
 };
 

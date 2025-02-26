@@ -58,6 +58,7 @@ export default function LoadButton() {
                     itemId: loadedLog.itemId,
                     change: loadedLog.change,
                     month: loadedLog.month,
+                    year: loadedLog.year,
                     type: loadedLog.type,
                 };
 

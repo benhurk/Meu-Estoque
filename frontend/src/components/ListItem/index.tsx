@@ -61,6 +61,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                         newValue,
                         time: now,
                         month: months[date.getMonth()],
+                        year: date.getFullYear(),
                         change: changeDiff.valueChange,
                         type: changeDiff.type,
                     });

@@ -110,7 +110,7 @@ export async function changeItemQuantity(req, res) {
         const userId = req.user.id;
         const targetId = req.params.id;
 
-        const { newValue, time, month, change, type } = req.body;
+        const { newValue, time, month, year, change, type } = req.body;
 
         const { data: updatedItem, updateError } = await supabase
             .from('items')
@@ -130,6 +130,7 @@ export async function changeItemQuantity(req, res) {
                     item_name: updatedItem[0].name,
                     change,
                     month,
+                    year,
                     time,
                     type,
                 },
@@ -137,6 +138,8 @@ export async function changeItemQuantity(req, res) {
             .select();
 
         if (logError) throw logError;
+
+        console.log(log);
 
         res.status(200).json({
             success: true,
