@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
 import html2pdf from 'html2pdf.js';
+import { useNavigate } from 'react-router-dom';
+
 import styles from './LogsTable.module.css';
 import api from '../../api';
 
@@ -24,16 +27,17 @@ import handleApiErrors from '../../utils/handleApiErrors';
 
 export default function LogsTable() {
     const { accessToken, guest } = useAuth();
+    const { logs } = useUserData();
+    const { setUserLogs, removeUserLog } = useUserDataStore();
+    const removeLocalLog = useLocalLogsStore((state) => state.removeLocalLog);
+    const navigate = useNavigate();
+
     const [monthFilter, setMonthFilter] = useState<Months>(
         months[new Date().getMonth()]
     );
     const [searchFor, setSearchFor] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [fetchError, setFetchError] = useState<string>('');
-
-    const { logs } = useUserData();
-    const { setUserLogs, removeUserLog } = useUserDataStore();
-    const removeLocalLog = useLocalLogsStore((state) => state.removeLocalLog);
 
     useEffect(() => {
         const fetchUserLogs = async () => {
@@ -45,6 +49,12 @@ export default function LogsTable() {
                 setUserLogs(keysToCamelCase(res.data.userLogs));
             } catch (error) {
                 handleApiErrors(error, setFetchError);
+
+                if (axios.isAxiosError(error)) {
+                    if (error.response && error.response.status != 403) {
+                        navigate('/signin');
+                    }
+                }
             }
 
             setLoading(false);
