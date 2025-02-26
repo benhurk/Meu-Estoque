@@ -101,14 +101,6 @@ export default function LogsTable() {
 
     return (
         <>
-            <button
-                type='button'
-                className={`btn btn-green ${styles.pdfButton}`}
-                disabled={filteredLogs.length > 0 ? false : true}
-                onClick={() => downloadPdf()}>
-                <i className='bi bi-file-earmark-arrow-down-fill' />
-                &nbsp;Baixar .pdf
-            </button>
             <div className={styles.filterArea}>
                 <FormGroup elementId='logs-filter' labelText='Mês:'>
                     <Select
@@ -135,23 +127,31 @@ export default function LogsTable() {
                     />
                 </FormGroup>
             </div>
+            <button
+                type='button'
+                className={`btn btn-green ${styles.pdfButton}`}
+                disabled={filteredLogs.length > 0 ? false : true}
+                onClick={() => downloadPdf()}>
+                <i className='bi bi-file-earmark-arrow-down-fill' />
+                &nbsp;Baixar .pdf
+            </button>
             <div id='logs-table'>
-                <div className={styles.tableInfo}>
-                    <div className={styles.info}>
-                        <i className='bi bi-circle-fill text-green' />
-                        &nbsp;
-                        <span>Aumentou</span>
-                    </div>
-                    <div className={styles.info}>
-                        <i className='bi bi-circle-fill text-red' />
-                        &nbsp;
-                        <span>Diminuiu</span>
-                    </div>
-                </div>
-                <div style={{ minHeight: '20rem' }}>
-                    {loading ? (
-                        <Loader />
-                    ) : filteredLogs.length > 0 && !fetchError ? (
+                {loading ? (
+                    <Loader />
+                ) : filteredLogs.length > 0 && !fetchError ? (
+                    <>
+                        <div className={styles.tableInfo}>
+                            <div>
+                                <i className='bi bi-circle-fill text-green' />
+                                &nbsp;
+                                <span>Aumentou</span>
+                            </div>
+                            <div>
+                                <i className='bi bi-circle-fill text-red' />
+                                &nbsp;
+                                <span>Diminuiu</span>
+                            </div>
+                        </div>
                         <table className={styles.table}>
                             <thead>
                                 <tr>
@@ -189,16 +189,16 @@ export default function LogsTable() {
                                 ))}
                             </tbody>
                         </table>
-                    ) : (
-                        <EmptyListContent
-                            text={
-                                fetchError
-                                    ? fetchError
-                                    : 'Nenhum registro disponível.'
-                            }
-                        />
-                    )}
-                </div>
+                    </>
+                ) : (
+                    <EmptyListContent
+                        text={
+                            fetchError
+                                ? fetchError
+                                : 'Nenhum registro disponível.'
+                        }
+                    />
+                )}
             </div>
         </>
     );

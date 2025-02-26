@@ -1,22 +1,17 @@
-import { useState } from 'react';
-import Modal from '../Modal';
-import LogsTable from '../LogsTable';
+import { useNavigate } from 'react-router-dom';
 
 export default function StatisticsButton() {
-    const [open, setOpen] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     return (
         <>
             <button
                 type='button'
                 className='btn btn-yellow'
-                onClick={() => setOpen(true)}>
+                onClick={() => navigate('/logs')}>
                 <i className='bi bi-bar-chart-fill' />
                 &nbsp;Registros
             </button>
-            <Modal isOpen={open} setIsOpen={setOpen}>
-                <LogsTable />
-            </Modal>
         </>
     );
 }
