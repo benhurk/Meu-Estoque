@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import styles from './Header.module.css';
+import logo from '../../assets/logo.svg';
 
 import DownloadButton from '../DownloadButton';
 import LoadButton from '../LoadButton';
@@ -20,7 +21,10 @@ export default function Header() {
         <header className={styles.header}>
             <div className='container'>
                 <Link to='/' className={styles.title}>
-                    <h1>EZtoque</h1>
+                    <h1>
+                        <img src={logo} alt='logo' />
+                        <span>Estoque Fácil</span>
+                    </h1>
                 </Link>
 
                 {location.pathname === '/' && (

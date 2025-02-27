@@ -9,15 +9,23 @@
     margin-inline: auto;
 }
 
-.title h1 {
+.title img {
+    display: block;
+    margin-inline: auto;
+}
+
+.title span {
+    font-family: 'Quicksand', sans-serif;
     color: #fff;
-    font-size: 2.5rem;
-    font-weight: bold;
+    line-height: 0;
+    font-weight: 400;
+    letter-spacing: 0.15rem;
 }
 
 .buttonsArea {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    margin-block: 1.25rem;
+    margin-top: 2rem;
+    margin-bottom: 1.25rem;
 }

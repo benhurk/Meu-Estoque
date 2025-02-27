@@ -34,7 +34,7 @@ export default function List() {
             <div className={styles.buttonsArea}>
                 <button
                     type='button'
-                    className='btn btn-dark'
+                    className='btn btn-blue'
                     onClick={() => {
                         setFormMode('add');
                         setItemFormOpen(true);

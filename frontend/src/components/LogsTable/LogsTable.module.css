@@ -18,6 +18,12 @@ tbody {
     background-color: #fff;
 }
 
+@media (max-width: 577px) {
+    tbody {
+        font-size: 0.75rem;
+    }
+}
+
 tr {
     position: relative;
 }
