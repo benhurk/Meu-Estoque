@@ -74,7 +74,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
             if (guest) {
                 if (mode === 'add') {
-                    addLocalItem({ ...newItem, id: crypto.randomUUID() });
+                    addLocalItem(newItem);
                 } else if (mode === 'edit') {
                     editLocalItem({ ...newItem, id: targetItem.id });
                 }
@@ -104,25 +104,29 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 />
             </FormGroup>
 
-            <FormGroup elementId='item-type' labelText='Contar por:'>
-                <Select
-                    elementId='item-type'
-                    options={[
-                        { label: 'Número', value: 'number' },
-                        { label: 'Opções', value: 'options' },
-                    ]}
-                    value={
-                        fields.quantityType === 'number' ? 'Número' : 'Opções'
-                    }
-                    change={(e) =>
-                        setFields({
-                            ...fields,
-                            quantityType: e.currentTarget.dataset
-                                .value! as QuantityType,
-                        })
-                    }
-                />
-            </FormGroup>
+            {formMode === 'add' && (
+                <FormGroup elementId='item-type' labelText='Contar por:'>
+                    <Select
+                        elementId='item-type'
+                        options={[
+                            { label: 'Número', value: 'number' },
+                            { label: 'Opções', value: 'options' },
+                        ]}
+                        value={
+                            fields.quantityType === 'number'
+                                ? 'Número'
+                                : 'Opções'
+                        }
+                        change={(e) =>
+                            setFields({
+                                ...fields,
+                                quantityType: e.currentTarget.dataset
+                                    .value! as QuantityType,
+                            })
+                        }
+                    />
+                </FormGroup>
+            )}
 
             {fields.quantityType === 'number' && (
                 <FormGroup elementId='item-numberOf' labelText='Número de:'>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './List.module.css';
 
 import useItemFormStore from '../../stores/itemFormStore';
@@ -22,10 +22,6 @@ export default function List() {
             item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
         );
     }, [listItems, search]);
-
-    useEffect(() => {
-        setSearch('');
-    }, [listItems]);
 
     const [itemFormOpen, setItemFormOpen] = useState<boolean>(false);
 

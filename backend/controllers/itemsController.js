@@ -1,5 +1,6 @@
 import { supabase } from '../config/db.js';
 import keysToSnakeCase from '../utils/camelToSnake.js';
+import returnColumns from '../utils/returnColumns.js';
 
 export async function getAllUserItems(req, res) {
     try {
@@ -7,7 +8,7 @@ export async function getAllUserItems(req, res) {
 
         const { data: userItems, error } = await supabase
             .from('items')
-            .select('*')
+            .select(returnColumns.items.join(', '))
             .eq('user_id', userId)
             .order('id', { ascending: true });
 
@@ -48,7 +49,7 @@ export async function addNewItem(req, res) {
                     description,
                 },
             ])
-            .select();
+            .select(returnColumns.items.join(', '));
 
         if (error) throw error;
 
@@ -79,19 +80,21 @@ export async function uploadItems(req, res) {
         const snakeCaseItems = items.map((item) => {
             return { user_id: userId, ...keysToSnakeCase(item) };
         });
-        const snakeCaseLogs = logs.map((log) => keysToSnakeCase(log));
+        const snakeCaseLogs = logs.map((log) =>
+            keysToSnakeCase({ user_id: userId, ...log })
+        );
 
         const { data: uploadedItems, itemsError } = await supabase
             .from('items')
             .insert(snakeCaseItems)
-            .select();
+            .select(returnColumns.items.join(', '));
 
         if (itemsError) throw itemsError;
 
         const { data: uploadedLogs, logsError } = await supabase
             .from('logs')
-            .insert([{ user_id: userId, ...snakeCaseLogs }])
-            .select();
+            .insert(snakeCaseLogs)
+            .select(returnColumns.logs.join(', '));
 
         if (logsError) throw logsError;
 
@@ -135,7 +138,7 @@ export async function changeItemQuantity(req, res) {
                     type,
                 },
             ])
-            .select();
+            .select(returnColumns.logs.join(', '));
 
         if (logError) throw logError;
 
@@ -180,7 +183,7 @@ export async function editItem(req, res) {
             })
             .eq('id', targetId)
             .eq('user_id', userId)
-            .select();
+            .select(returnColumns.items.join(', '));
 
         if (error) throw error;
 
@@ -208,16 +211,15 @@ export async function deleteItems(req, res) {
                 .json({ success: false, message: 'Invalid or empty id array' });
         }
 
-        const { data: removedItems, error } = await supabase
+        const { error } = await supabase
             .from('items')
             .delete()
             .in('id', ids)
-            .eq('user_id', userId)
-            .select('name');
+            .eq('user_id', userId);
 
         if (error) throw error;
 
-        res.status(200).json({ removedItems });
+        res.status(200);
     } catch (error) {
         console.log('Error while trying to deleteItems', error);
         res.status(500).json({

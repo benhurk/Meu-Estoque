@@ -1,11 +1,10 @@
 import { supabase } from '../config/db.js';
+import returnColumns from '../utils/returnColumns.js';
 
 export async function getUserLogs(req, res) {
     try {
         const userId = req.user.id;
         const { month } = req.query;
-
-        console.log(month);
 
         if (!month || typeof month != 'string') {
             res.status(400).json({
@@ -16,13 +15,15 @@ export async function getUserLogs(req, res) {
 
         const { data: userLogs, error } = await supabase
             .from('logs')
-            .select('*')
+            .select(returnColumns.logs.join(', '))
             .eq('month', month)
             .eq('user_id', userId);
 
         if (error) {
             throw error;
         }
+
+        console.log(userLogs);
 
         res.status(200).json({ userLogs });
     } catch (error) {

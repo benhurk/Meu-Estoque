@@ -15,7 +15,7 @@ import keysToCamelCase from '../../utils/snakeToCamel';
 
 export default function LoadButton() {
     const { accessToken, guest } = useAuth();
-    const { items: listItems, logs } = useUserData();
+    const { items: listItems } = useUserData();
     const { userItems, setUserItems } = useUserDataStore();
     const addLocalItem = useLocalListStore((state) => state.addLocalItem);
     const { addNewLocalLog } = useLocalLogsStore();
@@ -29,8 +29,7 @@ export default function LoadButton() {
             );
 
             const validItems = result.list.filter((loadedItem) => {
-                const newItem: ListItemType = {
-                    id: loadedItem.id,
+                const newItem: Omit<ListItemType, 'id'> = {
                     name: loadedItem.name,
                     quantityType: loadedItem.quantityType,
                     unitOfMeasurement: loadedItem.unitOfMeasurement,
@@ -42,17 +41,12 @@ export default function LoadButton() {
                 return (
                     !Object.values(newItem).some(
                         (val) => typeof val === 'undefined'
-                    ) &&
-                    !listItems.some(
-                        (item) =>
-                            item.name === newItem.name || item.id === newItem.id
-                    )
+                    ) && !listItems.some((item) => item.name === newItem.name)
                 );
             });
 
             const validLogs = result.logs.filter((loadedLog: Logs) => {
-                const newLog: Logs = {
-                    id: loadedLog.id,
+                const newLog: Omit<Logs, 'id'> = {
                     time: loadedLog.time,
                     itemName: loadedLog.itemName,
                     itemId: loadedLog.itemId,
@@ -62,10 +56,8 @@ export default function LoadButton() {
                     type: loadedLog.type,
                 };
 
-                return (
-                    !Object.values(newLog).some(
-                        (val) => typeof val === 'undefined'
-                    ) && !logs.some((log) => log.id === newLog.id)
+                return !Object.values(newLog).some(
+                    (val) => typeof val === 'undefined'
                 );
             });
 
