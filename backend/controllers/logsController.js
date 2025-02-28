@@ -23,8 +23,6 @@ export async function getUserLogs(req, res) {
             throw error;
         }
 
-        console.log(userLogs);
-
         res.status(200).json({ userLogs });
     } catch (error) {
         console.log('Error while trying to getUserLogs', error);

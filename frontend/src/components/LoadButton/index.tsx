@@ -46,38 +46,46 @@ export default function LoadButton() {
             });
 
             const validLogs = result.logs.filter((loadedLog: Logs) => {
-                const newLog: Omit<Logs, 'id'> = {
+                const newLog: Omit<Logs, 'id' | 'itemId'> = {
                     time: loadedLog.time,
                     itemName: loadedLog.itemName,
-                    itemId: loadedLog.itemId,
                     change: loadedLog.change,
                     month: loadedLog.month,
                     year: loadedLog.year,
                     type: loadedLog.type,
                 };
 
-                return !Object.values(newLog).some(
-                    (val) => typeof val === 'undefined'
+                return (
+                    !Object.values(newLog).some(
+                        (val) => typeof val === 'undefined'
+                    ) &&
+                    validItems.some((item) => item.name === newLog.itemName)
                 );
             });
 
-            if (accessToken) {
-                try {
-                    const res = await api.post('/items/upload', {
-                        items: validItems,
-                        logs: validLogs,
-                    });
+            if (validItems.length > 0 && validLogs.length > 0) {
+                if (accessToken) {
+                    try {
+                        const res = await api.post('/items/upload', {
+                            items: validItems,
+                            logs: validLogs,
+                        });
 
-                    setUserItems([
-                        ...userItems,
-                        ...keysToCamelCase(res.data.uploadedItems),
-                    ]);
-                } catch (error) {
-                    handleApiErrors(error, triggerErrorToast);
+                        setUserItems([
+                            ...userItems,
+                            ...keysToCamelCase(res.data.uploadedItems),
+                        ]);
+                    } catch (error) {
+                        handleApiErrors(error, triggerErrorToast);
+                    }
+                } else if (guest) {
+                    validItems.forEach((item) => addLocalItem(item));
+                    validLogs.forEach((log) => addNewLocalLog(log));
                 }
-            } else if (guest) {
-                validItems.forEach((item) => addLocalItem(item));
-                validLogs.forEach((log) => addNewLocalLog(log));
+            } else {
+                triggerErrorToast(
+                    'O arquivo selecionado é inválido ou não há dados para serem importados.'
+                );
             }
         };
 

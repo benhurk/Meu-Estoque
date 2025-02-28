@@ -76,14 +76,12 @@ export async function uploadItems(req, res) {
             .json({ success: false, message: 'Invalid body data' });
     }
 
-    try {
-        const snakeCaseItems = items.map((item) => {
-            return { user_id: userId, ...keysToSnakeCase(item) };
-        });
-        const snakeCaseLogs = logs.map((log) =>
-            keysToSnakeCase({ user_id: userId, ...log })
-        );
+    const snakeCaseItems = items.map((item) => {
+        return { user_id: userId, ...keysToSnakeCase(item) };
+    });
+    const snakeCaseLogs = logs.map((log) => keysToSnakeCase(log));
 
+    try {
         const { data: uploadedItems, itemsError } = await supabase
             .from('items')
             .insert(snakeCaseItems)
@@ -91,9 +89,19 @@ export async function uploadItems(req, res) {
 
         if (itemsError) throw itemsError;
 
+        const completeLogs = snakeCaseLogs.map((log) => {
+            return {
+                ...log,
+                item_id: uploadedItems.filter(
+                    (item) => item.name === log.item_name
+                )[0].id,
+                user_id: userId,
+            };
+        });
+
         const { data: uploadedLogs, logsError } = await supabase
             .from('logs')
-            .insert(snakeCaseLogs)
+            .insert(completeLogs)
             .select(returnColumns.logs.join(', '));
 
         if (logsError) throw logsError;
@@ -141,8 +149,6 @@ export async function changeItemQuantity(req, res) {
             .select(returnColumns.logs.join(', '));
 
         if (logError) throw logError;
-
-        console.log(log);
 
         res.status(200).json({
             success: true,
