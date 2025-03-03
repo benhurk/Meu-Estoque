@@ -205,7 +205,7 @@ export default function LogsTable() {
                         text={
                             fetchError
                                 ? fetchError
-                                : 'Nenhum registro disponível.'
+                                : `Nenhum registro disponível em ${monthFilter}.`
                         }
                     />
                 )}

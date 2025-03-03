@@ -28,64 +28,69 @@ export default function LoadButton() {
                 reader.result as string
             );
 
-            const validItems = result.list.filter((loadedItem) => {
-                const newItem: Omit<ListItemType, 'id'> = {
-                    name: loadedItem.name,
-                    quantityType: loadedItem.quantityType,
-                    unitOfMeasurement: loadedItem.unitOfMeasurement,
-                    quantity: loadedItem.quantity,
-                    alertQuantity: loadedItem.alertQuantity,
-                    description: loadedItem.description,
-                };
+            if (result.list && result.logs) {
+                const validItems = result.list.filter((loadedItem) => {
+                    const newItem: Omit<ListItemType, 'id'> = {
+                        name: loadedItem.name,
+                        quantityType: loadedItem.quantityType,
+                        unitOfMeasurement: loadedItem.unitOfMeasurement,
+                        quantity: loadedItem.quantity,
+                        alertQuantity: loadedItem.alertQuantity,
+                        description: loadedItem.description,
+                    };
 
-                return (
-                    !Object.values(newItem).some(
-                        (val) => typeof val === 'undefined'
-                    ) && !listItems.some((item) => item.name === newItem.name)
-                );
-            });
+                    return (
+                        !Object.values(newItem).some(
+                            (val) => typeof val === 'undefined'
+                        ) &&
+                        !listItems.some((item) => item.name === newItem.name)
+                    );
+                });
 
-            const validLogs = result.logs.filter((loadedLog: Logs) => {
-                const newLog: Omit<Logs, 'id' | 'itemId'> = {
-                    time: loadedLog.time,
-                    itemName: loadedLog.itemName,
-                    change: loadedLog.change,
-                    month: loadedLog.month,
-                    year: loadedLog.year,
-                    type: loadedLog.type,
-                };
+                const validLogs = result.logs.filter((loadedLog: Logs) => {
+                    const newLog: Omit<Logs, 'id' | 'itemId'> = {
+                        time: loadedLog.time,
+                        itemName: loadedLog.itemName,
+                        change: loadedLog.change,
+                        month: loadedLog.month,
+                        year: loadedLog.year,
+                        type: loadedLog.type,
+                    };
 
-                return (
-                    !Object.values(newLog).some(
-                        (val) => typeof val === 'undefined'
-                    ) &&
-                    validItems.some((item) => item.name === newLog.itemName)
-                );
-            });
+                    return (
+                        !Object.values(newLog).some(
+                            (val) => typeof val === 'undefined'
+                        ) &&
+                        validItems.some((item) => item.name === newLog.itemName)
+                    );
+                });
 
-            if (validItems.length > 0 && validLogs.length > 0) {
-                if (accessToken) {
-                    try {
-                        const res = await api.post('/items/upload', {
-                            items: validItems,
-                            logs: validLogs,
-                        });
+                if (validItems.length > 0 && validLogs.length > 0) {
+                    if (accessToken) {
+                        try {
+                            const res = await api.post('/items/upload', {
+                                items: validItems,
+                                logs: validLogs,
+                            });
 
-                        setUserItems([
-                            ...userItems,
-                            ...keysToCamelCase(res.data.uploadedItems),
-                        ]);
-                    } catch (error) {
-                        handleApiErrors(error, triggerErrorToast);
+                            setUserItems([
+                                ...userItems,
+                                ...keysToCamelCase(res.data.uploadedItems),
+                            ]);
+                        } catch (error) {
+                            handleApiErrors(error, triggerErrorToast);
+                        }
+                    } else if (guest) {
+                        validItems.forEach((item) => addLocalItem(item));
+                        validLogs.forEach((log) => addNewLocalLog(log));
                     }
-                } else if (guest) {
-                    validItems.forEach((item) => addLocalItem(item));
-                    validLogs.forEach((log) => addNewLocalLog(log));
+                } else {
+                    triggerErrorToast(
+                        'O arquivo selecionado não possui dados para serem importados.'
+                    );
                 }
             } else {
-                triggerErrorToast(
-                    'O arquivo selecionado é inválido ou não há dados para serem importados.'
-                );
+                triggerErrorToast('O arquivo selecionado é inválido.');
             }
         };
 
