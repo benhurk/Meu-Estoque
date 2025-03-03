@@ -10,9 +10,11 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     _retry?: boolean;
 }
 
+const userIsGuest = localStorage.getItem('guest-user') ? true : false;
+
 export default function AuthProvider({ children }: { children: ReactNode }) {
     const [accessToken, setAccessToken] = useState<string | null>();
-    const [guest, setGuest] = useState<boolean>(false);
+    const [guest, setGuest] = useState<boolean>(userIsGuest);
 
     const navigate = useNavigate();
 
@@ -96,6 +98,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             );
 
             if (guest) setGuest(false);
+            localStorage.removeItem('guest-user');
             setAccessToken(response.data.accessToken);
             navigate('/');
             return response.data;

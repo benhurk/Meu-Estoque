@@ -206,28 +206,22 @@ export async function editItem(req, res) {
     }
 }
 
-export async function deleteItems(req, res) {
+export async function deleteItem(req, res) {
     try {
         const userId = req.user.id;
-        const { ids } = req.body;
-
-        if (!ids || !Array.isArray(ids) || ids.length === 0) {
-            return res
-                .status(400)
-                .json({ success: false, message: 'Invalid or empty id array' });
-        }
+        const id = req.params.id;
 
         const { error } = await supabase
             .from('items')
             .delete()
-            .in('id', ids)
+            .eq('id', id)
             .eq('user_id', userId);
 
         if (error) throw error;
 
         res.status(200);
     } catch (error) {
-        console.log('Error while trying to deleteItems', error);
+        console.log('Error while trying to deleteItem', error);
         res.status(500).json({
             success: false,
             message: 'Internal server error',

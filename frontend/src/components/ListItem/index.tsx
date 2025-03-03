@@ -3,7 +3,7 @@ import api from '../../api';
 import styles from './ListItem.module.css';
 
 import useItemFormStore from '../../stores/itemFormStore';
-import useLocalListStore from '../../stores/localItemsStore';
+import useLocalDataStore from '../../stores/localDataStore';
 import useAuth from '../../hooks/useAuth';
 import useUserDataStore from '../../stores/userDataStore';
 
@@ -26,8 +26,8 @@ type Props = {
 
 const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
     const { accessToken, guest } = useAuth();
-    const { editUserItem, removeUserItems } = useUserDataStore();
-    const { editLocalItem, removeLocalItem } = useLocalListStore();
+    const { editUserItem, removeUserItem } = useUserDataStore();
+    const { editLocalItem, removeLocalItem, addLocalLog } = useLocalDataStore();
     const { setFormMode, setTargetItem } = useItemFormStore();
 
     const editTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -41,21 +41,22 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
             item.unitOfMeasurement
         );
 
-        if (accessToken) {
-            editUserItem({ ...item, quantity: newValue });
+        if (editTimeout.current) clearTimeout(editTimeout.current);
+        if (newValue - preChangeQuantity.current === 0) return;
 
-            if (editTimeout.current) clearTimeout(editTimeout.current);
-            if (newValue - preChangeQuantity.current === 0) return;
+        if (accessToken) editUserItem({ ...item, quantity: newValue });
+        else if (guest) editLocalItem({ ...item, quantity: newValue });
 
-            editTimeout.current = setTimeout(async () => {
-                const date = new Date();
-                const now = date.toLocaleDateString([], {
-                    day: '2-digit',
-                    month: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                });
+        editTimeout.current = setTimeout(async () => {
+            const date = new Date();
+            const now = date.toLocaleDateString([], {
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+            });
 
+            if (accessToken) {
                 try {
                     await api.put(`/items/quantity/${item.id}`, {
                         newValue,
@@ -75,10 +76,18 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                         quantity: preChangeQuantity.current,
                     });
                 }
-            }, 3000);
-        } else if (guest) {
-            editLocalItem({ ...item, quantity: newValue });
-        }
+            } else if (guest) {
+                addLocalLog({
+                    itemName: item.name,
+                    itemId: item.id,
+                    change: changeDiff.valueChange,
+                    type: changeDiff.type,
+                    month: months[date.getMonth()],
+                    time: now,
+                    year: date.getFullYear(),
+                });
+            }
+        }, 3000);
     };
 
     const setEditForm = () => {
@@ -89,7 +98,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
 
     const removeItem = () => {
         if (accessToken) {
-            removeUserItems([item.id]);
+            removeUserItem(item.id);
         } else if (guest) {
             removeLocalItem(item.id);
         }

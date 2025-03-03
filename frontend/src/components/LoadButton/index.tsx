@@ -1,8 +1,7 @@
 import api from '../../api';
 import styles from './LoadButton.module.css';
 
-import useLocalLogsStore from '../../stores/localLogsStore';
-import useLocalListStore from '../../stores/localItemsStore';
+import useLocalDataStore from '../../stores/localDataStore';
 import useAuth from '../../hooks/useAuth';
 import useUserDataStore from '../../stores/userDataStore';
 import useUserData from '../../hooks/useUserData';
@@ -17,8 +16,7 @@ export default function LoadButton() {
     const { accessToken, guest } = useAuth();
     const { items: listItems } = useUserData();
     const { userItems, setUserItems } = useUserDataStore();
-    const addLocalItem = useLocalListStore((state) => state.addLocalItem);
-    const { addNewLocalLog } = useLocalLogsStore();
+    const { addLocalItem, addLocalLog } = useLocalDataStore();
 
     const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reader = new FileReader();
@@ -82,7 +80,7 @@ export default function LoadButton() {
                         }
                     } else if (guest) {
                         validItems.forEach((item) => addLocalItem(item));
-                        validLogs.forEach((log) => addNewLocalLog(log));
+                        validLogs.forEach((log) => addLocalLog(log));
                     }
                 } else {
                     triggerErrorToast(

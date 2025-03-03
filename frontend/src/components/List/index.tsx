@@ -7,7 +7,7 @@ import ListItem from '../ListItem';
 import Modal from '../Modal';
 import ItemForm from '../ItemForm';
 import EmptyListContent from '../EmptyListContent';
-import RemoveMultipleButton from '../RemoveMultipleButton';
+import RemoveAllButton from '../RemoveAllButton';
 import InputWithButton from '../InputWithButton';
 import useUserData from '../../hooks/useUserData';
 
@@ -38,7 +38,7 @@ export default function List() {
                     <i className='bi bi-plus-lg' />
                     &nbsp;Adicionar item
                 </button>
-                <RemoveMultipleButton />
+                <RemoveAllButton />
             </div>
             <div className={styles.searchArea}>
                 <InputWithButton

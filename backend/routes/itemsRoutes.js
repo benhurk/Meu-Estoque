@@ -5,7 +5,7 @@ import {
     uploadItems,
     changeItemQuantity,
     editItem,
-    deleteItems,
+    deleteItem,
     deleteAllItems,
 } from '../controllers/itemsController.js';
 
@@ -16,7 +16,7 @@ router.post('/', addNewItem);
 router.post('/upload', uploadItems);
 router.put('/quantity/:id', changeItemQuantity);
 router.put('/:id', editItem);
-router.delete('/', deleteItems);
-router.delete('/all', deleteAllItems);
+router.delete('/:id', deleteItem);
+router.delete('/', deleteAllItems);
 
 export default router;

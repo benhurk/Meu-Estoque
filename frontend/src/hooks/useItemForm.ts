@@ -15,8 +15,13 @@ export default function useItemForm() {
     const { formMode, targetItemId } = useItemFormStore();
 
     const itemNames = useMemo(
-        () => new Set(listItems.map((item) => item.name)),
-        [listItems]
+        () =>
+            new Set(
+                listItems.map((item) =>
+                    item.id !== targetItemId ? item.name : ''
+                )
+            ),
+        [listItems, targetItemId]
     );
     const targetItem = useMemo(
         () => listItems.filter((item) => item.id === targetItemId)[0],
@@ -48,7 +53,7 @@ export default function useItemForm() {
 
         if (!fields.name) {
             newErrors.nameError = 'O nome não pode ficar em branco';
-        } else if (itemNames.has(fields.name) && formMode != 'edit') {
+        } else if (itemNames.has(fields.name)) {
             newErrors.nameError = 'Um item com esse nome já existe.';
         }
 

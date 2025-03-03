@@ -2,22 +2,27 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import ListItemType from '../types/ListItemTypes';
+import Logs from '../types/Logs';
 
 type ListState = {
     localItems: ListItemType[];
+    localLogs: Logs[];
 };
 
 type ListActions = {
     addLocalItem: (item: Omit<ListItemType, 'id'>) => void;
     removeLocalItem: (id: string) => void;
     editLocalItem: (editedItem: ListItemType) => void;
+    addLocalLog: (log: Omit<Logs, 'id'>) => void;
+    removeLocalLog: (id: string) => void;
     clearLocalList: () => void;
 };
 
-const useLocalListStore = create(
+const useLocalDataStore = create(
     persist<ListState & ListActions>(
         (set) => ({
             localItems: [],
+            localLogs: [],
             addLocalItem: (item) => {
                 const newItem = { id: crypto.randomUUID(), ...item };
                 set((state) => ({
@@ -29,6 +34,9 @@ const useLocalListStore = create(
                     localItems: state.localItems.filter(
                         (item) => item.id !== id
                     ),
+                    localLogs: state.localLogs.filter(
+                        (log) => log.itemId !== id
+                    ),
                 })),
             editLocalItem: (editedItem) =>
                 set((state) => ({
@@ -38,13 +46,30 @@ const useLocalListStore = create(
                             : existingItem
                     ),
                 })),
+            addLocalLog: (log) => {
+                set((state) => ({
+                    localLogs: [
+                        ...state.localLogs,
+                        {
+                            id: crypto.randomUUID(),
+                            ...log,
+                        },
+                    ],
+                }));
+            },
+            removeLocalLog: (id) => {
+                set((state) => ({
+                    localLogs: state.localLogs.filter((log) => log.id != id),
+                }));
+            },
             clearLocalList: () =>
                 set(() => ({
                     localItems: [],
+                    localLogs: [],
                 })),
         }),
-        { name: 'list-storage' }
+        { name: 'local-data-storage' }
     )
 );
 
-export default useLocalListStore;
+export default useLocalDataStore;

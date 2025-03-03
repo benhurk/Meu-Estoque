@@ -7,7 +7,7 @@ import useAuth from '../../hooks/useAuth';
 import useItemForm from '../../hooks/useItemForm';
 import useItemFormStore from '../../stores/itemFormStore';
 import useUserDataStore from '../../stores/userDataStore';
-import useLocalListStore from '../../stores/localItemsStore';
+import useLocalListStore from '../../stores/localDataStore';
 
 import unitsOfMeasurementOptions from '../../consts/unitsOfMeasurementOptions';
 import { defaultQuantityOptions } from '../../consts/quantityOptions';
@@ -39,7 +39,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleSubmit = async (
-        e: FormEvent<HTMLButtonElement>,
+        e: FormEvent<HTMLFormElement>,
         mode: FormMode
     ) => {
         e.preventDefault();
@@ -84,7 +84,9 @@ export default function ItemForm({ setItemFormOpen }: Props) {
     };
 
     return (
-        <div className={styles.form}>
+        <form
+            className={styles.form}
+            onSubmit={(e) => handleSubmit(e, formMode)}>
             <FormGroup
                 elementId={'item-name'}
                 labelText={'O que é:'}
@@ -224,9 +226,8 @@ export default function ItemForm({ setItemFormOpen }: Props) {
             </FormGroup>
 
             <button
-                type='button'
+                type='submit'
                 className={`btn btn-dark ${styles.submitButton}`}
-                onClick={(e) => handleSubmit(e, formMode)}
                 disabled={loading}>
                 <i
                     className={
@@ -235,6 +236,6 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 />
                 &nbsp;{formMode === 'add' ? 'Adicionar' : 'Salvar'}
             </button>
-        </div>
+        </form>
     );
 }

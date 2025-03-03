@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import styles from './LogsTable.module.css';
 import api from '../../api';
 
-import useLocalLogsStore from '../../stores/localLogsStore';
 import useUserData from '../../hooks/useUserData';
 import useAuth from '../../hooks/useAuth';
 import useUserDataStore from '../../stores/userDataStore';
+import useLocalDataStore from '../../stores/localDataStore';
 
 import FormGroup from '../FormGroup';
 import EmptyListContent from '../EmptyListContent';
@@ -29,7 +29,7 @@ export default function LogsTable() {
     const { accessToken, guest } = useAuth();
     const { logs } = useUserData();
     const { setUserLogs, removeUserLog } = useUserDataStore();
-    const removeLocalLog = useLocalLogsStore((state) => state.removeLocalLog);
+    const removeLocalLog = useLocalDataStore((state) => state.removeLocalLog);
     const navigate = useNavigate();
 
     const [monthFilter, setMonthFilter] = useState<Months>(
