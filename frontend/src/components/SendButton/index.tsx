@@ -79,7 +79,7 @@ export default function SendButton({
                     : optionsQuantity
             }%0a`;
 
-            const warnedItemsLine = `🔸 ${item.name} (${
+            const warnedItemsLine = `• ${item.name} (${
                 item.quantityType === 'number'
                     ? item.quantity +
                       ' ' +

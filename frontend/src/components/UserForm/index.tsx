@@ -90,6 +90,7 @@ export default function UserForm({ mode }: Props) {
                 <input
                     id='username-field'
                     name='username'
+                    maxLength={50}
                     type='text'
                     className='input'
                     placeholder='Seu nome'
@@ -104,6 +105,7 @@ export default function UserForm({ mode }: Props) {
                     id='password-field'
                     name='password'
                     type='password'
+                    maxLength={30}
                     className='input'
                     placeholder='Sua senha'
                     onChange={handleChange}
@@ -118,6 +120,7 @@ export default function UserForm({ mode }: Props) {
                         id='confirm-password-field'
                         name='passwordConfirm'
                         type='password'
+                        maxLength={30}
                         className='input'
                         placeholder='Digite sua senha novamente'
                         onChange={handleChange}
@@ -151,15 +154,13 @@ export default function UserForm({ mode }: Props) {
                             />
                             &nbsp;{mode === 'login' ? 'Entrar' : 'Criar conta'}
                         </button>
-                        {mode === 'login' && (
-                            <button
-                                type='button'
-                                className='btn btn-dark'
-                                onClick={continueAsGuest}>
-                                <i className='bi bi-person-fill-x' />
-                                &nbsp;Continuar sem conta
-                            </button>
-                        )}
+                        <button
+                            type='button'
+                            className='btn btn-dark'
+                            onClick={continueAsGuest}>
+                            <i className='bi bi-person-fill-x' />
+                            &nbsp;Continuar sem conta
+                        </button>
                     </>
                 ) : (
                     <ClipLoader />

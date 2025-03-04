@@ -22,7 +22,7 @@
 }
 
 .itemInfo {
-    width: 75%;
+    width: 70%;
 }
 
 .itemTitle {
@@ -30,6 +30,7 @@
     display: flex;
     gap: 0.5rem;
     font-size: 1rem;
+    align-items: center;
 }
 
 .itemQuantity {

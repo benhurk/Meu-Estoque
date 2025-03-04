@@ -28,6 +28,16 @@ h1 img {
     letter-spacing: 0.15rem;
 }
 
+@media (max-width: 577px) {
+    .title span {
+        font-size: 2rem;
+    }
+
+    h1 img {
+        height: 3.275rem;
+    }
+}
+
 .buttonsArea {
     display: flex;
     justify-content: center;

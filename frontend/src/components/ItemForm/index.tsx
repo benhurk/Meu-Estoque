@@ -94,6 +94,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 <input
                     type='text'
                     id='item-name'
+                    maxLength={50}
                     className='input'
                     placeholder='Nome do item'
                     value={fields.name}

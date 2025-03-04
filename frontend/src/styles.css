@@ -35,6 +35,12 @@ a {
 
 @media (max-width: 767px) {
     .container {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 370px) {
+    .container {
         max-width: 95%;
     }
 }

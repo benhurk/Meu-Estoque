@@ -18,7 +18,9 @@ export default function useItemForm() {
         () =>
             new Set(
                 listItems.map((item) =>
-                    item.id !== targetItemId ? item.name : ''
+                    item.id !== targetItemId
+                        ? item.name.toLocaleLowerCase()
+                        : ''
                 )
             ),
         [listItems, targetItemId]
@@ -53,7 +55,7 @@ export default function useItemForm() {
 
         if (!fields.name) {
             newErrors.nameError = 'O nome não pode ficar em branco';
-        } else if (itemNames.has(fields.name)) {
+        } else if (itemNames.has(fields.name.toLocaleLowerCase())) {
             newErrors.nameError = 'Um item com esse nome já existe.';
         }
 
