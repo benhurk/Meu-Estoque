@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import styles from './Header.module.css';
@@ -15,19 +15,16 @@ export default function Header() {
     const { accessToken, guest, logout } = useAuth();
 
     const navigate = useNavigate();
-    const location = useLocation();
 
     return (
         <header className={styles.header}>
             <div className='container'>
                 <Link to='/' className={styles.title}>
-                    <h1>
-                        <img src={logo} alt='logo' />
-                        <span>Estoque Fácil</span>
-                    </h1>
+                    <img src={logo} alt='logo' />
+                    <h1>Estoque Fácil</h1>
                 </Link>
 
-                {location.pathname === '/' && (
+                {(accessToken || guest) && (
                     <div className={styles.buttonsArea}>
                         <SendDropdown />
                         <StatisticsButton />
@@ -57,18 +54,20 @@ export default function Header() {
                     </button>
                 )}
 
-                {guest && location.pathname === '/' && (
-                    <button
-                        type='button'
-                        className='btn btn-link'
-                        style={{
-                            marginInline: 'auto',
-                        }}
-                        onClick={() => navigate('/signin')}>
-                        <i className='bi bi-box-arrow-right' />
-                        &nbsp;Entrar
-                    </button>
-                )}
+                {guest &&
+                    (location.pathname === '/' ||
+                        location.pathname === '/logs') && (
+                        <button
+                            type='button'
+                            className='btn btn-link'
+                            style={{
+                                marginInline: 'auto',
+                            }}
+                            onClick={() => navigate('/signin')}>
+                            <i className='bi bi-box-arrow-right' />
+                            &nbsp;Entrar
+                        </button>
+                    )}
             </div>
         </header>
     );

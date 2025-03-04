@@ -1,12 +1,5 @@
 ### Todo
 
--   Review the entire local user functionality.
-
-    -   [x] Add an item.
-    -   [x] Edit the item.
-    -   [x] Remove the item.
-    -   [x] Remove all items.
-    -   [x] Check logs.
-
--   Add ads.
+-   Some final testing.
 -   Make an actual README.
+-   Deploy.
