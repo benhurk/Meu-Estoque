@@ -43,9 +43,7 @@ export default function LogsTable() {
         const fetchUserLogs = async () => {
             try {
                 setLoading(true);
-                const res = await api.get('/logs', {
-                    params: { month: monthFilter },
-                });
+                const res = await api.get(`/logs/${monthFilter}`);
                 setUserLogs(keysToCamelCase(res.data.userLogs));
             } catch (error) {
                 handleApiErrors(error, setFetchError);
