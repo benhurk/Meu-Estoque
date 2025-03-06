@@ -132,28 +132,32 @@ export async function changeItemQuantity(req, res) {
 
         if (updateError) throw updateError;
 
-        const { data: log, logError } = await supabase
-            .from('logs')
-            .insert([
-                {
-                    user_id: userId,
-                    item_id: updatedItem[0].id,
-                    item_name: updatedItem[0].name,
-                    change,
-                    month,
-                    year,
-                    time,
-                    type,
-                },
-            ])
-            .select(returnColumns.logs.join(', '));
+        if (change && type) {
+            const { data: log, logError } = await supabase
+                .from('logs')
+                .insert([
+                    {
+                        user_id: userId,
+                        item_id: updatedItem[0].id,
+                        item_name: updatedItem[0].name,
+                        change,
+                        month,
+                        year,
+                        time,
+                        type,
+                    },
+                ])
+                .select(returnColumns.logs.join(', '));
 
-        if (logError) throw logError;
+            if (logError) throw logError;
 
-        res.status(200).json({
-            success: true,
-            log: log[0],
-        });
+            res.status(200).json({
+                success: true,
+                log: log[0],
+            });
+        } else {
+            res.sendStatus(200);
+        }
     } catch (error) {
         console.log('Error while trying to changeItemQuantity', error);
         res.status(500).json({

@@ -42,7 +42,6 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
         );
 
         if (editTimeout.current) clearTimeout(editTimeout.current);
-        if (newValue - preChangeQuantity.current === 0) return;
 
         if (accessToken) editUserItem({ ...item, quantity: newValue });
         else if (guest) editLocalItem({ ...item, quantity: newValue });
@@ -63,8 +62,8 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                         time: now,
                         month: months[date.getMonth()],
                         year: date.getFullYear(),
-                        change: changeDiff.valueChange,
-                        type: changeDiff.type,
+                        change: changeDiff?.valueChange,
+                        type: changeDiff?.type,
                     });
 
                     preChangeQuantity.current = newValue;
@@ -76,7 +75,7 @@ const ListItem = memo(function ListItem({ item, setItemFormOpen }: Props) {
                         quantity: preChangeQuantity.current,
                     });
                 }
-            } else if (guest) {
+            } else if (guest && changeDiff) {
                 addLocalLog({
                     itemName: item.name,
                     itemId: item.id,

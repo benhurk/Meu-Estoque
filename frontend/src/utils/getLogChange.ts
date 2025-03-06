@@ -7,8 +7,10 @@ export default function getLogChange(
     previousQuantity: number,
     newQuantity: number,
     unitOfMeasurement: UnitsOfMeasurement
-): { valueChange: string; type: 'increase' | 'decrease' } {
+): { valueChange: string; type: 'increase' | 'decrease' } | undefined {
     const diff = newQuantity - previousQuantity;
+
+    if (diff === 0) return;
 
     if (quantityType === 'options') {
         return {
