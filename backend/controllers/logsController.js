@@ -1,10 +1,33 @@
 import { supabase } from '../config/db.js';
 import returnColumns from '../utils/returnColumns.js';
 
+export async function getAllUserLogs(req, res) {
+    try {
+        const userId = req.user.id;
+
+        const { data: userLogs, error } = await supabase
+            .from('logs')
+            .select(returnColumns.logs.join(', '))
+            .eq('user_id', userId);
+
+        if (error) {
+            throw error;
+        }
+
+        res.status(200).json({ userLogs });
+    } catch (error) {
+        console.log('Error while trying to getAllUserLogs', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+}
+
 export async function getUserLogs(req, res) {
     try {
         const userId = req.user.id;
-        const { month } = req.query;
+        const { month } = req.params;
 
         if (!month || typeof month != 'string') {
             res.status(400).json({
