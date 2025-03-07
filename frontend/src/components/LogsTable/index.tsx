@@ -203,6 +203,8 @@ export default function LogsTable() {
                         text={
                             fetchError
                                 ? fetchError
+                                : searchFor.length > 0
+                                ? `Nenhum registro encontrado com "${searchFor}".`
                                 : `Nenhum registro disponível em ${monthFilter}.`
                         }
                     />

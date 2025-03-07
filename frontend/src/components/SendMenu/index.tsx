@@ -83,8 +83,8 @@ export default function SendMenu({ sendMode, setOpenSendMenu }: Props) {
                         <i className='bi bi-exclamation-circle-fill text-red' />
                         &nbsp;Certifique-se que o
                         <span className={`text-red ${styles.platformName}`}>
-                            &nbsp;{sendVia}
-                        </span>{' '}
+                            &nbsp;{sendVia}&nbsp;
+                        </span>
                         esteja instalado no seu dispositivo.
                     </small>
                 )}

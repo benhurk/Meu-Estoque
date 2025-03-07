@@ -59,6 +59,7 @@ export default function DownloadButton() {
             <button
                 type='button'
                 className='btn btn-dropdown-item text-green'
+                disabled={listItems.length === 0 ? true : false}
                 onClick={downloadData}>
                 <i className='bi bi-file-earmark-arrow-down-fill' />
                 &nbsp;Baixar
