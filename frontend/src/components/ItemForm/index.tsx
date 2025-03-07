@@ -74,7 +74,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
 
             if (guest) {
                 if (mode === 'add') {
-                    addLocalItem(newItem);
+                    addLocalItem({ ...newItem, id: crypto.randomUUID() });
                 } else if (mode === 'edit') {
                     editLocalItem({ ...newItem, id: targetItem.id });
                 }

@@ -10,7 +10,7 @@ type ListState = {
 };
 
 type ListActions = {
-    addLocalItem: (item: Omit<ListItemType, 'id'>) => void;
+    addLocalItem: (item: ListItemType) => void;
     removeLocalItem: (id: string) => void;
     editLocalItem: (editedItem: ListItemType) => void;
     addLocalLog: (log: Omit<Logs, 'id'>) => void;
@@ -24,9 +24,8 @@ const useLocalDataStore = create(
             localItems: [],
             localLogs: [],
             addLocalItem: (item) => {
-                const newItem = { id: crypto.randomUUID(), ...item };
                 set((state) => ({
-                    localItems: [...state.localItems, newItem],
+                    localItems: [...state.localItems, item],
                 }));
             },
             removeLocalItem: (id) =>

@@ -1,11 +1,14 @@
-import axios from 'axios';
+import api from '../../api';
+
 import useUserData from '../../hooks/useUserData';
+import useAuth from '../../hooks/useAuth';
+import useLocalDataStore from '../../stores/localDataStore';
+
 import ListItemType from '../../types/ListItemTypes';
 import Logs from '../../types/Logs';
 import handleApiErrors from '../../utils/handleApiErrors';
 import { triggerErrorToast } from '../../utils/triggerToast';
-import useAuth from '../../hooks/useAuth';
-import useLocalDataStore from '../../stores/localDataStore';
+import keysToCamelCase from '../../utils/snakeToCamel';
 
 export default function DownloadButton() {
     const { accessToken, guest } = useAuth();
@@ -17,18 +20,23 @@ export default function DownloadButton() {
         data.map(({ id, ...rest }) => rest);
 
     const downloadData = async () => {
-        let url = '';
+        const a = document.getElementById(
+            'download-anchor'
+        )! as HTMLAnchorElement;
+
         if (accessToken) {
             try {
-                const res = await axios.get('/logs');
-                const logs = res.data.userLogs;
+                const res = await api.get('/logs');
+                const logs = await keysToCamelCase(res.data.userLogs);
 
                 const data = JSON.stringify({
                     list: idLess(listItems),
                     logs: idLess(logs),
                 });
                 const blob = new Blob([data], { type: 'application/json' });
-                url = URL.createObjectURL(blob);
+                const url = URL.createObjectURL(blob);
+                a.href = url;
+                a.click();
             } catch (error) {
                 handleApiErrors(error, triggerErrorToast);
             }
@@ -38,14 +46,10 @@ export default function DownloadButton() {
                 logs: idLess(localLogs),
             });
             const blob = new Blob([data], { type: 'application/json' });
-            url = URL.createObjectURL(blob);
+            const url = URL.createObjectURL(blob);
+            a.href = url;
+            a.click();
         }
-
-        const a = document.getElementById(
-            'download-anchor'
-        )! as HTMLAnchorElement;
-        a.href = url;
-        a.click();
     };
 
     const date = new Date().toLocaleDateString();

@@ -63,12 +63,21 @@ export default function LoadButton() {
                     );
                 });
 
-                if (validItems.length > 0 && validLogs.length > 0) {
+                if (validItems.length === 0 && validLogs.length === 0) {
+                    triggerErrorToast(
+                        'O arquivo selecionado não possui dados para serem importados.'
+                    );
+                } else {
+                    const transformedLogs = validLogs.map(
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        ({ itemId, ...rest }) => rest
+                    );
+
                     if (accessToken) {
                         try {
                             const res = await api.post('/items/upload', {
                                 items: validItems,
-                                logs: validLogs,
+                                logs: transformedLogs,
                             });
 
                             setUserItems([
@@ -79,13 +88,22 @@ export default function LoadButton() {
                             handleApiErrors(error, triggerErrorToast);
                         }
                     } else if (guest) {
-                        validItems.forEach((item) => addLocalItem(item));
-                        validLogs.forEach((log) => addLocalLog(log));
+                        const newItems: { name: string; id: string }[] = [];
+
+                        validItems.forEach((item) => {
+                            const id = crypto.randomUUID();
+                            addLocalItem({ ...item, id });
+                            newItems.push({ name: item.name, id });
+                        });
+                        transformedLogs.forEach((log) =>
+                            addLocalLog({
+                                itemId: newItems.filter(
+                                    (item) => item.name === log.itemName
+                                )[0].id,
+                                ...log,
+                            })
+                        );
                     }
-                } else {
-                    triggerErrorToast(
-                        'O arquivo selecionado não possui dados para serem importados.'
-                    );
                 }
             } else {
                 triggerErrorToast('O arquivo selecionado é inválido.');
