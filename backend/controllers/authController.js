@@ -103,8 +103,6 @@ export async function loginUser(req, res) {
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            sameSite: 'lax', // Required for cross-site cookies
-            secure: false, // Required if sameSite is 'none'
         });
 
         res.status(200).json({
