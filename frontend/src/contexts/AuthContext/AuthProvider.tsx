@@ -2,7 +2,7 @@ import { ReactNode, useLayoutEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { InternalAxiosRequestConfig } from 'axios';
 
-import api from '../../api';
+import api, { URL } from '../../api';
 
 import AuthContext from './AuthContext';
 
@@ -18,10 +18,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
     const navigate = useNavigate();
 
-    const BASE_URL =
-        import.meta.env.VITE_ENV === 'development'
-            ? 'http://localhost:5000/api/auth'
-            : '/api/auth/';
+    const BASE_URL = `${URL}/auth`;
 
     useLayoutEffect(() => {
         const authInterceptor = api.interceptors.request.use(
