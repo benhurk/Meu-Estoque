@@ -18,16 +18,12 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || '5000';
-const URL =
-    process.env.NODE_ENV === 'development'
-        ? 'http://localhost:5173'
-        : 'https://eztoque.vercel.app/';
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
     cors({
-        origin: URL,
+        origin: ['http://localhost:5173', 'https://eztoque.vercel.app'],
         credentials: true,
     })
 );
