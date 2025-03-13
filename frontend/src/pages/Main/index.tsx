@@ -55,7 +55,19 @@ export default function MainPage() {
                             (loading ? <Loader /> : <List />)}
                     </>
                 )}
-                {error && <EmptyListContent text={error} />}
+                {error && (
+                    <>
+                        <EmptyListContent text={error} />
+                        <button
+                            type='button'
+                            className='btn btn-dark'
+                            style={{ marginInline: 'auto', marginTop: '1rem' }}
+                            onClick={() => window.location.reload()}>
+                            <i className='bi bi-arrow-clockwise' />
+                            &nbsp;Recarregar
+                        </button>
+                    </>
+                )}
             </main>
             <ToastContainer />
         </>

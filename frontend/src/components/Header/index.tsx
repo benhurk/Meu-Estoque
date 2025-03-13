@@ -21,7 +21,7 @@ export default function Header() {
             <div className='container'>
                 <Link to='/' className={styles.title}>
                     <img src={logo} alt='logo' />
-                    <h1>Estoque Fácil</h1>
+                    <h1>Meu Estoque</h1>
                 </Link>
 
                 {(accessToken || guest) && (
