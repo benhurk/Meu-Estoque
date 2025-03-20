@@ -19,7 +19,7 @@ export default function Header() {
     return (
         <header className={styles.header}>
             <div className='container'>
-                <Link to='/' className={styles.title}>
+                <Link to='/app' className={styles.title}>
                     <img src={logo} alt='logo' />
                     <h1>Meu Estoque</h1>
                 </Link>
@@ -55,8 +55,8 @@ export default function Header() {
                 )}
 
                 {guest &&
-                    (location.pathname === '/' ||
-                        location.pathname === '/logs') && (
+                    (location.pathname === '/app' ||
+                        location.pathname === '/app/logs') && (
                         <button
                             type='button'
                             className='btn btn-link'

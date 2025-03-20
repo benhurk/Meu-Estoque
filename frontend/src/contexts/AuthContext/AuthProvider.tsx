@@ -15,6 +15,7 @@ const userIsGuest = localStorage.getItem('guest-user') ? true : false;
 export default function AuthProvider({ children }: { children: ReactNode }) {
     const [accessToken, setAccessToken] = useState<string | null>();
     const [guest, setGuest] = useState<boolean>(userIsGuest);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const navigate = useNavigate();
 
@@ -64,6 +65,21 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         return () => api.interceptors.response.eject(refreshInterceptor);
     }, []);
 
+    useLayoutEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const res = await api.post('/auth/refresh-token');
+                setAccessToken(res.data.accessToken);
+            } catch {
+                setAccessToken(null);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        checkAuth();
+    }, []);
+
     const register = async (username: string, password: string) => {
         try {
             const response = await axios.post(`${BASE_URL}/register`, {
@@ -73,7 +89,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
             if (response.status === 201) {
                 await login(username, password);
-                navigate('/');
                 return response.data;
             }
         } catch (error) {
@@ -94,10 +109,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 { withCredentials: true }
             );
 
-            if (guest) setGuest(false);
-            localStorage.removeItem('guest-user');
-            setAccessToken(response.data.accessToken);
-            navigate('/');
+            const token = await response.data.accessToken;
+
+            if (guest) {
+                setGuest(false);
+                localStorage.removeItem('guest-user');
+            }
+
+            setAccessToken(token);
+            navigate('/app');
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
@@ -121,6 +141,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 logout,
                 guest,
                 setGuest,
+                isLoading,
             }}>
             {children}
         </AuthContext.Provider>

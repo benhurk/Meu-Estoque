@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import axios from 'axios';
 import html2pdf from 'html2pdf.js';
-import { useNavigate } from 'react-router-dom';
 
 import styles from './LogsTable.module.css';
 import api from '../../api';
@@ -15,6 +13,7 @@ import FormGroup from '../FormGroup';
 import EmptyListContent from '../EmptyListContent';
 import InputWithButton from '../InputWithButton';
 import Select from '../Select';
+import Loader from '../Loader';
 
 import Months from '../../types/Months';
 import Logs from '../../types/Logs';
@@ -22,7 +21,6 @@ import Logs from '../../types/Logs';
 import filterLogs from '../../utils/filterLogs';
 import months from '../../consts/months';
 import keysToCamelCase from '../../utils/snakeToCamel';
-import Loader from '../Loader';
 import handleApiErrors from '../../utils/handleApiErrors';
 
 export default function LogsTable() {
@@ -30,7 +28,6 @@ export default function LogsTable() {
     const { logs } = useUserData();
     const { setUserLogs, removeUserLog } = useUserDataStore();
     const removeLocalLog = useLocalDataStore((state) => state.removeLocalLog);
-    const navigate = useNavigate();
 
     const [monthFilter, setMonthFilter] = useState<Months>(
         months[new Date().getMonth()]
@@ -47,19 +44,13 @@ export default function LogsTable() {
                 setUserLogs(keysToCamelCase(res.data.userLogs));
             } catch (error) {
                 handleApiErrors(error, setFetchError);
-
-                if (axios.isAxiosError(error)) {
-                    if (error.response && error.response.status != 403) {
-                        navigate('/signin');
-                    }
-                }
             }
 
             setLoading(false);
         };
 
         if (!guest) fetchUserLogs();
-    }, [accessToken, guest, monthFilter, navigate, setUserLogs]);
+    }, [accessToken, guest, monthFilter, setUserLogs]);
 
     const filteredLogs = useMemo(() => {
         return filterLogs(logs, searchFor, monthFilter);

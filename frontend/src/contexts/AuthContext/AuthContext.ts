@@ -13,6 +13,7 @@ type AuthContextType = {
     logout: () => void;
     guest: boolean;
     setGuest: React.Dispatch<React.SetStateAction<boolean>>;
+    isLoading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

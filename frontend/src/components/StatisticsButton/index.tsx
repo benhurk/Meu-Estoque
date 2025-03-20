@@ -8,7 +8,7 @@ export default function StatisticsButton() {
             <button
                 type='button'
                 className='btn btn-yellow'
-                onClick={() => navigate('/logs')}>
+                onClick={() => navigate('/app/logs')}>
                 <i className='bi bi-bar-chart-fill' />
                 &nbsp;Registros
             </button>

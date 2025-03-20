@@ -14,8 +14,8 @@ function App() {
                 <Routes>
                     <Route path='/signin' element={<UserAccess />} />
                     <Route path='/signup' element={<UserAccess />} />
-                    <Route path='/' element={<MainPage />} />
-                    <Route path='/logs' element={<LogsPage />} />
+                    <Route path='/app' element={<MainPage />} />
+                    <Route path='/app/logs' element={<LogsPage />} />
                 </Routes>
             </AuthProvider>
         </BrowserRouter>

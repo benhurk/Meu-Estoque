@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../api';
 
 import useAuth from '../../hooks/useAuth';
@@ -7,20 +8,25 @@ import useListStore from '../../stores/userDataStore';
 import Header from '../../components/Header';
 import List from '../../components/List';
 import EmptyListContent from '../../components/EmptyListContent';
-import LoginMenu from '../../components/LoginMenu';
 import Loader from '../../components/Loader';
 
 import keysToCamelCase from '../../utils/snakeToCamel';
 import handleApiErrors from '../../utils/handleApiErrors';
 import { ToastContainer } from 'react-toastify';
-import FeatureText from '../../components/FeatureText';
 
 export default function MainPage() {
-    const { accessToken, guest } = useAuth();
+    const { accessToken, guest, isLoading } = useAuth();
     const setUserItems = useListStore((state) => state.setUserItems);
+    const navigate = useNavigate();
 
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
+
+    useEffect(() => {
+        if (!isLoading && !accessToken && !guest) {
+            navigate('/signin');
+        }
+    }, [accessToken, guest, isLoading, navigate]);
 
     useEffect(() => {
         const fetchUserItems = async () => {
@@ -42,19 +48,7 @@ export default function MainPage() {
         <>
             <Header />
             <main className='container'>
-                {!error && (
-                    <>
-                        {accessToken === undefined && !guest && <Loader />}
-                        {accessToken === null && !guest && (
-                            <>
-                                <FeatureText />
-                                <LoginMenu />
-                            </>
-                        )}
-                        {(guest || accessToken) &&
-                            (loading ? <Loader /> : <List />)}
-                    </>
-                )}
+                {!error && (loading ? <Loader /> : <List />)}
                 {error && (
                     <>
                         <EmptyListContent text={error} />
