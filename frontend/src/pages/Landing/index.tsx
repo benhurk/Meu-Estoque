@@ -30,16 +30,17 @@ export default function LandingPage() {
                         </span>
                     </h2>
                     <p className={styles.subtitle}>
-                        Uma solução de gerenciamento de estoque intuitiva.
-                        Mantenha a contagem de estoque, monitore as alterações e
-                        comunique sua lista rapidamente.
+                        Uma solução intuitiva para facilitar a gestão e a
+                        comunicação de estoque no ambiente de trabalho. Mantenha
+                        a contagem, monitore as alterações e comunique sua lista
+                        rapidamente.
                     </p>
                     <div className={styles.cta}>
                         <Link to='/signup' className='btn btn-blue'>
                             <i className='bi-person-plus-fill' />
                             &nbsp;Criar conta
                         </Link>
-                        <Link to='/signup' className='btn btn-dark'>
+                        <Link to='/signin' className='btn btn-dark'>
                             <i className='bi bi-box-arrow-in-right' />
                             &nbsp;Entrar
                         </Link>

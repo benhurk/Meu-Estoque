@@ -70,7 +70,7 @@ textarea {
     background-color: white;
     outline: none;
     transition: border-color 0.2s ease-in-out;
-    filter: drop-shadow(0.1rem 0.1rem 0.25rem var(--color-gray));
+    filter: drop-shadow(0.1rem 0.1rem 0.25rem rgba(0, 0, 0, 0.06));
 }
 
 .input[type='text'] {
@@ -123,7 +123,7 @@ a i.bi {
 }
 
 .btn-light {
-    background-color: #fff;
+    background-color: var(--color-light);
     color: #000;
     transition: background-color 0.2s ease-in-out;
 }

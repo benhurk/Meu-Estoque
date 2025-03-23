@@ -218,7 +218,7 @@ export default function ItemForm({ setItemFormOpen }: Props) {
                 <textarea
                     className={`input ${styles.description}`}
                     id='item-description'
-                    placeholder='Anotações sobre o item. Exemplo: Onde encontra-lo, modo de preparo, tempo de validade, etc. (Opcional)'
+                    placeholder='Anotações sobre o item. Exemplo: Onde encontra-lo, preço, modo de preparo, tempo de validade, etc.'
                     value={fields.description}
                     onChange={(e) =>
                         setFields({ ...fields, description: e.target.value })

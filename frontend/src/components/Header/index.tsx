@@ -10,6 +10,7 @@ import SendDropdown from '../SendDropdown';
 import StatisticsButton from '../StatisticsButton';
 import Dropdown from '../Dropdown';
 import useAuth from '../../hooks/useAuth';
+import RemoveAllButton from '../RemoveAllButton';
 
 export default function Header() {
     const { accessToken, guest, logout } = useAuth();
@@ -24,6 +25,19 @@ export default function Header() {
                     <h1>Meu Estoque</h1>
                 </Link>
 
+                {accessToken && (
+                    <button
+                        type='button'
+                        className='btn btn-link'
+                        style={{
+                            marginInline: 'auto',
+                        }}
+                        onClick={logout}>
+                        <i className='bi bi-box-arrow-left' />
+                        &nbsp;Sair
+                    </button>
+                )}
+
                 {(accessToken || guest) && (
                     <div className={styles.buttonsArea}>
                         <SendDropdown />
@@ -37,21 +51,11 @@ export default function Header() {
                             <li>
                                 <LoadButton />
                             </li>
+                            <li>
+                                <RemoveAllButton />
+                            </li>
                         </Dropdown>
                     </div>
-                )}
-
-                {accessToken && (
-                    <button
-                        type='button'
-                        className='btn btn-link'
-                        style={{
-                            marginInline: 'auto',
-                        }}
-                        onClick={logout}>
-                        <i className='bi bi-box-arrow-left' />
-                        &nbsp;Sair
-                    </button>
                 )}
 
                 {guest &&

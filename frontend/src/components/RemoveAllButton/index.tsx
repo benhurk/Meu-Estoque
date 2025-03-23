@@ -12,6 +12,7 @@ import handleApiErrors from '../../utils/handleApiErrors';
 import { triggerErrorToast } from '../../utils/triggerToast';
 
 import Modal from '../Modal';
+import Portal from '../Portal';
 
 export default function RemoveAllButton() {
     const { items: listItems } = useUserData();
@@ -44,37 +45,42 @@ export default function RemoveAllButton() {
         <>
             <button
                 type='button'
-                className='btn btn-red'
+                className='btn btn-dropdown-item text-red'
                 disabled={listItems.length === 0 ? true : false}
                 onClick={() => setModalOpen(true)}>
                 <i className='bi bi-trash-fill' />
-                &nbsp; Remover tudo
+                &nbsp;Remover tudo
             </button>
 
-            <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
-                <div>
-                    <span className={`text-red ${styles.removeWarning}`}>
-                        Deseja mesmo remover todos os itens?
-                    </span>
+            {modalOpen && (
+                <Portal>
+                    <Modal isOpen={modalOpen} setIsOpen={setModalOpen}>
+                        <div>
+                            <span
+                                className={`text-red ${styles.removeWarning}`}>
+                                Deseja mesmo remover todos os itens?
+                            </span>
 
-                    <div className={styles.buttonsArea}>
-                        <button
-                            type='button'
-                            className='btn btn-red me-2'
-                            onClick={() => removeItems()}
-                            disabled={loading}>
-                            Remover todos os itens
-                        </button>
-                        <button
-                            type='button'
-                            className='btn btn-dark me-2'
-                            onClick={() => setModalOpen(false)}
-                            disabled={loading}>
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </Modal>
+                            <div className={styles.buttonsArea}>
+                                <button
+                                    type='button'
+                                    className='btn btn-red me-2'
+                                    onClick={() => removeItems()}
+                                    disabled={loading}>
+                                    Remover todos os itens
+                                </button>
+                                <button
+                                    type='button'
+                                    className='btn btn-dark me-2'
+                                    onClick={() => setModalOpen(false)}
+                                    disabled={loading}>
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </Modal>
+                </Portal>
+            )}
         </>
     );
 }

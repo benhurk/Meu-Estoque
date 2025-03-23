@@ -7,7 +7,6 @@ import ListItem from '../ListItem';
 import Modal from '../Modal';
 import ItemForm from '../ItemForm';
 import EmptyListContent from '../EmptyListContent';
-import RemoveAllButton from '../RemoveAllButton';
 import InputWithButton from '../InputWithButton';
 import useUserData from '../../hooks/useUserData';
 
@@ -30,17 +29,14 @@ export default function List() {
             <div className={styles.buttonsArea}>
                 <button
                     type='button'
-                    className='btn btn-blue'
+                    className='btn btn-dark'
                     onClick={() => {
                         setFormMode('add');
                         setItemFormOpen(true);
                     }}>
                     <i className='bi bi-plus-lg' />
-                    &nbsp;Adicionar item
+                    &nbsp;Adicionar
                 </button>
-                <RemoveAllButton />
-            </div>
-            <div className={styles.searchArea}>
                 <InputWithButton
                     buttonIconClass='bi-search'
                     onButtonClick={(inputValue) => setSearch(inputValue)}

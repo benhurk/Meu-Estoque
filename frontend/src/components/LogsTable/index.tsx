@@ -9,7 +9,6 @@ import useAuth from '../../hooks/useAuth';
 import useUserDataStore from '../../stores/userDataStore';
 import useLocalDataStore from '../../stores/localDataStore';
 
-import FormGroup from '../FormGroup';
 import EmptyListContent from '../EmptyListContent';
 import InputWithButton from '../InputWithButton';
 import Select from '../Select';
@@ -100,8 +99,16 @@ export default function LogsTable() {
 
     return (
         <>
+            <button
+                type='button'
+                className={`btn btn-green ${styles.pdfButton}`}
+                disabled={filteredLogs.length > 0 ? false : true}
+                onClick={() => downloadPdf()}>
+                <i className='bi bi-file-earmark-arrow-down-fill' />
+                &nbsp;Baixar .pdf
+            </button>
             <div className={styles.filterArea}>
-                <FormGroup elementId='logs-filter' labelText='Mês:'>
+                <div>
                     <Select
                         elementId='logs-filter'
                         options={months.map((month) => {
@@ -114,43 +121,21 @@ export default function LogsTable() {
                             )
                         }
                     />
-                </FormGroup>
-                <FormGroup elementId='search-for' labelText='Pesquisar item:'>
-                    <InputWithButton
-                        inputId='search-for'
-                        placeholderText='Nome do item'
-                        buttonIconClass='bi-search'
-                        onButtonClick={(inputValue) => setSearchFor(inputValue)}
-                        clearAfter={false}
-                        clearBtn={() => setSearchFor('')}
-                    />
-                </FormGroup>
+                </div>
+                <InputWithButton
+                    inputId='search-for'
+                    placeholderText='Pesquisar item'
+                    buttonIconClass='bi-search'
+                    onButtonClick={(inputValue) => setSearchFor(inputValue)}
+                    clearAfter={false}
+                    clearBtn={() => setSearchFor('')}
+                />
             </div>
-            <button
-                type='button'
-                className={`btn btn-green ${styles.pdfButton}`}
-                disabled={filteredLogs.length > 0 ? false : true}
-                onClick={() => downloadPdf()}>
-                <i className='bi bi-file-earmark-arrow-down-fill' />
-                &nbsp;Baixar .pdf
-            </button>
             <div id='logs-table'>
                 {loading ? (
                     <Loader />
                 ) : filteredLogs.length > 0 && !fetchError ? (
                     <>
-                        <div className={styles.tableInfo}>
-                            <div>
-                                <i className='bi bi-circle-fill text-green' />
-                                &nbsp;
-                                <span>Aumentou</span>
-                            </div>
-                            <div>
-                                <i className='bi bi-circle-fill text-red' />
-                                &nbsp;
-                                <span>Diminuiu</span>
-                            </div>
-                        </div>
                         <table className={styles.table}>
                             <thead>
                                 <tr>
