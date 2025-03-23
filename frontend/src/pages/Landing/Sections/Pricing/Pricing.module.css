@@ -1,0 +1,161 @@
+.pricing {
+    padding: 6rem 2rem;
+    background-color: #f9fafb;
+}
+
+.header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 4rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.plans {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.plan {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 2.5rem;
+    flex: 1;
+    min-width: 300px;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.plan:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.popularPlan {
+    border: 2px solid var(--color-blue);
+    transform: scale(1.05);
+}
+
+.popularPlan:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.popularBadge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-blue);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 1rem;
+    border-radius: 9999px;
+}
+
+.planName {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-bottom: 1rem;
+}
+
+.planPrice {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
+}
+
+.price {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-dark);
+}
+
+.period {
+    font-size: 1.125rem;
+    color: #6b7280;
+    margin-left: 0.25rem;
+}
+
+.planDescription {
+    color: #6b7280;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    flex: 1;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.primaryCta {
+    background-color: var(--color-blue);
+    color: white;
+    transition: background-color 0.2s ease;
+}
+
+.primaryCta:hover {
+    background-color: #2563eb;
+}
+
+.secondaryCta {
+    background-color: white;
+    color: var(--color-blue);
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.secondaryCta:hover {
+    border-color: var(--color-blue);
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+@media (max-width: 768px) {
+    .pricing {
+        padding: 4rem 1.5rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .plans {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .plan {
+        width: 100%;
+        max-width: 400px;
+        transform: none;
+    }
+
+    .plan:hover {
+        transform: translateY(-5px);
+    }
+}
