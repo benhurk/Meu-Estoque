@@ -10,14 +10,14 @@ import PricingSection from './Sections/Pricing';
 import FeaturesSection from './Sections/Fetures';
 
 export default function LandingPage() {
-    const { isLoading, accessToken, guest } = useAuth();
+    const { isLoading, accessToken } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isLoading && (accessToken || guest)) {
+        if (!isLoading && accessToken) {
             navigate('/app');
         }
-    }, [accessToken, guest, isLoading, navigate]);
+    }, [accessToken, isLoading, navigate]);
 
     return (
         <main className='container'>

@@ -76,9 +76,9 @@ export default function UserForm({ mode }: Props) {
     };
 
     const continueAsGuest = () => {
+        navigate('/app');
         setGuest(true);
         localStorage.setItem('guest-user', 'true');
-        navigate('/app');
     };
 
     return (

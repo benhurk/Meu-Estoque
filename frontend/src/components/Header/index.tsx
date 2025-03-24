@@ -1,5 +1,4 @@
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import styles from './Header.module.css';
 import logo from '../../assets/logo.svg';
@@ -9,36 +8,24 @@ import LoadButton from '../LoadButton';
 import SendDropdown from '../SendDropdown';
 import StatisticsButton from '../StatisticsButton';
 import Dropdown from '../Dropdown';
-import useAuth from '../../hooks/useAuth';
 import RemoveAllButton from '../RemoveAllButton';
+import HeaderAuthButtons from '../HeaderAuthButtons';
 
 export default function Header() {
-    const { accessToken, guest, logout } = useAuth();
-
-    const navigate = useNavigate();
+    const location = useLocation();
 
     return (
         <header className={styles.header}>
             <div className='container'>
-                <Link to='/app' className={styles.title}>
+                <Link to='/' className={styles.title}>
                     <img src={logo} alt='logo' />
                     <h1>Meu Estoque</h1>
                 </Link>
 
-                {accessToken && (
-                    <button
-                        type='button'
-                        className='btn btn-link'
-                        style={{
-                            marginInline: 'auto',
-                        }}
-                        onClick={logout}>
-                        <i className='bi bi-box-arrow-left' />
-                        &nbsp;Sair
-                    </button>
-                )}
+                {(location.pathname === '/app' ||
+                    location.pathname === '/app/logs') && <HeaderAuthButtons />}
 
-                {(accessToken || guest) && (
+                {location.pathname === '/app' && (
                     <div className={styles.buttonsArea}>
                         <SendDropdown />
                         <StatisticsButton />
@@ -57,21 +44,6 @@ export default function Header() {
                         </Dropdown>
                     </div>
                 )}
-
-                {guest &&
-                    (location.pathname === '/app' ||
-                        location.pathname === '/app/logs') && (
-                        <button
-                            type='button'
-                            className='btn btn-link'
-                            style={{
-                                marginInline: 'auto',
-                            }}
-                            onClick={() => navigate('/signin')}>
-                            <i className='bi bi-box-arrow-right' />
-                            &nbsp;Entrar
-                        </button>
-                    )}
             </div>
         </header>
     );
