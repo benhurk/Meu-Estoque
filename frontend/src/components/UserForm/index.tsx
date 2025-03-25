@@ -6,9 +6,11 @@ import { UserFormType, Errors } from '../../types/UserFormTypes';
 import FormGroup from '../FormGroup';
 import useAuth from '../../hooks/useAuth';
 import { ClipLoader } from 'react-spinners';
+import validateUserForm from '../../utils/validateUserForm';
 
 const initialForm: UserFormType = {
     username: '',
+    email: '',
     password: '',
     passwordConfirm: '',
 };
@@ -37,38 +39,18 @@ export default function UserForm({ mode }: Props) {
         });
     };
 
-    const validate = () => {
-        const newErrors: Errors = {};
-
-        if (!fields.username) {
-            newErrors.username = 'O nome não pode ficar em branco.';
-        }
-
-        if (!fields.password) {
-            newErrors.password = 'A senha não pode ficar em branco.';
-        }
-
-        if (mode === 'register') {
-            if (!fields.passwordConfirm) {
-                newErrors.passwordConfirm = 'Confirme a sua senha.';
-            } else if (fields.passwordConfirm !== fields.password) {
-                newErrors.passwordConfirm = 'As senhas não batem.';
-            }
-        }
-
-        setErrors(newErrors);
-        return Object.values(newErrors).every((error) => error === '');
-    };
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const requestFn = mode === 'login' ? login : register;
+        const requestFn =
+            mode === 'login'
+                ? login(fields.username, fields.password)
+                : register(fields.username, fields.email, fields.password);
 
-        if (validate()) {
+        if (validateUserForm(fields, mode, setErrors)) {
             setLoading(true);
 
-            const res = await requestFn(fields.username, fields.password);
+            const res = await requestFn;
 
             setLoading(false);
             setResponseMessage(res);
@@ -90,13 +72,31 @@ export default function UserForm({ mode }: Props) {
                 <input
                     id='username-field'
                     name='username'
-                    maxLength={50}
+                    maxLength={20}
                     type='text'
                     className='input'
                     placeholder='Seu nome'
                     onChange={handleChange}
                 />
             </FormGroup>
+
+            {mode === 'register' && (
+                <FormGroup
+                    elementId='email-field'
+                    labelText='Email:'
+                    error={errors.email}>
+                    <input
+                        id='email-field'
+                        name='email'
+                        type='text'
+                        maxLength={100}
+                        className='input'
+                        placeholder='exemplo@email.com'
+                        onChange={handleChange}
+                    />
+                </FormGroup>
+            )}
+
             <FormGroup
                 elementId='password-field'
                 labelText='Senha:'
@@ -111,6 +111,7 @@ export default function UserForm({ mode }: Props) {
                     onChange={handleChange}
                 />
             </FormGroup>
+
             {mode === 'register' && (
                 <FormGroup
                     elementId='confirm-password-field'

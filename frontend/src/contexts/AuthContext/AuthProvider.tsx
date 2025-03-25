@@ -80,10 +80,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         checkAuth();
     }, []);
 
-    const register = async (username: string, password: string) => {
+    const register = async (
+        username: string,
+        email: string,
+        password: string
+    ) => {
         try {
             const response = await axios.post(`${BASE_URL}/register`, {
                 username,
+                email,
                 password,
             });
 

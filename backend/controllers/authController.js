@@ -4,9 +4,9 @@ import jwt from 'jsonwebtoken';
 
 export async function registerUser(req, res) {
     try {
-        const { username, password } = req.body;
+        const { username, email, password } = req.body;
 
-        if (!username || !password) {
+        if (!username || !password || !email) {
             return res.status(400).json({
                 success: false,
                 message: 'Preencha os campos obrigatórios.',
@@ -26,11 +26,24 @@ export async function registerUser(req, res) {
                 message: 'Nome de usuário já registrado.',
             });
 
+        const { data: existingEmail, existingEmailError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email);
+
+        if (existingEmailError) throw existingEmailError;
+
+        if (existingEmail.length > 0)
+            return res.status(401).json({
+                success: false,
+                message: 'Email já registrado.',
+            });
+
         const hashed_password = await bcrypt.hash(password, 10);
 
         const { data: newUser, insertError } = await supabase
             .from('users')
-            .insert([{ username, password_hash: hashed_password }]);
+            .insert([{ username, email, password_hash: hashed_password }]);
 
         if (insertError) throw insertError;
 

@@ -8,6 +8,7 @@ type AuthContextType = {
     ) => Promise<{ success: boolean; message: string }>;
     register: (
         username: string,
+        email: string,
         password: string
     ) => Promise<{ success: boolean; message: string }>;
     logout: () => void;

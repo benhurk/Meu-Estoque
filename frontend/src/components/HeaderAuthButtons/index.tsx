@@ -29,7 +29,7 @@ export default function HeaderAuthButtons() {
                     }}
                     onClick={() => navigate('/signup')}>
                     <i className='bi bi-person-plus-fill' />
-                    &nbsp;Criar conta PRO
+                    &nbsp;Criar conta
                 </button>
             )}
         </>
